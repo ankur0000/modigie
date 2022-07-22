@@ -1,0 +1,66 @@
+.THIS table{
+	/* border: 1px solid black; */
+    table-layout: auto !important;
+}
+
+
+.editButton.THIS {
+    margin-left: 77%;
+    margin-bottom: 1%;
+}
+.THIS.exampleHolder{
+    position: absolute;
+    /* display: inline-block; */
+    width: 80%;
+    height: 90%;
+}
+
+.THIS .pageHeader
+{
+    width: 100%;
+}
+
+.THIS .dataTable
+{
+    height:fit-content;
+}
+
+
+.THIS .noSettings
+{
+    font-size: x-large;margin: 1%;text-align:center;
+}
+
+.THIS .addLimit
+{
+    margin: 1%;padding-left: 45%;
+}
+
+.THIS .headerClose
+{
+    margin-top: -47%;margin-left: 51%;
+}
+
+.THIS .headerH2
+{
+    font-size: xx-large;
+}
+
+.THIS .modalBody
+{
+    font-size:medium;height: inherit; overflow:auto;
+}
+
+.THIS .currentContent
+{
+    text-align: center;font-size: large;
+}
+.THIS .adHoclimitsOptionSelect{
+    margin-right: 2%;
+}
+.THIS .slds-form-element__label{
+    display:none;
+}
+.THIS .selectLimits{
+    margin-right:2%;
+}

@@ -1,0 +1,88 @@
+.c-container {
+    border: 1px solid #d8dde6;
+    margin: 10px 0 20px 0;
+}
+
+.custom-box {
+    text-align: center;
+    background-color: #f4f6f9;
+    padding: 1rem;
+    border: 1px solid #d8dde6;
+}
+
+.customclass{
+    width:95%;
+}
+.buttonColor{
+    background: green;
+}
+.buttonWidth{
+    width:fit-content;
+    max-width: 120%;
+}
+.slds-form-element__label{
+    width : 35%;
+}
+.same-line{
+    display:inline;
+}
+
+
+.modigiePara p
+{
+    font-weight: bold;
+    font-weight: 900;
+}
+
+.totalMember
+{
+    border-bottom: 1px solid green;
+    font-size: small;
+    font-weight: 400;
+}
+
+.spinnerBg
+{
+    background-color: white;
+}
+
+.pageHeader
+{
+    width:100%;
+}
+
+.pageHeaderDiv
+{
+    margin-right: 2%; font-size: large;
+}
+
+.toastDiv
+{
+    width: 50%;
+
+}
+
+.tableBody
+{
+    vertical-align: bottom;
+}
+
+.tableData
+{
+    padding:4px;
+}
+
+.additionalBody
+{
+    text-align:center;
+}
+.unauthorizedAccessBody{
+    height: 20rem;
+    font-size: x-large;
+    text-align: center;
+    padding-top: 15%;
+    font-weight: 500;
+}
+.banner{
+    border-radius: 0.2rem;
+}

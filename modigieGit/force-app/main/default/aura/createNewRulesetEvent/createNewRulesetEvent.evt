@@ -1,0 +1,7 @@
+<aura:event type="COMPONENT" description="Event template">
+    <aura:attribute name="newRulesetDetails" type="List" />
+    <aura:attribute name="leadCriteriaList" type="List" />
+    <aura:attribute name="contactCriteriaList" type="List" />
+    <aura:attribute name="rulesetId" type="String" />
+
+</aura:event>

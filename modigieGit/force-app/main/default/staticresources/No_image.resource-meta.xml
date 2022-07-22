@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StaticResource xmlns="http://soap.sforce.com/2006/04/metadata">
+    <cacheControl>Public</cacheControl>
+    <contentType>image/jpeg</contentType>
+    <description>This image is used to display &apos;NO&apos; as a flag in &apos;alternate mobile phone&apos; of contact and lead object.</description>
+</StaticResource>

@@ -1,0 +1,784 @@
+({
+  /*New js  starts*/
+
+ /* handleHome: function (component, event, helper) {
+    component.set("v.User_Limits_Settings", false);
+    component.set("v.Modigie_Job_Automation", false);
+    component.set("v.Schedule_Job", false);
+    component.set("v.Authorization", false);
+    component.set("v.Home", true);
+    component.set('v.automationRefrence', false);
+    component.set('v.authorizationRefrence', false);
+    component.set('v.scheduleJobRefrence', false);
+    component.set('v.userLimitRefrence', false);
+  },
+
+  handleAuthorization: function (component, event, helper) {
+    component.set("v.User_Limits_Settings", false);
+    component.set("v.Modigie_Job_Automation", false);
+    component.set("v.Schedule_Job", false);
+    component.set("v.Authorization", true);
+    component.set("v.Home", false);
+    component.set('v.automationRefrence', false);
+    component.set('v.authorizationRefrence', false);
+    component.set('v.scheduleJobRefrence', false);
+    component.set('v.userLimitRefrence', false);
+  },
+
+  handleSchedule_Job: function (component, event, helper) {
+    component.set("v.User_Limits_Settings", false);
+    component.set("v.Modigie_Job_Automation", false);
+    component.set("v.Schedule_Job", true);
+    component.set("v.Authorization", false);
+    component.set("v.Home", false);
+    component.set('v.automationRefrence', false);
+    component.set('v.authorizationRefrence', false);
+    component.set('v.scheduleJobRefrence', false);
+    component.set('v.userLimitRefrence', false);
+  },
+
+  handleModigie_Job_Automation: function (component, event, helper) {
+    component.set("v.User_Limits_Settings", false);
+    component.set("v.Modigie_Job_Automation", true);
+    component.set("v.Schedule_Job", false);
+    component.set("v.Authorization", false);
+    component.set("v.Home", false);
+    component.set('v.automationRefrence', false);
+    component.set('v.authorizationRefrence', false);
+    component.set('v.scheduleJobRefrence', false);
+    component.set('v.userLimitRefrence', false);
+  },
+
+  handleUser_Limits_Settings: function (component, event, helper) {
+    component.set("v.User_Limits_Settings", true);
+    component.set("v.Modigie_Job_Automation", false);
+    component.set("v.Schedule_Job", false);
+    component.set("v.Authorization", false);
+    component.set("v.Home", false);
+    component.set('v.automationRefrence', false);
+    component.set('v.authorizationRefrence', false);
+    component.set('v.scheduleJobRefrence', false);
+    component.set('v.userLimitRefrence', false);
+  },
+
+  handleAutomationRefrence: function (component, event, helper) {
+
+    component.set('v.automationRefrence', true);
+    component.set('v.authorizationRefrence', false);
+    component.set('v.scheduleJobRefrence', false);
+    component.set('v.userLimitRefrence', false);
+    component.set("v.User_Limits_Settings", false);
+    component.set("v.Modigie_Job_Automation", false);
+    component.set("v.Schedule_Job", false);
+    component.set("v.Authorization", false);
+    component.set("v.Home", false);
+
+  },
+
+  handleAuthorizationRefrence: function (component, event, helper) {
+
+    component.set('v.automationRefrence', false);
+    component.set('v.authorizationRefrence', true);
+    component.set('v.scheduleJobRefrence', false);
+    component.set('v.userLimitRefrence', false);
+    component.set("v.User_Limits_Settings", false);
+    component.set("v.Modigie_Job_Automation", false);
+    component.set("v.Schedule_Job", false);
+    component.set("v.Authorization", false);
+    component.set("v.Home", false);
+
+  },
+
+  handleScheduleJobRefrence: function (component, event, helper) {
+
+    component.set('v.automationRefrence', false);
+    component.set('v.authorizationRefrence', false);
+    component.set('v.scheduleJobRefrence', true);
+    component.set('v.userLimitRefrence', false);
+    component.set("v.User_Limits_Settings", false);
+    component.set("v.Modigie_Job_Automation", false);
+    component.set("v.Schedule_Job", false);
+    component.set("v.Authorization", false);
+    component.set("v.Home", false);
+
+  },
+
+  handleUserLimitsSettingsRefrence: function (component, event, helper) {
+
+    component.set('v.automationRefrence', false);
+    component.set('v.authorizationRefrence', false);
+    component.set('v.scheduleJobRefrence', false);
+    component.set('v.userLimitRefrence', true);
+    component.set("v.User_Limits_Settings", false);
+    component.set("v.Modigie_Job_Automation", false);
+    component.set("v.Schedule_Job", false);
+    component.set("v.Authorization", false);
+    component.set("v.Home", false);
+
+  },
+
+
+
+  /*new js ends
+
+  doinit: function (component, event, helper) {
+
+    component.set("v.selectedItem", 'Home');
+    component.set("v.toggleSpinner", true);
+    component.set("v.edit_Button", true);
+
+    
+    if(component.get('v.isInitially') == true)
+    {
+      component.set("v.selectedItem", 'Home');
+    }
+
+    else if(component.get('v.isInitially') == false)
+    {
+      component.set("v.selectedItem", 'Schedule_Job');
+    }
+
+
+
+    var lstOptions = [];
+
+    var lstoptionshourinter = [];
+    lstoptionshourinter.push("00");
+
+    for (var i = 1; i <= 11; i++) {
+      var str = "";
+
+      if (i < 10) {
+        str = "0" + i;
+      } else {
+        str = i + "";
+      }
+
+      lstOptions.push(str);
+      lstoptionshourinter.push(str);
+    }
+    lstOptions.push(12 + "");
+
+    component.set("v.optionsHourTime", lstOptions);
+    component.set("v.optionsHoursInterval", lstoptionshourinter);
+
+    var lstOptionsMinInterval = [];
+    var lstOptionsMinTime = [];
+
+    lstOptionsMinInterval.push("00");
+    for (var i = 0; i < 60; i++) {
+      var str = "";
+
+      if (i == 1) {
+        lstOptionsMinInterval.push("0.5");
+      }
+
+      if (i < 10) {
+        str = "0" + i;
+      } else {
+        str = i + "";
+      }
+
+      if (60 % i == 0) {
+        lstOptionsMinInterval.push(str);
+      }
+
+      lstOptionsMinTime.push(str);
+    }
+
+    component.set("v.optionsMinuteInterval", lstOptionsMinInterval);
+    component.set("v.optionsMinuteTime", lstOptionsMinTime);
+
+    var action1 = component.get("c.checkToken");
+
+    action1.setParams({});
+    action1.setCallback(this, function (response1) {
+      var url_String = window.location.href.toString();
+
+      if (url_String.includes("visualforce.com")) {
+        var url = new URL(window.location.href.toString());
+        var customerIdfromURL = url.searchParams.get("modigie__customerId");
+        if (customerIdfromURL == null) {
+          component.set("v.tokenCheck", true);
+          component.set("v.creditsId", response1.getReturnValue().creditsId);
+          component.set("v.apiKey", response1.getReturnValue().apiKey);
+          component.set(
+            "v.serviceCredentials",
+            response1.getReturnValue().serviceCredential
+          );
+          component.set("v.customerId", response1.getReturnValue().customerId);
+          component.set("v.privateKey", response1.getReturnValue().privateKey);
+        } else {
+          component.set("v.customerId", customerIdfromURL);
+        }
+
+      }
+      else {
+        //component.set("v.selectedItem", 'Authorization');
+        if (component.get("v.pageReference.state.modigie__customerId") == null) {
+          if (response1.getReturnValue().apiKey != null) {
+            //component.set("v.selectedItem", 'Authorization');
+            component.set("v.tokenCheck", true);
+            component.set("v.creditsId", response1.getReturnValue().creditsId);
+            component.set("v.apiKey", response1.getReturnValue().apiKey);
+            component.set(
+              "v.serviceCredentials",
+              response1.getReturnValue().serviceCredential
+            );
+            component.set("v.customerId", response1.getReturnValue().customerId);
+            component.set("v.privateKey", response1.getReturnValue().privateKey);
+            //component.set("v.privateKey", response1.getReturnValue().privateKey);
+          }
+        } else {
+          component.set(
+            "v.customerId",
+            component.get("v.pageReference.state.modigie__customerId")
+
+          );
+          component.set("v.privateKey", null);
+          component.set("v.Home", false);
+          component.set("v.Authorization", true);
+          //component.set("v.selectedItem", 'Authorization');
+        }
+      }
+
+      if (response1.getReturnValue().apiKey != null) {
+        component.set("v.showTabs", true);
+      }
+
+      component.set("v.toggleSpinner", false);
+      component.set("v.baseUrl", response1.getReturnValue().baseUrl);
+      component.set("v.canCreateToken", response1.getReturnValue().TokenCreate);
+    });
+    $A.enqueueAction(action1);
+
+    var action2 = component.get("c.getJobTimeDetails");
+    action2.setParams({});
+    action2.setCallback(this, function (response1) {
+      component.set("v.jobTimeDetails", null);
+
+      if (response1.getReturnValue() != null) {
+        component.set("v.isInterval", false);
+        component.set("v.isIntervalPick", false);
+        component.set("v.isTime", false);
+        component.set("v.isTimePick", false);
+        var result = JSON.parse(response1.getReturnValue());
+
+        var hour = result.Hour;
+        var minute = result.Minute;
+
+        if (!result.Interval) {
+          component.set("v.isTime", true);
+          component.set("v.isTimePick", true);
+
+          if (result.Hour < 12) {
+            component.set("v.selectedmeridiem", "AM");
+          } else {
+            component.set("v.selectedmeridiem", "PM");
+            if (result.Hour > 12) {
+              result.Hour -= 12;
+            }
+          }
+        }
+        if (result.Hour < 10) {
+          hour = "0" + result.Hour;
+        }
+        if (result.Minute < 10) {
+          if (result.Minute > 0 && result.Minute < 1) {
+            minute = "" + result.Minute;
+          } else {
+            minute = "0" + result.Minute;
+          }
+        }
+
+        if (result.Interval) {
+          component.set("v.isInterval", true);
+          component.set("v.isIntervalPick", true);
+          component.set("v.selectedHourInterval", hour);
+          component.set("v.selectedMinuteInterval", minute);
+
+          var obj = { Hour: hour, Minute: minute, isTime: false };
+          component.set("v.jobTimeDetails", obj);
+        } else {
+          if (hour == 0) {
+            hour = "12";
+          }
+          component.set("v.selectedHourTime", hour);
+          component.set("v.selectedMinuteTime", minute);
+
+          var obj = {
+            Hour: hour,
+            Minute: minute,
+            isTime: true,
+            Meridian: component.get("v.selectedmeridiem")
+          };
+          component.set("v.jobTimeDetails", obj);
+        }
+
+        component.set("v.toggleSpinner", false);
+      }
+    });
+    $A.enqueueAction(action2);
+
+    var action3 = component.get("c.getScheduleJobsInfo");
+    action3.setParams({});
+    action3.setCallback(this, function (response3) {
+      var parsedObj = JSON.parse(response3.getReturnValue());
+
+      if (parsedObj.DataAvailable) {
+        component.set("v.batchJobsInfoOriginal", parsedObj);
+        component.set(
+          "v.batchJobsInfo",
+          JSON.parse(JSON.stringify(component.get("v.batchJobsInfoOriginal")))
+        );
+      }
+    });
+    $A.enqueueAction(action3);
+    
+
+  },
+
+  scheduleEdit: function (component, event, helper) {
+    component.set("v.scheduleEdit", false);
+  },
+
+  handleToast: function (component, event, helper) {
+    let delay = 1000;
+    setTimeout(() => {
+      component.set("v.configurationToast", false);
+    }, delay);
+  },
+
+  handleErrorToast: function (component, event, helper) {
+    let delay = 1000;
+    setTimeout(() => {
+      component.set("v.configurationErrorToast", false);
+    }, delay);
+  },
+
+  getAPIToken: function (component, event, helper) {
+    var currentURL;
+    currentURL = window.location.hostname;
+    component.set("v.edit_Button", true);
+
+    if (component.get("v.canCreateToken") == "true") {
+      var customerId = component.get("v.customerId");
+      var creditsId = component.get("v.creditsId");
+      var apiKey = component.get("v.apiKey");
+      var serviceCredentials = component.get("v.serviceCredentials");
+      var privateKey = component.get("v.privateKey");
+
+      if (apiKey && creditsId && serviceCredentials && privateKey) {
+        var sampleVar = privateKey.toString().replace(/[\n\r]/g, "");
+
+
+        var obj = {
+          customerId: component.get("v.customerId"),
+          creditsId: creditsId,
+          apiKey: apiKey,
+          serviceCredentials: serviceCredentials,
+          privateKey: privateKey.replace("\n", "")
+        };
+        var action1 = component.get("c.getToken");
+        component.set("v.toggleSpinner", true);
+
+        action1.setParams({
+          resMap: obj
+        });
+        action1.setCallback(this, function (response1) {
+          if (response1.getState() == "SUCCESS") {
+            if (currentURL.includes("visualforce.com")) {
+              component.set(
+                "v.toastMessage",
+                "Credentials Submitted Successfully."
+              );
+              component.set("v.configurationToast", true);
+              $A.enqueueAction(component.get("c.handleToast"));
+            } else {
+              var toastEvent = $A.get("e.force:showToast");
+              toastEvent.setParams({
+                type: "success",
+                title: "Success!",
+                message: "Credentials Submitted Successfully."
+              });
+              toastEvent.fire();
+            }
+
+            component.set("v.showTabs", true);
+            component.set("v.toggleSpinner", false);
+
+            component.set("v.tokenCheck", true);
+          } else {
+            if (currentURL.includes("visualforce.com")) {
+              component.set("v.toastMessage", response1.getReturnValue());
+              component.set("v.configurationErrorToast", true);
+              $A.enqueueAction(component.get("c.handleErrorToast"));
+              component.set("v.showTabs", true);
+              component.set("v.toggleSpinner", false);
+
+              component.set("v.tokenCheck", true);
+            } else {
+              var toastEvent = $A.get("e.force:showToast");
+              toastEvent.setParams({
+                type: "error",
+                title: "Error!",
+                message: response1.getReturnValue()
+              });
+              toastEvent.fire();
+            }
+          }
+        });
+        $A.enqueueAction(action1);
+      } else {
+        if (currentURL.includes("visualforce.com")) {
+          component.set("v.toastMessage", "Fill out all the fields.");
+          component.set("v.configurationErrorToast", true);
+          $A.enqueueAction(component.get("c.handleErrorToast"));
+          component.set("v.showTabs", true);
+          component.set("v.toggleSpinner", false);
+          component.set("v.tokenCheck", false);
+          component.set("v.edit_Button", false);
+        } else {
+          var toastEvent = $A.get("e.force:showToast");
+          toastEvent.setParams({
+            type: "error",
+            title: "Error!",
+            message: "Fill out all the fields."
+          });
+          toastEvent.fire();
+          component.set("v.edit_Button", false);
+        }
+      }
+    } else {
+      if (currentURL.includes("visualforce.com")) {
+        component.set("v.toastMessage", "You can not authorize the app.");
+        component.set("v.configurationErrorToast", true);
+        $A.enqueueAction(component.get("c.handleErrorToast"));
+        component.set("v.showTabs", true);
+        component.set("v.toggleSpinner", false);
+        component.set("v.tokenCheck", true);
+      } else {
+        var toastEvent = $A.get("e.force:showToast");
+        toastEvent.setParams({
+          type: "error",
+          title: "Error!",
+          message: "You can not authorize the app"
+        });
+        toastEvent.fire();
+      }
+    }
+  },
+
+  navigate: function (component, event, helper) {
+    var currentURL = window.location.hostname;
+    if (currentURL.includes("visualforce.com")) {
+      window.open(
+        "https://modigie-customer-gateway-bqqdnyh5lq-uc.a.run.app/authenticate?callback=" +
+        component.get("v.baseUrl") +
+        "/modigie/ModigieConfigurationRedirectionAppClassic.app",
+        "_self"
+      );
+    } else {
+      window.open(
+        "https://modigie-customer-gateway-bqqdnyh5lq-uc.a.run.app/authenticate?callback=" +
+        component.get("v.baseUrl") +
+        "/modigie/ModigieConfigurationRedirectionApp.app",
+        "_self"
+      );
+
+      component.set("v.redirectAuthenticate", false);
+    }
+  },
+  navigateModigie: function (component, event, helper) {
+    // var urlEvent = $A.get("e.force:navigateToURL");
+    // urlEvent.setParams({
+    //   url: "https://modigie.com"
+    // });
+    // urlEvent.fire();
+
+    window.open("https://modigie.com/");
+
+  },
+  edit: function (component, event, helper) {
+    component.set("v.tokenCheck", false);
+    component.set("v.edit_Button", false);
+  },
+
+  closeModel: function (component, event, helper) 
+  {
+    component.set("v.tokenGenerated", false);
+    component.set("v.tokenCheck", true);
+    component.set("v.uname", "");
+    component.set("v.passwd", "");
+    component.set("v.edit_Button", true);
+    // var a = component.get("c.doinit");
+    // $A.enqueueAction(a);
+
+
+
+
+    var action1 = component.get("c.checkToken");
+
+    action1.setParams({});
+    action1.setCallback(this, function (response1) {
+      var url_String = window.location.href.toString();
+
+      if (url_String.includes("visualforce.com")) {
+        var url = new URL(window.location.href.toString());
+        var customerIdfromURL = url.searchParams.get("modigie__customerId");
+        if (customerIdfromURL == null) {
+          component.set("v.tokenCheck", true);
+          component.set("v.creditsId", response1.getReturnValue().creditsId);
+          component.set("v.apiKey", response1.getReturnValue().apiKey);
+          component.set(
+            "v.serviceCredentials",
+            response1.getReturnValue().serviceCredential
+          );
+          component.set("v.customerId", response1.getReturnValue().customerId);
+          component.set("v.privateKey", response1.getReturnValue().privateKey);
+        } else {
+          component.set("v.customerId", customerIdfromURL);
+        }
+
+      }
+      else {
+        component.set("v.selectedItem", 'Authorization');
+        if (component.get("v.pageReference.state.modigie__customerId") == null) {
+          if (response1.getReturnValue().apiKey != null) {
+            component.set("v.selectedItem", 'Authorization');
+            component.set("v.tokenCheck", true);
+            component.set("v.creditsId", response1.getReturnValue().creditsId);
+            component.set("v.apiKey", response1.getReturnValue().apiKey);
+            component.set(
+              "v.serviceCredentials",
+              response1.getReturnValue().serviceCredential
+            );
+            component.set("v.customerId", response1.getReturnValue().customerId);
+            component.set("v.privateKey", response1.getReturnValue().privateKey);
+            //component.set("v.privateKey", response1.getReturnValue().privateKey);
+          }
+        } else {
+          component.set(
+            "v.customerId",
+            component.get("v.pageReference.state.modigie__customerId")
+
+          );
+          component.set("v.privateKey", null);
+          component.set("v.Home", false);
+          component.set("v.Authorization", true);
+          component.set("v.selectedItem", 'Authorization');
+        }
+      }
+
+      if (response1.getReturnValue().apiKey != null) {
+        component.set("v.showTabs", true);
+      }
+
+      component.set("v.toggleSpinner", false);
+      component.set("v.baseUrl", response1.getReturnValue().baseUrl);
+      component.set("v.canCreateToken", response1.getReturnValue().TokenCreate);
+    });
+    $A.enqueueAction(action1);
+
+
+      //  $A.get('e.force:refreshView').fire();
+    },
+  handleAction: function (component, event, helper) {
+    component.set("v.isTimePick", !component.get("v.isTimePick"));
+    component.set("v.isIntervalPick", !component.get("v.isIntervalPick"));
+  },
+
+  handleSubmit: function (component, event, helper) {
+    var hour;
+    var minute;
+    var type = "Interval";
+    var currentURL;
+    currentURL = window.location.hostname;
+    if (component.get("v.isTimePick")) {
+      hour = parseInt(component.get("v.selectedHourTime"));
+      minute = parseInt(component.get("v.selectedMinuteTime"));
+      if (component.get("v.selectedmeridiem") == "PM") {
+        if (hour != 12) {
+          hour = hour + 12;
+        }
+      } else if (component.get("v.selectedmeridiem") == "AM") {
+        if (hour == 12) {
+          hour = 0;
+        }
+      }
+      type = "Time";
+    } else {
+      hour = parseInt(component.get("v.selectedHourInterval"));
+      minute = parseFloat(component.get("v.selectedMinuteInterval"));
+      "minute interval --->>>", minute;
+      if (hour == 0 && minute == 0) {
+        if (currentURL.includes("visualforce.com")) {
+          component.set("v.toastMessage", "Invalid Interval");
+          component.set("v.configurationErrorToast", true);
+          $A.enqueueAction(component.get("c.handleErrorToast"));
+        } else {
+          var toastEvent = $A.get("e.force:showToast");
+          toastEvent.setParams({
+            type: "Error",
+            title: "Error!",
+            message: "Invalid Interval"
+          });
+          toastEvent.fire();
+        }
+        return;
+      }
+    }
+    component.set("v.toggleSpinner", true);
+    var action1 = component.get("c.scheduleBatchClass");
+    action1.setParams({
+      hours: hour,
+      minutes: minute,
+      types: type
+    });
+    action1.setCallback(this, function (response1) {
+      component.set("v.toggleSpinner", false);
+      var obj = {
+        GetLinkedIn: false,
+        GetMobileNumber: false,
+        GetPhoneInsights: false,
+        VerifyEmployer: false
+      };
+      component.set("v.batchJobsInfo", obj);
+      component.set(
+        "v.batchJobsInfoOriginal",
+        JSON.parse(JSON.stringify(component.get("v.batchJobsInfo")))
+      );
+      if (currentURL.includes("visualforce.com")) {
+        component.set(
+          "v.toastMessage",
+          "The Batch Schedule Class Time saved sucessfully."
+        );
+        component.set("v.configurationToast", true);
+        $A.enqueueAction(component.get("c.handleToast"));
+        // component.set('v.showTabs',true);
+        // component.set("v.toggleSpinner", false);
+        // component.set('v.tokenCheck',true);
+      } else {
+        var toastEvent = $A.get("e.force:showToast");
+        toastEvent.setParams({
+          type: "Success",
+          title: "Success!",
+          message: "The Batch Schedule Class Time saved sucessfully."
+        });
+        toastEvent.fire();
+      }
+      component.set("v.isInitially", false);
+      var a = component.get("c.doinit");
+      $A.enqueueAction(a);
+    });
+    $A.enqueueAction(action1);
+    component.set("v.scheduleEdit", true);
+
+    
+  },
+
+  cancelAction: function (component, event, helper) {
+    // var a = component.get("c.doinit");
+    // $A.enqueueAction(a);
+
+
+    var action3 = component.get("c.getScheduleJobsInfo");
+    action3.setParams({});
+    action3.setCallback(this, function (response3) {
+      var parsedObj = JSON.parse(response3.getReturnValue());
+
+      if (parsedObj.DataAvailable) 
+      {
+        component.set("v.batchJobsInfoOriginal", parsedObj);
+        component.set("v.selectedItem", 'Schedule_Job');
+        component.set("v.batchJobsInfo",JSON.parse(JSON.stringify(component.get("v.batchJobsInfoOriginal"))));
+      }
+    });
+    $A.enqueueAction(action3);
+
+
+    component.set("v.scheduleEdit", true);
+  },
+
+  abortScheduledJobs: function (component, event, helper) {
+    component.set("v.openAbortModal", false);
+    var action1 = component.get("c.abortModigieJobs");
+    component.set("v.toggleSpinner", true);
+    var obj = component.get("v.batchJobsInfo");
+    action1.setParams({
+      strObj: JSON.stringify(obj)
+    });
+    action1.setCallback(this, function (response1) {
+      component.set("v.toggleSpinner", false);
+
+      if (response1.getReturnValue() == "success") {
+        var toastEvent = $A.get("e.force:showToast");
+        toastEvent.setParams({
+          type: "Success",
+          title: "Success!",
+          message: "Selected jobs aborted successfully."
+        });
+        toastEvent.fire();
+        component.set(
+          "v.batchJobsInfoOriginal",
+          JSON.parse(JSON.stringify(component.get("v.batchJobsInfo")))
+        );
+
+        //component.set("v.isInitially", false);
+        var a = component.get("c.doinit");
+        $A.enqueueAction(a);
+      } else {
+        var toastEvent = $A.get("e.force:showToast");
+        toastEvent.setParams({
+          type: "error",
+          title: "Error!",
+          message: response1.getReturnValue()
+        });
+        toastEvent.fire();
+      }
+    });
+    $A.enqueueAction(action1);
+  },
+  navigteToScheduleTab: function (component, event, helper) {
+    component.set("v.selectedTab", "two");
+  },
+
+  shceduleForOneMinute: function (component, event, helper) {
+    component.set("v.toggleSpinner", true);
+
+    var action1 = component.get("c.scheduleBatchClass");
+
+    action1.setParams({
+      hours: 0,
+      minutes: 1,
+      types: "Interval"
+    });
+    action1.setCallback(this, function (response1) {
+      component.set("v.toggleSpinner", false);
+
+      var toastEvent = $A.get("e.force:showToast");
+      toastEvent.setParams({
+        type: "Success",
+        title: "Success!",
+        message: "The Batch Schedule Class Time saved sucessfully."
+      });
+      toastEvent.fire();
+    });
+    $A.enqueueAction(action1);
+  },
+  openAbortModal: function (component, event, helper) {
+    component.set("v.openAbortModal", true);
+  },
+  closeAbortModal: function (component, event, helper) {
+    component.set("v.openAbortModal", false);
+    var obj = component.get("v.batchJobsInfoOriginal");
+
+    component.set("v.batchJobsInfo", JSON.parse(JSON.stringify(obj)));
+  },
+  handleCheckBoxChange: function (component, event, helper) {
+    var obj = component.get("v.batchJobsInfo");
+  },
+*/
+
+
+});

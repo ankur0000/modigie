@@ -1,0 +1,43 @@
+<template>
+    
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open" >
+            <div class="slds-modal__container" style="width:32%;">
+            
+            <div class="slds-modal__header">
+            <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Create New Credit Account</h1>
+            </div>
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <template if:false={isDataSaving}>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td style="padding-left:2rem;">
+                                Credit Title
+                            </td>
+                            <td style = "width:60%; padding-right:2rem;">
+                                <div class="slds-form-element">
+                                    <div class="slds-form-element__control">
+                                        <lightning-input type="text" value={titleValue} onkeyup={handleTitleChange}></lightning-input>
+                                    <!-- <input type="text" value={titleValue} id="text-input-id-51" placeholder=""  class="slds-input" /> -->
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            
+        </template>
+        <template if:true={isDataSaving}>
+            <lightning-spinner alternative-text="Loading" style="height: 0%; margin-top:75%"></lightning-spinner>
+        </template>
+    </div>
+            <div class="slds-modal__footer">
+            <button class="slds-button slds-button_neutral"  onclick={cancelModel} aria-label="Cancel">Cancel</button>
+            <button class="slds-button slds-button_brand" onclick={saveNewCreditIdValue}>Save</button>
+            </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+        
+        
+</template>

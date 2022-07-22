@@ -1,0 +1,9 @@
+.THIS .custom_focus input  {
+    outline: 0;
+    border-color: rgb(21, 137, 238);
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0 0 3px #0070d2;
+}
+.THIS .slds-dropdown_left{
+    width: 100%;
+}

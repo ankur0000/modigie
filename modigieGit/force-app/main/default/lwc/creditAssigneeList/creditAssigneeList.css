@@ -1,0 +1,35 @@
+.table1{
+    margin-left: 2rem; 
+    width:22rem;
+}
+.LeftAlignClass{
+    text-align: left;
+}
+.grayColor{
+    color: gray;
+}
+.blackColor{
+    color: black;
+}
+.Left{
+    margin-left: 0.5rem;
+}
+.fontHeader{
+    font-size: 1.12rem;
+}
+.fontContent{
+    font-size: 0.875rem;
+}
+.spinnerClass{
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+.marginClass{
+    margin: 0 2rem 1rem 2rem;
+}
+.dualListBoxLabel{
+    margin: 2rem 2rem 2rem 2rem;
+}

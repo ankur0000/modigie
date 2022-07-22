@@ -1,0 +1,201 @@
+.THIS {
+    min-width: 50%;
+    max-width: 100%;
+    /* overflow: none !important; */
+    /* height: 84vh; */
+    /* min-height: 100%; */
+}
+.THIS .slds-border_bottom {
+    padding:1%;
+    width:60%;
+    margin:auto;
+}
+.THIS .toggle{
+    padding-top: 5%;
+    padding-left: 47%;
+}
+.THIS .buttonStyle{
+    width: 200%;
+}
+.THIS .customClass{
+    padding-left : 10%;
+    padding-right : 10%;
+    /* margin:2% 0% 2% 0%; */
+   
+}
+.THIS .customClass1
+{
+    margin:3% 0% 3% 0%;
+}
+
+.THIS .slds-tabs_scoped__content {
+    border-width: 0px;    
+}
+.THIS .customButtonClass{
+    width: 100%;
+}
+
+.THIS .scheduleClass{
+    margin-right : 10%;
+}
+.THIS .layoutClass{
+    margin-left: 7%;
+    margin-right: 10%;
+}
+.THIS .logo{
+    width: 40%;
+    margin-left: 165px;
+}
+.THIS .disabledInputFields{
+    width: 91%;
+}
+.THIS .slds-form-element__label {
+    font-size: inherit !important;   
+    
+}
+
+.THIS.greenOnWhite svg {
+    fill : yellow;
+}
+.THIS.greenOnWhite {
+   background-color:white !important;
+}
+
+.THIS .slds-card__footer{
+    border-top : none!important;
+}
+
+.THIS.pageHeader
+{
+    height:15%;
+}
+
+
+.THIS .slds-page-header
+{
+    width:100%;
+    padding:2%;
+    margin-bottom: 2%;
+}
+
+.THIS H1
+{
+    margin-top:3%;
+}
+
+/* .THIS .timeLayout
+{
+    width:50%;
+} */
+
+/* .THIS .timeDiv
+{
+    width:120%;
+} */
+
+
+.THIS .slds-nav-vertical__item.slds-is-active .slds-nav-vertical__action
+{
+    text-decoration: none;
+    font-weight:normal !important;
+}
+.THIS.exampleHolder{
+    position: absolute;
+    /* display: inline-block; */
+    width: 80%;
+    height: 90%;
+}
+
+.THIS .spinnerClass
+{
+    background-color: white;
+}
+
+.THIS .textDiv
+{
+    text-align: justify;
+}
+
+.THIS .textDiv h2
+{
+    font-size: medium;
+    line-height: 2rem;
+}
+
+.THIS .textDiv p
+{
+    font-size: medium;
+    line-height: 2rem;
+}
+
+.THIS .textDiv ul 
+{
+    list-style-type:disc;
+    margin-bottom:2%;
+    margin-left: 3%;
+}
+
+.THIS .textDiv ul li
+{
+    font-size: small;
+    line-height: 2rem;
+}
+
+.THIS .textDiv ol
+{
+    list-style-type: decimal;
+    margin-left: 3%;
+    margin-bottom:2%;
+
+}
+
+.THIS .olDiv 
+{
+    border-bottom: 1px solid grey;
+}
+
+
+.THIS .textDiv ol li
+{
+    margin-bottom: 1%;
+}
+
+.THIS .divP
+{
+    font-size: medium;
+    line-height: 2rem;
+}
+
+.THIS .contentDiv
+{
+    /* height: 500px; */
+    overflow: auto;
+}
+
+.THIS .homeDiv
+{
+    line-height: 2rem;
+}
+
+.THIS .homeDiv p
+{
+    font-size: medium;
+    line-height: 2rem;
+}
+
+.THIS .homeDiv b
+{
+    font-size: medium;
+    line-height: 2rem;
+}
+
+.THIS .homeDiv span
+{
+    font-size: medium;
+    /* line-height: 1rem; */
+}
+
+.THIS .verticalNavigation
+{
+    overflow-y: auto;
+}

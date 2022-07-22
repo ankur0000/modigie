@@ -1,0 +1,443 @@
+/*.THIS .slds-button{
+    margin-right: 20px;
+    height: fit-content;
+    margin-top:20px;
+}*/
+.THIS .modalButtonMargin{
+    margin:1%;
+}
+
+.THIS .flows-section{
+    font-size:109%;
+}
+
+.THIS .mqCheckbox{
+  margin-right:-8px !important;
+}
+
+/*.c-container.THIS{
+    
+}
+.THIS.padding-icons{
+    
+}*/
+.THIS .flows
+{
+    background-color: none;
+    padding: 1%;
+}
+
+.THIS .slds-section__title-action
+{
+    background-color: none !important;
+}
+
+.THIS .select
+{
+    margin-top: -3% !important;
+    width: 20%;
+    margin-left: 80%;
+}
+
+.THIS .oppLimits{
+    width: 25%;
+    margin-left: 75%;
+}
+
+.THIS .helpText
+{
+    margin-top: -2%;
+}
+
+.THIS .templateHeader
+{
+    padding-bottom: 1%;
+    border-bottom: 1px solid lightgrey;
+}
+
+.THIS .listTitle
+{
+    font-style: italic;
+}
+
+.THIS .btnClass
+{
+    margin-top: 2%;
+}
+
+
+.THIS .scrollable
+{
+    scroll-behavior: smooth;
+}
+
+.THIS.scrollerSize {
+    height: 70%;
+    width:100%;
+}
+
+
+
+/* new */
+
+.THIS .textDiv
+{
+    text-align: justify;
+    
+}
+
+.THIS .textDiv h2
+{
+    font-size: medium;
+    line-height: 2rem;
+    font-weight: 500;
+}
+
+
+
+.THIS .textDiv p
+{
+    font-size: medium;
+    line-height: 2rem;
+}
+
+.THIS .textDiv ul 
+{
+    list-style-type:disc;
+    margin-bottom:2%;
+    margin-left: 3%;
+}
+
+.THIS .textDiv ul li
+{
+    font-size: small;
+    line-height: 2rem;
+}
+
+.THIS .textDiv ol
+{
+    list-style-type: decimal;
+    margin-left: 3%;
+    margin-bottom:2%;
+
+}
+
+.THIS .olDiv 
+{
+    border-bottom: 1px solid grey;
+    margin-left: 2%;
+}
+
+.THIS .getModigieDiv 
+{
+    border-bottom: 2px solid black;
+}
+
+
+.THIS .textDiv ol li
+{
+    margin-bottom: 1%;
+}
+
+.THIS .divP
+{
+    font-size: medium;
+    line-height: 2rem;
+}
+
+.THIS .navbar {
+    overflow: hidden;
+    background-color: #333;
+  }
+
+  .THIS .sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+  }
+
+  .THIS .selectDays
+  {
+    width: 10%;
+    margin-left: 90%;
+    text-align: end;
+  }
+
+  .THIS .funnelTop
+  {
+    font-size: large;
+    line-height: 2rem;
+    font-weight: 500;
+    margin-bottom: 2%;
+    margin-top: 0% !important;
+    color:#005fb2;
+    text-align: center;
+  }
+
+  .THIS .confirmModalClose
+  {
+    margin-top: -47%;margin-left: 51%;
+  }
+
+  .THIS .headerDiv
+  {
+    display: inline-flex;padding-right: inherit;
+  }
+
+  .THIS .headerDiv h2
+  {
+    font-size: xx-large;
+  }
+
+  .THIS .headerDivIcon
+  {
+    margin:auto
+  }
+
+  .THIS .confirmModalBody
+  {
+    font-size:medium;
+  }
+
+  .THIS .configurationToastDiv
+  {
+    height:1rem; position:static;top:-1.3rem;left:1rem;right:1rem
+  }
+
+  .THIS .configurationToastSubDiv
+  {
+    width:100%;
+  }
+
+  .THIS .configurationToastSpan
+  {
+    background-color: white; margin-right:3%;
+  }
+
+  .THIS .configurationErrorToastDiv
+  {
+    height:1rem; position:absolute;top:-1.3rem;left:1rem;right:1rem;
+  }
+
+  .THIS .configurationErrorToastSubDiv
+  {
+    width:100%;
+  }
+
+  .THIS .configurationErrorToastSpan
+  {
+    background-color: white; margin-right:3%;
+  }
+
+
+.THIS .pSpan
+{
+    font-weight: bold;
+}
+
+.THIS .textDivUl
+{
+    list-style-type: disc;
+}
+
+.THIS .modalSpinner
+{
+    background-color: white;
+}
+
+.THIS .pageHeader
+{
+    width:100%;
+}
+
+.THIS .noMobileInfoSave
+{
+    margin-bottom: -2%;margin-right: 25px;
+}
+
+.THIS .noMobileInfoSaveButton
+{
+    height: 22px;
+}
+
+.THIS .togglePosition2
+{
+    padding-top:6%;
+}
+
+
+.THIS .noMobileInfoCancel
+{
+    margin-bottom: -2%;
+}
+
+.THIS .noMobileInfoCancelButton
+{
+    height: 22px;width: 60px;
+}
+
+.THIS .validValueError
+{
+    color: red;text-align:center
+}
+
+.THIS .togglePosition
+{
+    padding-top:20px;
+}
+
+.THIS .xtraButton
+{
+    padding-top:5%
+}
+
+.THIS .leadStatusButton
+{
+    margin-left: 84%;
+}
+
+.THIS .oppStageButton
+{
+    margin-left: 80%;
+}
+
+.THIS hr{
+    height: 5px;
+    background: rgb(197, 194, 194);
+}
+
+.THIS .slds-accordion__list-item {
+    list-style-type:none;
+}
+
+.THIS .spacebetween {
+    display: flex;
+    justify-content: space-between;
+}
+
+.THIS .rulesetHeader {
+    display: flex;
+    justify-content: space-between;
+}
+
+.THIS .rulesetCheckbox{
+    padding-right: 10px;
+}
+
+.THIS .accordionBody{
+    display: flex;
+    justify-content: space-between;
+    width: 70%;
+    line-height: 2;
+}
+
+.THIS .addButton{
+    border-radius: 50px;
+    font-size: 40px;
+    padding-bottom: 5px;
+    background: #ED1B2F;
+    margin-left: 90%;
+    margin-top: 120px;
+}
+
+.THIS .createButton{
+    background: #014486;
+    margin-left: 80%;
+    margin-top: 20px;
+}
+.THIS .createButtonDisabled{
+    margin-left: 80%;
+    margin-top: 20px;
+}
+
+.THIS .slds-radio{
+    display:inline-block;
+    margin-left: 27%;
+    margin-bottom: 2%;
+    margin-top: 2%;
+}
+
+.THIS .tableHeader{
+    font-size: 15px;
+}
+
+.THIS .slds-cell-fixed{
+    padding-top: 5px;
+}
+
+.THIS .accordion{
+    margin-left: -30px;
+    box-shadow: none;
+    height: 130%;
+} 
+
+.THIS .slds-dropdown__header{
+    width: 200px;
+}
+
+/* .THIS .modigieTemplatesComponent > .textDiv > ul > li {
+    font-size: x-small !important;
+    line-height: 0px !important;
+}
+
+.THIS .modigieModigieConfigurationPage .textDiv ul li {
+    font-size: x-small !important;
+    line-height: 0px !important;
+} */
+
+.THIS .slds-dropdown_left{
+    width: 130px;
+}
+
+.THIS .slds-accordion__summary{
+    background-color: rgb(248, 248, 248);
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.THIS .manualCalculationField{
+    margin-top: -10px;
+    width: 150px;
+}
+
+.THIS .buttons{
+    margin-left: 72%;
+    margin-top: 10px;
+}
+
+.THIS .calculation{
+    text-align: end;
+    /* margin-left: 50%;
+    width: 50%; */
+}
+
+.THIS .maintenanceLimit{
+    width: 5.85rem;
+}
+.THIS .timeInterval{
+    width: 10%;
+    margin-left: 79%;
+    margin-top: -51px;
+}
+.THIS .tableData{
+    margin-right: -50px;
+}
+.THIS .topZero {
+    margin-top: 0px !important;
+    padding-top: 0px !important;
+}
+.THIS .selectorDM {
+    display: flex;
+    align-content: end;
+    justify-content: flex-start;
+    flex-direction: row-reverse;
+}
+.THIS .flexObjectRadio fieldset div{
+    display: flex;
+}
+.THIS .marginTopRadio{
+    margin-top: 0.25rem;
+}
+.THIS .banner{
+    border-radius: 0.25rem;
+}

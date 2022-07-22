@@ -1,0 +1,53 @@
+.logo{
+    width: 40%;
+    margin-left: 165px;
+}
+
+.slds-spinner_container {
+    position: sticky;
+    top: 50%;
+}
+.greyColor{
+    color: gray;
+}
+
+.modalHeader
+{
+    font-size: xx-large;
+}
+
+.errorDiv
+{
+    font-size: medium;margin-left:6%;
+}
+
+.noMissingInd {
+    font-size: small;
+    margin-left: 6%;
+    font-style: italic;
+}
+
+.modalSpan
+{
+    font-size: medium;
+}
+
+.modalSpanDiv
+{
+    margin: 30px;
+}
+
+.modalSpanInput
+{
+    margin: 5px;
+}
+
+.isContact
+{
+    margin-left: 30px;
+}
+
+.apiLimit
+{
+    font-size: medium;margin-left:6%;margin-top: 4%;
+}

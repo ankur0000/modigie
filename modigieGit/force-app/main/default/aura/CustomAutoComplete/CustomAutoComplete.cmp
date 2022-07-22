@@ -1,0 +1,72 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global">
+    <aura:attribute name="allOption" type="List" />
+    <aura:registerEvent name="modigieRuleSelectedField" type="c:modigieRuleSelectedField" />
+    <aura:handler name="init" value="{!this}" action="{!c.doinit}" />
+
+    <aura:attribute name="results" type="List" />
+    <aura:attribute name="openDropDown" type="Boolean" default="false" />
+    <aura:attribute name="selectedOption" type="String" />
+    <aura:attribute name="inputValue" type="String" />
+    <aura:attribute name="noLabel" type="Boolean" default="true" />
+    <aura:attribute name="sfdcClassic" type="Boolean" default="false" />
+
+    <div class="slds-form-element">
+        <div class="slds-form-element__control">
+            <div class="slds-combobox_container">
+                <div class="{! v.openDropDown ? 'slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-is-open' : 'slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click'}"
+                    aria-expanded="true" aria-haspopup="listbox" role="combobox">
+                    <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
+                        <aura:if isTrue="{!v.noLabel}">
+                            <label for="search" class="label slds-form-element__label"><abbr class="slds-required"
+                                    title="required">* </abbr> FieldName</label>
+                            <aura:set attribute="else">
+                                <label for="search" class="label slds-form-element__label" style="margin-top: 10px;">
+                                </label>
+                            </aura:set>
+                        </aura:if>
+
+                        <input type="text" name="search"
+                            class="auto-complete slds-input slds-combobox__input slds-has-focus slds-combobox__input-value"
+                            id="combobox-id-21" aria-autocomplete="list" aria-controls="listbox-id-11"
+                            autoComplete="false" onkeyup="{!c.searchHandler}" role="textbox" placeholder="Search..."
+                            value="{!v.inputValue}" />
+                        <aura:if isTrue="{! empty(v.selectedOption)}">
+                            <span
+                                class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_right">
+                                <lightning:icon class="{!(v.sfdcClassic ? 'marTopClearSelection ': '')}"
+                                    iconName="utility:search" size="x-small" />
+                            </span>
+                            <aura:set attribute="else">
+                                <button
+                                    class="{!(v.sfdcClassic ? 'padTopClearSelection ': '') + 'slds-button slds-button_icon slds-input__icon slds-input__icon_right'}"
+                                    title="Clear the text input" onclick="{!c.clearOption}">
+                                    <lightning:icon iconName="utility:clear" size="x-small" />
+                                </button>
+                            </aura:set>
+                        </aura:if>
+                    </div>
+                    <div id="listbox-id-11" class="slds-dropdown slds-dropdown_length-5 dropdownDiv" role="listbox">
+                        <ul class="slds-listbox slds-listbox_vertical listBox" role="presentation">
+                            <aura:iteration items="{!v.results}" var="result">
+                                <li role="presentation" class="slds-listbox__item listItem" data-id="{!result.apiname}"
+                                    data-value="{!result.label}" onclick="{!c.optionClickHandler}">
+                                    <div id="{!result.apiname}"
+                                        class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small"
+                                        role="option">
+                                        <span class="slds-media__figure slds-listbox__option-icon"></span>
+                                        <span class="slds-media__body">
+                                            <span class="slds-truncate" title="All Opportunities">
+                                                <span>{!result.label}</span>
+                                            </span>
+                                        </span>
+                                    </div>
+                                </li>
+                            </aura:iteration>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</aura:component>

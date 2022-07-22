@@ -1,0 +1,29 @@
+.buttonsDiv{
+    display: flex;
+    justify-content: center;
+}
+.button{
+    margin: 0.5rem;
+}
+.centerAlignClass{
+    text-align: center;
+}
+.transformClass{
+    transform: scale(0.8);
+}
+/* div > .buttonClass{
+    --lwc-spacingXSmall : 0.5rem !important;
+} */
+/* div > .buttonClass > button > lightning-primitive-icon > svg > .slds-button__icon_left{
+    margin-right: 1rem !important;
+    margin-top: -0.2rem !important;
+} */
+.buttonClass > button > .slds-button_neutral{
+    margin: 3rem;
+    background: red !important;
+    --slds-c-button-spacing-inline-start: 0.5rem !important;
+    --slds-c-button-spacing-inline-end: 0.5rem !important;
+}
+lightning-primitive-icon{
+    margin-top: -0.25rem;
+}

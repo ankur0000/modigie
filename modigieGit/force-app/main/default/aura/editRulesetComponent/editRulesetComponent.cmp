@@ -1,0 +1,285 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"
+access="global"  controller="DynamicAutomationCriteriaCompController">
+  <aura:registerEvent name="getNewRulesetData" type="c:createNewRulesetEvent"/>
+  <aura:attribute name="ruleName" type="String" />
+  <aura:attribute name="description" type="String" />
+  <aura:attribute name="automationTrigger" type="String" />
+  <aura:attribute name="onclose" type="Aura.Action" />
+  <aura:attribute name="rulesetId" type="String" />
+  <aura:attribute name="nextStep" type="Boolean" default="false"/>
+  <aura:attribute name="Limits_No_Limits_Selection" type="String" />
+  <aura:attribute name="showNumberOfRequests" type="Boolean" default="true" />
+  <aura:attribute name="requestLimit" type="Integer" />
+  <aura:attribute name="maintainQueue" type="Boolean" />
+
+  <aura:handler name="DeleteRowEvt" event="c:DeleteRowEvt" action="{!c.removeDeletedRow}" />
+  <aura:handler name="AddRowEvt" event="c:AddNewRowEvt" action="{!c.addNewRow}" />
+
+
+
+  <aura:attribute name="critriaList" type="Object[]" />
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <aura:attribute name="fields" type="List" />
+  <aura:attribute name="fieldsLabel" type="Object" />
+  <aura:attribute name="fieldsDataType" type="Object" />
+  <aura:attribute name="contactFieldsLabel" type="Object" />
+  <aura:attribute name="contactFieldsDataType" type="Object" />
+  <aura:attribute name="contactFields" type="Object" />
+  <aura:attribute name="contactCriteriaList" type="Object[]" />
+
+  <aura:attribute name="radioOptions" type="List"
+    default="[{'label': 'Lead', 'value': 'Lead'},{'label': 'Contact', 'value': 'Contact'}]" />
+  <aura:attribute name="selectedObject" type="String" default="Lead" />
+
+  <!-- Dynamic Custom Logic -->
+  <aura:attribute name="logicOptions" type="List"
+    default="[{'label': 'All of the conditions are met (AND)', 'value': '1'}, {'label': 'Any of the conditions are met (OR)', 'value': '2'}, {'label': 'Customize the logic', 'value': '3'}]" />
+
+  <aura:attribute name="selectedLogic" type="String" default="1" />
+  <aura:attribute name="contactSelectedLogic" type="String" default="1" />
+
+  <aura:attribute name="leadLogic" type="String" />
+  <aura:attribute name="contactLogic" type="String" />
+  <aura:attribute name="isLogicLoaded" type="Boolean" default="false" />
+  <aura:attribute name="isCriteriaLoaded" type="Boolean" default="false" />
+  <aura:attribute name="isSaveClicked" type="Boolean" default="false" />
+  <aura:attribute name="logicError" type="Boolean" default="false" />
+  <aura:attribute name="contactLogicError" type="Boolean" default="false" />
+
+  <aura:attribute name="leadErrors" type="String" />
+  <aura:attribute name="contactErrors" type="String" />
+  <!-- end Dynamic Custom Logic -->
+    
+
+  <aura:if isTrue="{!v.nextStep}">
+    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+    
+    
+    <lightning:select
+                              name="LimitsSelection"
+                              value="{!v.Limits_No_Limits_Selection}"
+                              onchange="{!c.handleChange}"
+                              >
+                <option text="Limits" value="Limits" />
+                <option text="No Limits" value="No Limits" />
+            </lightning:select>
+    <aura:if
+            isTrue="{!v.showNumberOfRequests}"
+            >
+       <div
+            class="slds-form-element"
+            >
+           <div>
+            <lightning:input type="number" name="Rule Name" label="Number of Requests per day" value="{!v.requestLimit}" required="true"/>
+               <!-- <label
+                      class=""
+                      for="text-input-id-1"
+                      >
+                   <abbr class="slds-required" title="required"
+                         >* </abbr
+                       >Number of Requests per day</label
+                   >
+               <div class="slds-form-element__control">
+                
+                   <input
+                          type="number"
+                          id="text-input-id-1"
+                          placeholder="Enter limit…"
+                          required=""
+                          aria-describedby="error-message-unique-id"
+                          class="slds-input"
+                          aria-invalid="true"
+                          min="1"
+                          autocomplete="off"
+                          value="{!v.switchData.Validate_Employer_Data_Maintenance_Lmt}"
+                          oninput="{!c.handleLimitChange}"
+                          data-name="Validate_Employer_Data_Maintenance_Lmt"
+                          />
+               </div> -->
+           </div>
+           <!-- <aura:if
+                    isTrue="{!and(v.switchData.Validate_Employer_Data_Maintenance,v.showLimitsBox)}"
+                    >
+               <div class="c-container">
+                   <aura:if
+                            isTrue="{!!or(v.validationObject.Validate_Employer_Data_Maintenance_Lmt, v.sameValue.Validate_Employer_Data_Maintenance_Lmt)}"
+                            >
+                       <lightning:layout horizontalAlign="space">
+                           <lightning:layoutItem padding="around-small">
+                               <div class="noMobileInfoSave">
+                                   <button
+                                           class="
+                                                  slds-button slds-button_brand
+                                                  noMobileInfoSaveButton
+                                                  "
+                                           type="button"
+                                           onclick="{!c.confirmLimit}"
+                                           data-name="Validate_Employer_Data_Maintenance_Lmt"
+                                           >
+                                       Save
+                                   </button>
+                               </div>
+                           </lightning:layoutItem>
+                           <lightning:layoutItem padding="around-small">
+                               <div class="noMobileInfoCancel">
+                                   <button
+                                           class="
+                                                  slds-button slds-button_brand
+                                                  noMobileInfoCancelButton
+                                                  "
+                                           type="button"
+                                           onclick="{!c.displayExistingLimit}"
+                                           data-name="Validate_Employer_Data_Maintenance_Lmt"
+                                           >
+                                       Cancel
+                                   </button>
+                               </div>
+                           </lightning:layoutItem>
+                       </lightning:layout>
+                   </aura:if>
+                   <aura:if
+                            isTrue="{!v.validationObject.Validate_Employer_Data_Maintenance_Lmt}"
+                            >
+                       <div
+                            class="
+                                   slds-form-element__help
+                                   validValueError
+                                   "
+                            id="error-message-unique-id"
+                            >
+                           Enter a valid value.
+                       </div>
+                   </aura:if>
+               </div>
+           </aura:if> -->
+       </div>
+   
+   <lightning:input
+      type="checkbox"
+      class="mqCheckbox"
+      id="horizontal-checkbox-mq"
+      label="Maintain Queue"
+      name="input1"
+      checked="{!v.maintainQueue}"
+      onchange="{!c.handleMaintainQueueChange}"
+      />
+  <button class="slds-button slds-button_neutral">Current Queue</button>
+</aura:if>
+  
+    <div style="border: var(--lwc-borderWidthThin,1px) solid var(--lwc-colorBorderSelection,#006EB3);
+          border-radius: var(--lwc-borderRadiusMedium,0.25rem);
+          background-color: var(--lwc-colorBackgroundStencil,rgb(242, 242, 243));">
+
+      <lightning:radioGroup name="radioGroup" options="{! v.radioOptions }" value="{! v.selectedObject }"
+        type="radio" />
+
+      <aura:if isTrue="{!v.selectedObject  == 'Lead'}">
+        <aura:iteration items="{!v.critriaList}" var="item" indexVar="index">
+          <c:DynmaicAutomationCriteriaRowComp rowIndex="{!index}" selectedField="{!item.SelectedField}"
+            selectedOperator="{!item.SelectedOperator}" criteriaValue="{!item.CriteriaValue}"
+            fieldsDataType="{!v.fieldsDataType}" fieldsLabel="{!v.fieldsLabel}" fields="{!v.fields}"
+            objectName="Lead"></c:DynmaicAutomationCriteriaRowComp>
+        </aura:iteration>
+
+        <aura:set attribute="else">
+          <aura:iteration items="{!v.contactCriteriaList}" var="item" indexVar="index">
+            <c:DynmaicAutomationCriteriaRowComp rowIndex="{!index}" selectedField="{!item.SelectedField}"
+              selectedOperator="{!item.SelectedOperator}" criteriaValue="{!item.CriteriaValue}"
+              fieldsDataType="{!v.contactFieldsDataType}" fieldsLabel="{!v.contactFieldsLabel}"
+              fields="{!v.contactFields}" objectName="Contact"></c:DynmaicAutomationCriteriaRowComp>
+          </aura:iteration>
+
+        </aura:set>
+      </aura:if>
+      <div class="slds-m-around_x-small">
+        <!--aura:if isTrue="{!v.fields[0].apiname}"-->
+        <a href="javascript:void(0);" style="color: rgb(107, 109, 112);font-size:0.875rem;text-decoration: none;"
+          onclick="{!c.addNewRow}">
+          <lightning:icon iconName="utility:add" alternativeText="add" title="add" size="xx-small"
+            class="slds-m-right_x-small" />
+          <span>Add Row</span>
+        </a>
+        <!--/aura:if-->
+      </div>
+      <!-- Dynamic Custom Logic -->
+      <div class="slds-p-around_x-small slds-m-left_small">
+        <!--aura:if isTrue="{!v.isLogicLoaded}"-->
+        <aura:if isTrue="{!v.selectedObject  == 'Lead'}">
+          <lightning:radioGroup class="no-inline" name="radioLogicGroup" options="{! v.logicOptions }"
+            value="{! v.selectedLogic }" type="radio" required="true" label="Conditions" />
+          <aura:if isTrue="{! v.selectedLogic == '3'}">
+            <lightning:input class="logic-input" name="customLeadLogic" label="Logic" required="true"
+              value="{!v.leadLogic}" onchange="{!c.handleLogicInput}" />
+            <!--
+                To Push
+            -->
+            <aura:if isTrue="{!v.logicError}">
+              <lightning:icon class="logic-error" iconName="utility:error" alternativeText="Error!"
+                variant="error" title="{!v.leadErrors}" size="xx-small" />
+            </aura:if>
+            <!--
+                End
+            -->
+          </aura:if>
+
+          <aura:set attribute="else">
+            <lightning:radioGroup class="no-inline" name="radioLogicGroup" options="{! v.logicOptions }"
+              value="{! v.contactSelectedLogic }" type="radio" required="true" label="Conditions" />
+            <aura:if isTrue="{! v.contactSelectedLogic == '3'}">
+              <lightning:input class="logic-input" name="customContactLogic" label="Logic" required="true"
+                value="{!v.contactLogic}" onchange="{!c.handleLogicInput}" />
+              <!--
+                To Push
+              -->
+              <aura:if isTrue="{!v.contactLogicError}">
+                <lightning:icon class="logic-error" iconName="utility:error" alternativeText="Error!"
+                  variant="error" title="{!v.contactErrors}" size="xx-small" />
+              </aura:if>
+              <!--
+                End
+              -->
+            </aura:if>
+          </aura:set>
+        </aura:if>
+        <!--/aura:if-->
+      </div>
+      <!-- end Dynamic Custom Logic -->
+
+    </div>
+  </div>
+      <footer class="slds-modal__footer">
+        <button class="slds-button slds-button_neutral" onclick="{!v.onclose}">Cancel</button>
+        <button class="slds-button slds-button_neutral" onclick="{!c.handleBack}">Back</button>
+        <button class="slds-button slds-button_brand" onclick="{!c.saveRulesetDetails}">
+          Save
+          <aura:if isTrue="{!v.isSaveClicked}">
+            <lightning:spinner class="inside-save" alternativeText="Loading" size="small" variant="brand" />
+          </aura:if>
+        </button>
+      </footer>
+    
+    <aura:set attribute="else">
+      <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+        <div>
+            <lightning:input name="Rule Name" label="Enter a unique ruleset name" value="{!v.rulesetId}" required="true"/>
+            <lightning:textarea label="Description" value="{!v.description}"/>
+            <lightning:select name="automationTrigger" value="{!v.automationTrigger}" label="Automation Trigger">
+                  <option value="1">on record creation</option>
+                  <option value="2">on record creation or modification</option>
+              </lightning:select>
+        </div>
+        
+      </div>
+      <footer class="slds-modal__footer">
+        <button class="slds-button slds-button_neutral" onclick="{!v.onclose}">Cancel</button>
+        <button class="slds-button slds-button_brand" onclick="{!c.handleNext}">Next</button>
+        <!-- <button class="slds-button slds-button_brand" onclick="{!c.saveRulesetDetails}">
+          Save
+          <aura:if isTrue="{!v.isSaveClicked}">
+            <lightning:spinner class="inside-save" alternativeText="Loading" size="small" variant="brand" />
+          </aura:if>
+        </button> -->
+      </footer>
+    </aura:set>
+  </aura:if>
+</aura:component>

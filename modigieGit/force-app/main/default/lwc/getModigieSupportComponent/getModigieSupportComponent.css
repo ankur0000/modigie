@@ -1,0 +1,30 @@
+.slds-form-element__label{
+    font-size: large !important;
+}
+.logo{
+    width: 40%;
+    margin-left: 165px;
+}
+.greyColor{
+    color: gray;
+}
+
+.modalHeader
+{
+    font-size: xx-large;
+}
+
+.accordianSpan
+{
+    font-size: large;
+}
+
+.accordianDiv
+{
+    margin: 30px;
+}
+
+.accordianInput
+{
+    margin: 5px;
+}

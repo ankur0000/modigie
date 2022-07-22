@@ -1,0 +1,73 @@
+<aura:component Controller="GetModigieCampaignButton" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" access="global">
+    <!--
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="resMap" type="Map" />
+    <aura:attribute name="totalCampaignMembers" type="Integer" />
+    <aura:attribute name="alreadyValidatedMembers" type="Integer" />
+    <aura:attribute name="recordsToProcess" type="Integer" />
+    <aura:attribute name="memberCount" type="Integer" />
+    <aura:attribute name="creditCount" type="Integer" />
+    <aura:attribute name="disableSubmit" type="Boolean" default="false" />
+    <aura:attribute name="showModel" type="Boolean" default="false" />
+    <aura:attribute name="toggleSpinner" type="boolean" default="false"/>
+    
+    
+    
+    
+    <aura:if isTrue="{!v.showModel}">
+    <!-Modal Header->  
+    <div class="modal-header slds-modal__header slds-size_1-of-1">
+        <div class="logo" >
+            <img src="{!$Resource.ModigieLogo}"/>
+        </div>
+    </div>
+    <!-End Modal Header-> 
+    
+    <!-Modal Body->   
+    <div class="slds-modal__content slds-p-around-x-small slds-align_absolute-center slds-size_1-of-1 slds-is-relative">
+        <aura:if isTrue="{!v.toggleSpinner}">
+            <div class="slds-spinner_container">
+                <div class="slds-spinner-brand  slds-spinner slds-spinner_small" role="alert">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>
+        </aura:if>
+        <div class="slds-grid slds-grid_vertical">
+            <div class="slds-col">
+                <span>
+                    There are a total of {!v.totalCampaignMembers} records in your campaign.
+                </span>
+            </div>
+            <div class="slds-col">
+                <span>
+                    {!v.alreadyValidatedMembers} currently have validated Modigie contact information.
+                </span>
+            </div>
+            <div class="slds-col">
+                <span>
+                    Modigie will process the remaining {!v.recordsToProcess}.  You can check the status of your request in the appropriate Lead or Contact record. 
+                </span>
+            </div>
+        </div>
+    </div>
+    <!-End of Modal Body-> 
+    
+    <!-Modal Footer->
+    <div class="modal-footer slds-modal__footer slds-size_1-of-1">
+        <lightning:button variant="destructive"
+                          label="Sync Only New Records"
+                          title="Sync Only New Records"
+                          disabled="{!v.disableSubmit}"
+                          onclick="{! c.SyncNewRecords }"/>
+        
+        <lightning:button variant="neutral"
+                          label="Cancel"
+                          title="Cancel"
+                          disabled="{!v.disableSubmit}"
+                          onclick="{! c.closeModel }"/>
+    </div>
+    <!-End of Modal Footer->
+    </aura:if>-->    
+</aura:component>

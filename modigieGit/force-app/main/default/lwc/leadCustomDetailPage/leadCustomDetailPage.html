@@ -1,0 +1,185 @@
+<template>
+    <!--template if:true={toggleSpinner}>
+        <div class="slds-spinner_container" style="background-color: white;">
+            <div class="slds-spinner-brand  slds-spinner slds-spinner_large" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </template>
+    <div class="slds-box"> 
+        <lightning-record-edit-form record-id={recordId} object-api-name="Lead" onsuccess={successHoGya} onload={handleLoad}>
+            <lightning-accordion class="example-accordion" allow-multiple-sections-open active-section-name={activeSections}>
+                <lightning-accordion-section name="A" label="Inputs">
+                    <template if:true={isSubmit}>
+                        <lightning-button
+                        class="slds-m-top_small"
+                        variant="brand"
+                        type="submit"
+                        name="Update"
+                        label="Update" style="position: absolute;top:0%;margin-left:90%"></lightning-button>
+                    </template>
+                    <template if:false={isSubmit}>
+                        <lightning-button
+                        class="slds-m-top_small"
+                        variant="brand"
+                        name="Edit"
+                        label="Edit" onclick={handleChange} style="position: absolute;left:93%;top:0%"></lightning-button>
+                    </template>
+                    <div class="slds-grid">
+                        <div class="slds-col slds-size_1-of-2 ">
+                        <template if:true={isSubmit}>
+                            <lightning-input-field field-name="FirstName" class="customclass"></lightning-input-field>
+                            <lightning-input-field field-name="LastName" class="customclass"></lightning-input-field>
+                            <lightning-input-field field-name="Company" class="customclass"></lightning-input-field>
+                            <lightning-input-field field-name="Email" class="customclass"></lightning-input-field>
+                        </template>
+                        <template if:false={isSubmit}>
+                            <lightning-output-field field-name="FirstName" class="slds-border_bottom customclass"></lightning-output-field>
+                            <lightning-output-field field-name="LastName" class="slds-border_bottom customclass"></lightning-output-field>
+                            <lightning-output-field field-name="Email" class="slds-border_bottom customclass"></lightning-output-field>
+                            <lightning-output-field field-name="Company" class="slds-border_bottom customclass"></lightning-output-field>
+                        </template>
+                            <!-lightning-output-field field-name="modigie__JOB_ID__c" class="slds-border_bottom customclass"></lightning-output-field->
+                            <!-lightning-output-field field-name="modigie__Validation_Date_Get_Mobile_Number__c" class="slds-border_bottom customclass"></lightning-output-field-> 
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <template if:true={isSubmit}>
+                                <lightning-input-field field-name="City" class="customclass"></lightning-input-field>
+                                <lightning-input-field field-name="State" class="customclass"></lightning-input-field>
+                                <lightning-input-field field-name="PostalCode" class="customclass"></lightning-input-field>
+                                <lightning-input-field field-name="LinkedIn_Url__c" class="customclass"></lightning-input-field>
+                            </template>
+                            <template if:false={isSubmit}>
+                                <lightning-output-field field-name="City" class="slds-border_bottom customclass"></lightning-output-field>
+                                <lightning-output-field field-name="State" class="slds-border_bottom customclass"></lightning-output-field>
+                                <lightning-output-field field-name="PostalCode" class="slds-border_bottom customclass"></lightning-output-field>
+                                <lightning-output-field field-name="LinkedIn_Url__c" class="slds-border_bottom customclass"></lightning-output-field>
+                            </template>
+                            <!-lightning-output-field field-name="modigie__Response_time__c" class="slds-border_bottom customclass"></lightning-output-field->
+                        </div>
+                    </div>
+                    
+                </lightning-accordion-section>
+                <lightning-accordion-section name="B" label="Outputs">
+                    <lightning-accordion-section name="C" label="Fast People Search">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 ">
+                                <lightning-output-field field-name="Full_Address_FPS__c" class="slds-border_bottom customclass"></lightning-output-field>
+                                <lightning-output-field field-name="Country_FPS__c" class="slds-border_bottom customclass"></lightning-output-field>
+                                <lightning-output-field field-name="Zip_FPS__c" class="slds-border_bottom customclass"></lightning-output-field>
+                                <lightning-output-field field-name="Status_FPS__c" class="slds-border_bottom customclass"></lightning-output-field>
+                                
+                                <!-lightning-output-field field-name="modigie__JOB_ID__c" class="slds-border_bottom customclass"></lightning-output-field->
+                                <!-lightning-output-field field-name="modigie__Validation_Date_Get_Mobile_Number__c" class="slds-border_bottom customclass"></lightning-output-field-> 
+                            </div>
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning-output-field field-name="Phone_FPS__c" class="slds-border_bottom customclass"></lightning-output-field>
+                                <lightning-output-field field-name="Phone_Type_FPS__c" class="slds-border_bottom customclass"></lightning-output-field>
+                                <lightning-output-field field-name="Is_Connected_FPS__c" class="slds-border_bottom customclass"></lightning-output-field>
+                                <lightning-output-field field-name="Name_FPS__c" class="slds-border_bottom customclass"></lightning-output-field>
+                            </div>
+                        </div>
+                    </lightning-accordion-section>
+                    <lightning-accordion-section name="D" label="Lusha">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-2 ">
+                                <lightning-output-field field-name="Full_Name_Lusha__c" class="slds-border_bottom customclass"></lightning-output-field>
+                                <lightning-output-field field-name="Area_Code_Lusha__c" class="slds-border_bottom customclass"></lightning-output-field>
+                                <lightning-output-field field-name="Country_Code_Lusha__c" class="slds-border_bottom customclass"></lightning-output-field>
+                                <lightning-output-field field-name="Status_Lusha__c" class="slds-border_bottom customclass"></lightning-output-field>
+                                
+                                <!-lightning-output-field field-name="modigie__JOB_ID__c" class="slds-border_bottom customclass"></lightning-output-field->
+                                <!-lightning-output-field field-name="modigie__Validation_Date_Get_Mobile_Number__c" class="slds-border_bottom customclass"></lightning-output-field-> 
+                            </div>
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning-output-field field-name="Phone_Lusha__c" class="slds-border_bottom customclass"></lightning-output-field>
+                                <lightning-output-field field-name="Country_Calling_Code_Lusha__c" class="slds-border_bottom customclass"></lightning-output-field>
+                                <lightning-output-field field-name="Country_Lusha__c" class="slds-border_bottom customclass"></lightning-output-field>
+                                <lightning-output-field field-name="Type_Lusha__c" class="slds-border_bottom customclass"></lightning-output-field>
+                            </div>
+                        </div>
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered slds-border_left slds-border_right">
+                            <thead>
+                                <tr class="slds-line-height_reset">
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate">
+                                            <div class="slds-truncate" title="Days">Email Address</div>
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div>
+                                            Email Server
+                                        </div>
+                                    </th>
+        
+                                    <th scope="col">
+                                        <div>
+                                            Email Type
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                    <tr>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="TimeToCall"><lightning-output-field field-name="Email1_Lusha__c" variant='label-hidden' class="customclass"></lightning-output-field></div>
+                                        </th>
+        
+                                        <th scope="col">
+                                            <div><lightning-output-field field-name="Email1_Server_Lusha__c" variant='label-hidden' class="customclass"></lightning-output-field></div>
+                                        </th>
+                                    
+                                        <th scope="col">
+                                            <div><lightning-output-field field-name="Email1_Type_Lusha__c" variant='label-hidden' class="customclass"></lightning-output-field></div>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th scope="col">
+                                            <div><lightning-output-field field-name="Email2_Lusha__c" variant='label-hidden' class="customclass"></lightning-output-field></td></div>
+                                        </th>
+                                    
+                                        <th scope="col">
+                                            <div><lightning-output-field field-name="Email2_Server_Lusha__c" variant='label-hidden' class="customclass"></lightning-output-field></div>
+                                        </th>
+                                    
+                                        
+                                        <th scope="col">
+                                            <div><lightning-output-field field-name="Email2_Type_Lusha__c" variant='label-hidden' class="customclass"></lightning-output-field></div>
+                                        </th>
+                                    </tr>
+                            </tbody>
+                        </table>
+                       
+                        
+                        
+                    </lightning-accordion-section>
+                <lightning-accordion-section name="E" label="People Data Labs">
+                    <div class="slds-grid">
+                        <div class="slds-col slds-size_1-of-2 ">
+                            <lightning-output-field field-name="Location_PDL__c" class="slds-border_bottom customclass"></lightning-output-field>
+                            <lightning-output-field field-name="Name_PDL__c" class="slds-border_bottom customclass"></lightning-output-field>
+                            <lightning-output-field field-name="Personal_Email_PDL__c" class="slds-border_bottom customclass"></lightning-output-field>
+                            <lightning-output-field field-name="LinkedIn_URL_PDL__c" class="slds-border_bottom customclass"></lightning-output-field>
+                            <lightning-output-field field-name="Phone_PDL__c" class="slds-border_bottom customclass"></lightning-output-field>
+                            
+                            <!-lightning-output-field field-name="modigie__JOB_ID__c" class="slds-border_bottom customclass"></lightning-output-field->
+                            <!-lightning-output-field field-name="modigie__Validation_Date_Get_Mobile_Number__c" class="slds-border_bottom customclass"></lightning-output-field-> 
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-output-field field-name="Birth_Date_PDL__c" class="slds-border_bottom customclass"></lightning-output-field>
+                            <lightning-output-field field-name="Network_PDL__c" class="slds-border_bottom customclass"></lightning-output-field>
+                            <lightning-output-field field-name="Username_PDL__c" class="slds-border_bottom customclass"></lightning-output-field>
+                            <lightning-output-field field-name="Network_URL_PDL__c" class="slds-border_bottom customclass"></lightning-output-field>
+                            <lightning-output-field field-name="Phone_Type_FPS__c" class="slds-border_bottom customclass"></lightning-output-field>
+                        </div>
+                    </div>
+                </lightning-accordion-section>
+                </lightning-accordion-section> 
+            </lightning-accordion>
+            
+    </lightning-record-edit-form>
+    </div-->
+</template>

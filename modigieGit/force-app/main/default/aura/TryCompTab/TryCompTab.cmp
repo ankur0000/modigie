@@ -1,0 +1,191 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction">
+	 <!--lightning:layout multipleRows="true" horizontalAlign="spread">                             
+        <lightning:tabset variant="scoped" selectedTabId="{!v.activeTab}">
+            <lightning:tab label="Rates &amp; Availability" title="Rates &amp; Availability" id='Rate'>
+                <div class="slds-filters__item slds-grid slds-grid_vertical-align-center">
+                    <lightning:layout multipleRows="true" horizontalAlign="spread">
+                        <lightning:layoutItem padding="around-small" size="4">
+                            <div class="slds-form-element">
+                                <span class="slds-form-element__label">Rate Period</span>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-form-element__static">
+                                        <lightning:combobox aura:id='Period' name="rateType" label="Rate Type" variant="label-hidden" value="{!v.rPeriod}" placeholder="Select Rate Type" options="{! v.rateType }" onchange="{!c.handleChangeOthers}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </lightning:layoutItem>
+                        <aura:if isTrue="{!v.calledFrom == 'PersonSearch'}">
+                        <lightning:layoutItem padding="around-small" size="4">
+                            <div class="slds-form-element">
+                                <span class="slds-form-element__label">Rate Type</span>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-form-element__static">
+                                        <lightning:combobox aura:id="Type" name="optionType" label="Select Option" variant="label-hidden" value="{!v.rType}" placeholder="Select Option" options="{! v.optionType }" onchange="{!c.handleChangeOthers}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </lightning:layoutItem>
+                        
+                    </aura:if>
+                        <lightning:layoutItem padding="around-small" size="4">
+                            <div class="slds-form-element">
+                                <span class="slds-form-element__label">Currency</span><span><lightning:helptext content="To search with a different currency, please change your default currency in your Profile Settings"/>
+                                </span>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-form-element__static">
+                                        <lightning:combobox name="currency" disabled="true" label="Currency" variant="label-hidden" value="{!v.rCurrency}" placeholder="Select Currency" options="{! v.currency }" />
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </lightning:layoutItem>
+                        <aura:if isTrue="{!v.calledFrom != 'PersonSearch'}">
+                        <lightning:layoutItem padding="around-small" size="4">
+                                <div class="slds-form-element">&nbsp;</div>
+                        </lightning:layoutItem>
+                    </aura:if>
+                        <lightning:layoutItem padding="around-small" size="4">
+                            <div class="slds-form-element">
+                                <span class="slds-form-element__label">Minimum Rate</span>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-form-element__static">
+                                        <lightning:input aura:id = 'MinimumRate' onblur="{!c.handleChange}" type="number" variant="label-hidden"  value="{!v.rMinRate}" />
+                                    </div>
+                                </div>
+                            </div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="around-small" size="4">
+                            <div class="slds-form-element">
+                                <span class="slds-form-element__label">Maximum Rate</span>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-form-element__static">
+                                        <lightning:input aura:id = 'MaximumRate' onblur="{!c.handleChange}" type="number" variant="label-hidden" value="{!v.rMaxRate}" />
+                                    </div>
+                                </div>
+                            </div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="around-small" size="4">
+                            <div class="slds-form-element">
+                               &nbsp;
+                            </div>
+                        </lightning:layoutItem>
+                        <aura:if isTrue="{!v.calledFrom == 'PersonSearch'}">
+                        <lightning:layoutItem padding="around-small" size="4">
+                            <div class="slds-form-element">
+                                <span class="slds-form-element__label">Available From Date</span>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-form-element__static">
+                                        <lightning:input type="date" variant="label-hidden"  value="{!v.rAvailableFromDate}" onchange="{!c.handleDate}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="around-small" size="4">
+                            <div class="slds-form-element">
+                                <span class="slds-form-element__label">Available To Date</span>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-form-element__static">
+                                        <lightning:input type="date" variant="label-hidden"  value="{!v.rAvailableToDate}" onchange="{!c.handleDate}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </lightning:layoutItem>
+                        
+                        <lightning:layoutItem padding="around-small" size="4">
+                            <div class="slds-form-element">&nbsp;</div>
+                        </lightning:layoutItem>
+                    </aura:if>
+                    </lightning:layout>
+                    
+                </div>  
+            </lightning:tab>
+            <lightning:tab label="Salary &amp; Notice Period" title="Salary &amp; Notice Period" id='Salary'>
+                <div class="slds-filters__item slds-grid slds-grid_vertical-align-center">
+                    <lightning:layout multipleRows="true" horizontalAlign="spread">
+                        
+                        <lightning:layoutItem padding="around-small" size="4">
+                            <div class="slds-form-element">
+                                <span class="slds-form-element__label">Salary Period</span>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-form-element__static">
+                                        <lightning:combobox aura:id = 'sPeriod' name="salary Type" label="Salary Type" variant="label-hidden" value="{!v.sPeriod}" placeholder="Select Salary Type" options="{! v.salaryType }" onchange="{!c.handleChangeOthers}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </lightning:layoutItem>
+                        <aura:if isTrue="{!v.calledFrom == 'PersonSearch'}">
+                        <lightning:layoutItem padding="around-small" size="4">
+                            <div class="slds-form-element">
+                                <span class="slds-form-element__label">Salary Type</span>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-form-element__static">
+                                        <lightning:combobox aura:id = 'sType' name="optionType" label="Select Option" variant="label-hidden" value="{!v.sType}" placeholder="Select Option" options="{! v.optionType }" onchange="{!c.handleChangeOthers}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </lightning:layoutItem>
+                      
+                        </aura:if>
+                        <lightning:layoutItem padding="around-small" size="4">
+                            <div class="slds-form-element">
+                                <span class="slds-form-element__label">Currency</span>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-form-element__static">
+                                        <lightning:combobox name="currency" disabled="true" label="Currency" variant="label-hidden" value="{!v.sCurrency}" placeholder="Select Currency" options="{! v.currency }"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </lightning:layoutItem>
+                        <aura:if isTrue="{!v.calledFrom != 'PersonSearch'}">
+                            <lightning:layoutItem padding="around-small" size="4">
+                                    <div class="slds-form-element">&nbsp;</div>
+                            </lightning:layoutItem>
+                        </aura:if>
+                        <lightning:layoutItem padding="around-small" size="4">
+                            <div class="slds-form-element">
+                                <span class="slds-form-element__label">Minimum Salary</span>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-form-element__static">
+                                        <lightning:input type="number" variant="label-hidden" value="{!v.salMinRate}" onblur="{!c.shandleChange}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="around-small" size="4">
+                            <div class="slds-form-element">
+                                <span class="slds-form-element__label">Maximum Salary</span>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-form-element__static">
+                                        <lightning:input type="number" variant="label-hidden" value="{!v.salMaxRate}" onblur="{!c.shandleChange}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </lightning:layoutItem>
+                        <aura:if isTrue="{!v.calledFrom != 'PersonSearch'}">
+                            <lightning:layoutItem padding="around-small" size="4">
+                                    <div class="slds-form-element">&nbsp;</div>
+                            </lightning:layoutItem>
+                        </aura:if>
+                        
+                        <aura:if isTrue="{!v.calledFrom == 'PersonSearch'}">
+                        <lightning:layoutItem padding="around-small" size="4">
+                            <div class="slds-form-element">
+                                <span class="slds-form-element__label">Maximum Notice Period</span>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-form-element__static">
+                                      
+                                        <lightning:combobox aura:id='noticePeriod' name="noticePeriod" label="Maximum Notice Period" variant="label-hidden" value="{!v.notPeriod}" placeholder="Select Notice Period" options="{! v.noticePeriod }" onchange="{! c.shandleChange }"  />
+                           
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </lightning:layoutItem>
+                        </aura:if>
+                    </lightning:layout>
+                    
+                </div>
+            </lightning:tab>
+        </lightning:tabset>                               
+    </lightning:layout-->
+</aura:component>

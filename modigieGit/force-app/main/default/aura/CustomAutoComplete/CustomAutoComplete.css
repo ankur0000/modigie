@@ -1,0 +1,24 @@
+.THIS .slds-input__icon{
+    margin-top: 3px;
+}
+.THIS .label{
+    color: rgb(87, 87, 87);
+}
+.THIS .listItem{
+    line-height: normal !important;
+    font-size: x-small !important;
+}
+.THIS .listBox{
+    margin-left: -16% !important;
+    margin-top: -10px !important;
+    /* margin-bottom: -10px !important; */
+}
+.THIS .dropdownDiv{
+    width: 225px !important;
+}
+.THIS .padTopClearSelection lightning-icon{
+    padding-top: 1.45rem;
+}
+.THIS .marTopClearSelection{
+    margin-top: 0.75rem;
+}

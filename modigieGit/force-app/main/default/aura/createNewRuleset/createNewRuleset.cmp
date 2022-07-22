@@ -1,0 +1,609 @@
+<aura:component
+  implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"
+  access="global" controller="DynamicAutomationCriteriaCompController">
+  <aura:registerEvent name="getNewRulesetData" type="c:createNewRulesetEvent" />
+  <aura:attribute name="performanceTitle" type="String" />
+  <aura:attribute name="isPerformance" type="Boolean" />
+  <aura:attribute name="showWarningMessage" type="Boolean" />
+  <aura:attribute name = "creditId" type="List"/>
+  <aura:attribute name = "creditIdValue" type="string"/>
+  <aura:attribute name="ruleName" type="String" />
+  <aura:attribute name="description" type="String" />
+  <aura:attribute name="automationTrigger" type="String" default="2" />
+  <aura:attribute name="automationTriggerForAnalysis" type="String" />
+  <aura:attribute name="onclose" type="Aura.Action" />
+  <aura:attribute name="rulesetId" type="String" />
+  <aura:attribute name="nextStep" type="Boolean" default="false" />
+  <aura:attribute name="isEdit" type="Boolean" default="false" />
+  <aura:attribute name="Limits_No_Limits_Selection" type="String" />
+  <aura:attribute name="showNumberOfRequests" type="Boolean" default="true" />
+  <aura:attribute name="requestLimit" type="Integer" />
+  <aura:attribute name="maintainQueue" type="Boolean" />
+  <aura:attribute name="currentQueue" type="Integer" />
+  <aura:attribute name="sfdcClassic" type="Boolean" default="false" />
+
+  <aura:attribute name="showPreAnalysisModal" type="Boolean" />
+  <aura:attribute name="anticipatedQueriesCalculation" type="Integer" />
+  <aura:attribute name="showContactUserList" type="Boolean" default="false" />
+  <aura:attribute name="leadCount" type="String" />
+  <aura:attribute name="contactCount" type="String" />
+  <aura:attribute name="mostActiveUserListContact" type="List" />
+  <aura:attribute name="mostActiveUserListLead" type="List" />
+  <aura:attribute name="selectedObjectForAnalysis" type="String" default="Lead" />
+  <aura:attribute name="analyzeSpinner" type="Boolean" default="false" />
+  <aura:attribute name="showErrorToast" type="Boolean" default="false" />
+
+
+  <aura:handler name="DeleteRowEvt" event="c:DeleteRowEvt" action="{!c.removeDeletedRow}" />
+  <aura:handler name="AddRowEvt" event="c:AddNewRowEvt" action="{!c.addNewRow}" />
+
+
+
+  <aura:attribute name="critriaList" type="Object[]" />
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <aura:attribute name="fields" type="List" />
+  <aura:attribute name="fieldsLabel" type="Object" />
+  <aura:attribute name="fieldsDataType" type="Object" />
+  <aura:attribute name="contactFieldsLabel" type="Object" />
+  <aura:attribute name="contactFieldsDataType" type="Object" />
+  <aura:attribute name="contactFields" type="Object" />
+  <aura:attribute name="contactCriteriaList" type="Object[]" />
+  
+
+  <aura:attribute name="radioOptions" type="List"
+    default="[{'label': 'Lead', 'value': 'Lead'},{'label': 'Contact', 'value': 'Contact'}]" />
+  <aura:attribute name="selectedObject" type="String" default="Lead" />
+
+  <!-- Dynamic Custom Logic -->
+  <aura:attribute name="logicOptions" type="List"
+    default="[{'label': 'All of the conditions are met (AND)', 'value': '1'}, {'label': 'Any of the conditions are met (OR)', 'value': '2'}, {'label': 'Customize the logic', 'value': '3'}]" />
+
+  <aura:attribute name="selectedLogic" type="String" default="1" />
+  <aura:attribute name="contactSelectedLogic" type="String" default="1" />
+
+  <aura:attribute name="leadLogic" type="String" />
+  <aura:attribute name="contactLogic" type="String" />
+  <aura:attribute name="isDetailsLoaded" type="Boolean" default="false" />
+  <aura:attribute name="isCriteriaLoaded" type="Boolean" default="false" />
+  <aura:attribute name="isSaveClicked" type="Boolean" default="false" />
+  <aura:attribute name="isAnalysisClicked" type="Boolean" default="false" />
+  <aura:attribute name="logicError" type="Boolean" default="false" />
+  <aura:attribute name="contactLogicError" type="Boolean" default="false" />
+
+  <aura:attribute name="leadErrors" type="String" />
+  <aura:attribute name="contactErrors" type="String" />
+  <aura:attribute name="logicTooltip" type="boolean" default="false" />
+  <!-- end Dynamic Custom Logic -->
+
+  <aura:if isTrue="{!v.showPreAnalysisModal}">
+
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+      aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+      <aura:if isTrue="{! v.analyzeSpinner }">
+        <div class="slds-modal__container">
+
+          <header class="slds-modal__header">
+            <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Analysis of Ruleset</h2>
+          </header>
+          <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+            <div>Anticipated queries sent to Modigie per day ~ {!v.anticipatedQueriesCalculation}</div>
+
+            <lightning:radioGroup name="radioGroup" options="{!v.radioOptions}" value="{!v.selectedObjectForAnalysis}"
+              onchange="{!c.handleRadioChange}" type="radio"
+              class="{!(v.sfdcClassic ? 'marginTopRadio ' : '') + 'flexObjectRadio'}" />
+            <!-- <aura:if isTrue="">
+                                                <aura:set attribute="else">
+
+                                                </aura:set>
+                                            </aura:if> -->
+            <!-- <h3><aura:if isTrue="{!v.showContactUserList}">
+                                                {!v.contactCount}
+                                                    <aura:set attribute="else" >
+                                                        {!v.leadCount}
+                                                    </aura:set>
+                                                </aura:if> Records meets the current criteria that have been {!v.automationTriggerForAnalysis} in last 30 days.
+                                            </h3> -->
+            <!-- <aura:if isTrue="{!v.leadCount == 0}">
+                                                No data
+                                                <aura:set attribute="else">
+                                                  <h3>The Most Active User who {!v.automationTriggerForAnalysis} {!v.selectedObjectForAnalysis} records within last 30 days.</h3>
+                                                </aura:set>
+                                            </aura:if> -->
+            <aura:if isTrue="{!v.showContactUserList}">
+              <aura:if isTrue="{!v.contactCount == 0}">
+                <div style="text-align: center;font-size: medium;">No Records Found</div>
+                <aura:set attribute="else">
+                  <h3>{!v.contactCount} Records meets the current criteria that have been {!v.automationTriggerForAnalysis} in last
+                    30 days.</h3>
+                  <h3>The Most Active User who {!v.automationTriggerForAnalysis} {!v.selectedObjectForAnalysis} records
+                    within last 30 days.</h3>
+
+                  <br />
+                  <div class="slds-table--header-fixed_container" style="height:100px;" id="scrollable">
+                    <div class="slds-scrollable_y" style="height:100%; background-color: white">
+                      <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table--header-fixed">
+                        <thead>
+                          <tr class="slds-line-height_reset tableHeader">
+                            <th class="" scope="col">
+                              <div class="slds-truncate slds-cell-fixed" title="User Name">User Name</div>
+                            </th>
+                            <th class="" scope="col">
+                              <div class="slds-truncate slds-cell-fixed" title="Count">Count</div>
+                            </th>
+                            <th class="" scope="col">
+                              <div class="slds-truncate slds-cell-fixed" title="AutomationUser">Automation User</div>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <aura:iteration items="{!v.mostActiveUserListContact}" var="user" indexVar="index">
+                            <tr class="slds-hint-parent">
+                              <th data-label="Opportunity Name" class="tableData">
+                                <div class="slds-truncate tableData" title="UserName">
+                                  {!user.userName}
+                                </div>
+                              </th>
+                              <td data-label="Count">
+                                <div class="slds-truncate" title="Cloudhub">{!user.total}</div>
+                              </td>
+                              <td data-label="Count">
+                                <div class="slds-truncate" title="AutomationUser">
+                                  <aura:if isTrue="{!user.isAutomation}">
+                                    Yes
+                                    <aura:set attribute="else">
+                                      No
+                                    </aura:set>
+                                  </aura:if>
+                                </div>
+                              </td>
+                            </tr>
+                          </aura:iteration>
+
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </aura:set>
+              </aura:if>
+
+              <aura:set attribute="else">
+                <aura:if isTrue="{!v.leadCount == 0}">
+                  <div style="text-align: center;font-size: medium;">No Records Found</div>
+                  <aura:set attribute="else">
+                    <h3>{!v.leadCount} Records meets the current criteria that have been {!v.automationTriggerForAnalysis} in last
+                      30 days.</h3>
+                    <h3>The Most Active User who {!v.automationTriggerForAnalysis} {!v.selectedObjectForAnalysis}
+                      records within last 30 days.</h3>
+
+                    <br />
+                    <div class="slds-table--header-fixed_container" style="height:100px;" id="scrollable">
+                      <div class="slds-scrollable_y" style="height:100%; background-color: white">
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table--header-fixed">
+                          <thead>
+                            <tr class="slds-line-height_reset tableHeader">
+                              <th class="" scope="col">
+                                <div class="slds-truncate slds-cell-fixed" title="User Name">User Name</div>
+                              </th>
+                              <th class="" scope="col">
+                                <div class="slds-truncate slds-cell-fixed" title="Count">Count</div>
+                              </th>
+                              <th class="" scope="col">
+                                <div class="slds-truncate slds-cell-fixed" title="Count">Automation User</div>
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <aura:iteration items="{!v.mostActiveUserListLead}" var="user" indexVar="index">
+                              <tr class="slds-hint-parent">
+                                <th data-label="Opportunity Name" scope="row">
+                                  <div class="slds-truncate tableData" title="UserName">
+                                    {!user.userName}
+                                  </div>
+                                </th>
+                                <td data-label="Count">
+                                  <div class="slds-truncate" title="Cloudhub">{!user.total}</div>
+                                </td>
+                                <td data-label="Count">
+                                  <div class="slds-truncate" title="Cloudhub">
+                                    <aura:if isTrue="{!user.isAutomation}">
+                                      Yes
+                                      <aura:set attribute="else">
+                                        No
+                                      </aura:set>
+                                    </aura:if>
+                                  </div>
+                                </td>
+                              </tr>
+                            </aura:iteration>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </aura:set>
+                </aura:if>
+
+              </aura:set>
+            </aura:if>
+
+
+          </div>
+          <footer class="slds-modal__footer">
+            <button class="slds-button slds-button_neutral" onclick="{!c.closePreAnalysisModal}">Close</button>
+          </footer>
+        </div>
+        <aura:set attribute="else">
+          <lightning:spinner alternativeText="Loading" />
+        </aura:set>
+      </aura:if>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+    <aura:set attribute="else">
+      <aura:if isTrue="{!v.showErrorToast}">
+        <div class="demo-only configurationErrorToastDiv">
+          <div class="slds-notify_container slds-is-relative">
+            <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+              <span class="slds-assistive-text">error</span>
+              <div class="slds-grid slds-gutters configurationErrorToastSubDiv">
+                <span class="
+                                                          slds-icon_container
+                                                          slds-icon-utility-error
+                                                          slds-m-right_small
+                                                          slds-no-flex slds-align-top
+                                                          configurationErrorToastSpan
+                                                          ">
+                  <lightning:icon iconName="utility:error" alternativeText="Error!" variant="Error" size="small" />
+                </span>
+                <div class="slds-notify__content">
+                  <h2 class="slds-text-heading_small">{!v.toastMessage}</h2>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aura:if>
+      <aura:if isTrue="{! v.isCriteriaLoaded}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+          aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+          <div class="slds-modal__container">
+            <header class="slds-modal__header">
+              <aura:if isTrue="{!and(v.showWarningMessage, v.isPerformance)}">
+                <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">View Ruleset</h2>
+                <aura:set attribute="else">
+                  <aura:if isTrue="{!v.isEdit}">
+                    <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Edit Ruleset</h2>
+                    <aura:set attribute="else">
+                      <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Create New Ruleset</h2>
+                    </aura:set>
+                  </aura:if>
+                </aura:set>
+              </aura:if>
+              
+            </header>
+            <!-- <c:createNewRuleset onclose="{!c.closeCreateNewRuleset}"></c:createNewRuleset> -->
+
+            <aura:if isTrue="{!v.nextStep}">
+              <div class="slds-modal__content slds-p-around_medium " id="modal-content-id-1">
+                <aura:if isTrue="{!and(v.showWarningMessage, v.isPerformance)}">
+                  <div class="slds-notify slds-notify_alert slds-alert_error" role="alert" style="background: white; color: red">
+                    <span class="slds-assistive-text">Error</span>
+                    <h2>The ruleset details are saved and cannot be edited.
+                    </h2>
+                  </div>
+                </aura:if>
+                
+                <!-- for credit id -->
+                <!-- <table>
+                  <tbody>
+                    <tr>
+                      <td style="width: 10%; padding-bottom:1rem;">credit Id</td>
+                      <td>
+                <lightning:select name="LimitsSelection"
+                 class="credit-limits">
+                <aura:iteration items="{!v.creditId}" var="CI">
+                  <option text="{!CI.modigie__Title__c}" value="{!CI.Id}" /> 
+        		 </aura:iteration>  
+              </lightning:select>
+            </td>
+            </tr>
+            </tbody>
+            </table> -->
+
+                <lightning:select name="LimitsSelection" value="{!v.Limits_No_Limits_Selection}"
+                  onchange="{!c.handleChange}" class="{!(v.sfdcClassic ? 'limitsTopPadding ': '') + 'limits'}">
+                  <option text="Limits" value="Limits" />    
+                  <option text="No Limits" value="No Limits" />
+                </lightning:select>
+                <aura:if isTrue="{!v.showNumberOfRequests}">
+                  <!-- <div class="slds-form-element requestLimit"> -->
+                  <!-- <label for="limit">Number of Requests per day</label> -->
+                  <!-- <lightning:input type="number" label="Number of Requests per day" name="limit" style="width: 30%; margin-left: 70%" value="{!v.requestLimit}"/> -->
+                  <!-- <div class="slds-grid slds-gutters">
+                                        <div class="slds-col slds-size_1-of-2">
+
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-2">
+                                          <div class="slds-grid slds-gutters">
+                                            <div class="slds-col slds-size_2-of-3" style="padding-top: 20px; padding-left: 20px">
+                                              Number of Requests per day
+                                            </div>
+                                            <div class="slds-col slds-size_1-of-3">
+                                              <lightning:input style="width: 80px;" type="number" value="{!v.requestLimit}"/>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        
+                                          
+                                      </div> -->
+
+                  <!-- </div> -->
+                  <div style="margin-left: 10px; margin-top: -15px">
+                    <!-- <div class="slds-grid slds-gutters"> -->
+                    <!-- <div class="slds-col slds-size_3-of-12">
+                                    
+                                  </div> -->
+                    <!-- <div class="slds-col slds-size_-of-12"> -->
+                    <table>
+                      <tbody>
+                        <tr>
+                          <td>Number of Requests per day</td>
+                          <td style="width: 30%;">
+                            <lightning:input type="number" name="limit"
+                              class="{!(v.sfdcClassic ? 'limitPerRuleSetClassic ' : '') + 'limitPerRuleSet'}"
+                              value="{!v.requestLimit}" />
+                          </td>
+                          <aura:if isTrue="{!v.isEdit}">
+                            <aura:if isTrue="{!v.currentQueue == 0}">
+                              <td style="width: 100px;"></td>
+                              <aura:set attribute="else">
+                                <td style="margin-top: -5px;">Current Queue Qty {!v.currentQueue}</td>
+                              </aura:set>
+                            </aura:if>
+
+                            <aura:set attribute="else">
+                              <td style="width: 100px;"></td>
+                            </aura:set>
+                          </aura:if>
+
+                          <td>
+                            <lightning:input type="checkbox" class="mqCheckbox" id="horizontal-checkbox-mq"
+                              label="Maintain Queue" name="input1" checked="{!v.maintainQueue}" />
+                          </td>
+
+                        </tr>
+                      </tbody>
+                    </table>
+                    <!-- <div class="slds-grid slds-gutters">
+                                      <div class="slds-col slds-size_1-of-2">
+                                        <lightning:input type="checkbox" class="mqCheckbox" id="horizontal-checkbox-mq" label="Maintain Queue" name="input1" checked="{!v.maintainQueue}" />
+                                      </div>
+                                      <div class="slds-col slds-size_1-of-2">
+                                      <button class="slds-button slds-button_neutral">Current Queue</button>
+                                    </div>
+                                    </div> -->
+
+
+                    <!-- </div> -->
+                    <!-- </div> -->
+                  </div>
+
+
+                </aura:if>
+
+                <div style="border: var(--lwc-borderWidthThin,1px) solid var(--lwc-colorBorderSelection,#006EB3);
+                                      border-radius: var(--lwc-borderRadiusMedium,0.25rem);
+                                      background-color: var(--lwc-colorBackgroundStencil,rgb(242, 242, 243));">
+                  <div class="slds-grid slds-wrap">
+
+                    <div class="slds-col slds-size_1-of-1">
+                      <lightning:radioGroup class="{!(v.sfdcClassic ? 'flexTopPadding ': '') + 'flexObjectRadio'}"
+                        name="radioGroup" options="{! v.radioOptions }" value="{! v.selectedObject }" type="radio" />
+                    </div>
+
+
+                    <div class="slds-col slds-size_1-of-1">
+                      <aura:if isTrue="{!v.selectedObject  == 'Lead'}">
+                        <aura:iteration items="{!v.critriaList}" var="item" indexVar="index">
+                          <c:DynmaicAutomationCriteriaRowComp rowIndex="{!index}" selectedField="{!item.SelectedField}"
+                            selectedOperator="{!item.SelectedOperator}" criteriaValue="{!item.CriteriaValue}"
+                            fieldsDataType="{!v.fieldsDataType}" fieldsLabel="{!v.fieldsLabel}" fields="{!v.fields}"
+                            objectName="Lead"></c:DynmaicAutomationCriteriaRowComp>
+                        </aura:iteration>
+
+                        <aura:set attribute="else">
+                          <aura:iteration items="{!v.contactCriteriaList}" var="item" indexVar="index">
+                            <c:DynmaicAutomationCriteriaRowComp rowIndex="{!index}"
+                              selectedField="{!item.SelectedField}" selectedOperator="{!item.SelectedOperator}"
+                              criteriaValue="{!item.CriteriaValue}" fieldsDataType="{!v.contactFieldsDataType}"
+                              fieldsLabel="{!v.contactFieldsLabel}" fields="{!v.contactFields}" objectName="Contact">
+                            </c:DynmaicAutomationCriteriaRowComp>
+                          </aura:iteration>
+
+                        </aura:set>
+                      </aura:if>
+                    </div>
+                    <div class="slds-m-around_x-small slds-col slds-size_1-of-1">
+                      <!--aura:if isTrue="{!v.fields[0].apiname}"-->
+                      <a href="javascript:void(0);"
+                        style="color: rgb(107, 109, 112);font-size:0.875rem;text-decoration: none;"
+                        onclick="{!c.addNewRow}">
+                        <lightning:icon iconName="utility:add" alternativeText="add" title="add" size="xx-small"
+                          class="slds-m-right_x-small" />
+                        <span>Add Row</span>
+                      </a>
+                      <!--/aura:if-->
+                    </div>
+                    <!-- Dynamic Custom Logic -->
+                    <div class="slds-p-around_x-small slds-m-left_small slds-col slds-size_1-of-1">
+                      <!--aura:if isTrue="{!v.isLogicLoaded}"-->
+                      <aura:if isTrue="{!v.selectedObject  == 'Lead'}">
+                        <lightning:radioGroup class="no-inline" name="radioLogicGroup" options="{! v.logicOptions }"
+                          value="{! v.selectedLogic }" type="radio" required="true" label="Conditions" />
+                        <aura:if isTrue="{! v.selectedLogic == '3'}">
+
+                          <lightning:input class="logic-input" name="customLeadLogic" label="Logic" required="true"
+                            value="{!v.leadLogic}" onchange="{!c.handleLogicInput}" />
+
+                          <lightning:helptext class="fixPositionTooltip"
+                            content='Use parantheses, AND and OR to customize the logic. For example, if you enter "(1 AND 2 AND 3) OR 4", the process evaluates whether the first three conditions are true or only the fourth conditions is true.' />
+                          <!--
+                                            To Push
+                                        -->
+                          <aura:if isTrue="{!v.logicError}">
+                            <lightning:icon class="logic-error" iconName="utility:error" alternativeText="Error!"
+                              variant="error" title="{!v.leadErrors}" size="xx-small" />
+                          </aura:if>
+                          <!--
+                                            End
+                                        -->
+                        </aura:if>
+
+                        <aura:set attribute="else">
+                          <lightning:radioGroup class="no-inline" name="radioLogicGroup" options="{! v.logicOptions }"
+                            value="{! v.contactSelectedLogic }" type="radio" required="true" label="Conditions" />
+                          <aura:if isTrue="{! v.contactSelectedLogic == '3'}">
+                            <lightning:input class="logic-input" name="customContactLogic" label="Logic" required="true"
+                              value="{!v.contactLogic}" onchange="{!c.handleLogicInput}" />
+
+                            <lightning:helptext class="fixPositionTooltip"
+                              content='Use parantheses, AND and OR to customize the logic. For example, if you enter "(1 AND 2 AND 3) OR 4", the process evaluates whether the first three conditions are true or only the fourth conditions is true.' />
+                            <!--
+                                            To Push
+                                          -->
+                            <aura:if isTrue="{!v.contactLogicError}">
+                              <lightning:icon class="logic-error" iconName="utility:error" alternativeText="Error!"
+                                variant="error" title="{!v.contactErrors}" size="xx-small" />
+                            </aura:if>
+                            <!--
+                                            End
+                                          -->
+                          </aura:if>
+                        </aura:set>
+                      </aura:if>
+                      <!--/aura:if-->
+                    </div>
+
+                    <!-- end Dynamic Custom Logic -->
+                  </div>
+                </div>
+                <button class="slds-button slds-button_success preAnalysis" onclick="{!c.runAnalysis}"
+                  disabled="{!v.isAnalysisClicked}">Run Analysis
+                  <aura:if isTrue="{!v.isAnalysisClicked}">
+                    <lightning:spinner class="inside-save" alternativeText="..." size="small" variant="brand" />
+                  </aura:if>
+                </button>
+              </div>
+              <footer class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" onclick="{!v.onclose}">Cancel</button>
+                <button class="slds-button slds-button_neutral" onclick="{!c.handleBack}">Back</button>
+                <aura:if isTrue="{!and(v.showWarningMessage, v.isPerformance)}">
+                  <aura:set attribute="else">
+                    <button class="slds-button slds-button_brand" onclick="{!c.saveRulesetDetails}"
+                      disabled="{!v.isSaveClicked}">
+                      Save
+                      <aura:if isTrue="{!v.isSaveClicked}">
+                        <lightning:spinner class="inside-save" alternativeText="..." size="small" variant="brand" />
+                      </aura:if>
+                    </button>
+                  </aura:set>
+                </aura:if>
+                
+              </footer>
+
+              <aura:set attribute="else">
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                  <aura:if isTrue="{!and(v.showWarningMessage, v.isPerformance)}">
+                    <div class="slds-notify slds-notify_alert slds-alert_error" role="alert" style="background: white; color: red;">
+                      <span class="slds-assistive-text">Error</span>
+                      <h2>The ruleset details are saved and cannot be edited.
+                      </h2>
+                    </div>
+                  </aura:if>
+                  
+                  <div class="table">
+                    <table>
+                      <tbody>
+                        <tr>
+                          <td class="tdStyle">Rule Name</td>
+                          <td>
+                            <lightning:input name="Rule Name" value="{!v.ruleName}" />
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td class="tdStyle">Description</td>
+                          <td>
+                            <lightning:textarea value="{!v.description}"
+                              placeholder="Description must not exceed 255 characters" maxlength="255"/>
+                          </td>
+                        </tr>
+                        
+                        <tr>
+                          <td class="tdStyle">Automation Trigger</td>
+                          <td style="padding-right: 13%;">
+                            <lightning:select name="automationTrigger" value="{!v.automationTrigger}">
+                              <option value="1">on record creation</option>
+                              <option value="2">on record creation or modification</option>
+                            </lightning:select>
+                          </td>
+                        </tr>
+
+                        <!-- for credit id -->
+                        <tr>
+                          <td style="padding-left:3rem;" >Credit Account</td>
+                            <td style="padding-right: 13%;" id = "check">
+                              
+                              <aura:if isTrue="{!v.isPerformance}">
+                                <div style="padding-left: 0.5rem;">{!v.performanceTitle}</div>
+                                <aura:set attribute="else">
+                                  <lightning:select  aura:id="LimitsSelection" name="LimitsSelection" value="{!v.creditIdValue}">
+                                    <aura:iteration items="{!v.creditId}" var="CI">
+                                      <option value="{!CI.id}" selected="{!CI.selected}">{!CI.label}</option>
+                                    </aura:iteration>  
+                                  </lightning:select>
+                                </aura:set>
+                              </aura:if>
+                              
+                          </td>
+                        </tr>
+
+                      </tbody>
+                    </table>
+
+
+
+                  </div>
+
+                </div>
+                <footer class="slds-modal__footer">
+                  <button class="slds-button slds-button_neutral" onclick="{!v.onclose}">Cancel</button>
+                  <button class="slds-button slds-button_brand" onclick="{!c.handleNext}">Next</button>
+                  <!-- <button class="slds-button slds-button_brand" onclick="{!c.saveRulesetDetails}">
+                                      Save
+                                      <aura:if isTrue="{!v.isSaveClicked}">
+                                        <lightning:spinner class="inside-save" alternativeText="Loading" size="small" variant="brand" />
+                                      </aura:if>
+                                    </button> -->
+                </footer>
+              </aura:set>
+            </aura:if>
+          </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+
+        <aura:set attribute="else">
+          <!-- <aura:if isTrue="{!v.isEdit}"> -->
+            <div>
+
+              <lightning:spinner class="spinner" alternativeText="Loading" size="medium" variant="brand" />
+            </div>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+          <!-- </aura:if> -->
+        </aura:set>
+
+
+      </aura:if>
+
+
+    </aura:set>
+  </aura:if>
+</aura:component>

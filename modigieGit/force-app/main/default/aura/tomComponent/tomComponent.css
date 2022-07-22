@@ -1,0 +1,49 @@
+.THIS .buttonDiv{
+    margin-top: 50px;
+    margin-left: 100px;
+}
+.THIS .saveButton{
+    margin-right: 20px;
+}
+.THIS .autocomplete{
+    width: 300px;
+}
+.THIS .disclaimer
+  {
+    font-size:medium;
+  }
+  
+.THIS .noJobTimeHeading
+{
+    text-align: center;font-size: large;
+}
+
+.THIS .tLogo{
+  width: 2.2rem;
+  height: auto;
+}
+
+.THIS .tomHeader{
+  top: -0.75rem;
+}
+.THIS .setForward lightning-primitive-icon svg{
+  width: 1.6rem;
+  height: 0.8rem;
+  margin-left: -1rem;
+}
+.THIS .heading{
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+.THIS .heading span{
+  padding-left: 0.5rem;
+  font-weight: normal;
+  font-size: 0.9rem;
+}
+
+.THIS hr{
+  margin-bottom: 1rem !important;
+}
+.THIS .tomSaveFooter {
+  margin-left: 0px;
+}

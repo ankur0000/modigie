@@ -1,0 +1,168 @@
+<aura:component
+    implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"
+    controller="UserLimitsCompController" access="global">
+
+    <aura:attribute name="dataObject" type="Object" />
+    <aura:attribute name="ListOfDataObject" type="Object[]" />
+    <aura:attribute name="lstUserOrProfileName" type="List" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="searchObject" type="String" />
+    <aura:attribute name="searchTerm" type="String" />
+    <aura:attribute name="optionSelected" type="boolean" default="false" />
+    <aura:attribute name="SelectedOptionValue" type="String" />
+    <aura:attribute name="rowIndex" type="String" />
+    <aura:attribute name="errorObject" type="Object" />
+    <aura:registerEvent name="DeleteRowEvt" type="c:DeleteRowEvt" />
+    <aura:registerEvent name="AddRowEvt" type="c:AddNewRowEvt" />
+
+
+
+
+
+    <div class="slds-grid slds-gutters mainDiv slds-p-top_x-small">
+        <div class="slds-col">
+            <lightning:select name="UserProfileSelection" label="User/Profile" value="{!v.dataObject.searchObject}"
+                aura:id="UserProfileId" onchange="{!c.handleSearchObjectChange}" disabled="{!v.optionSelected}">
+                <option text="User" value="User" />
+                <option text="Profile" value="Profile" />
+            </lightning:select>
+        </div>
+        <div class="slds-col">
+            <!--div class="slds-form-element">
+                <label class="slds-form-element__label" for="text-input-id-1">
+                    <abbr class="slds-required" title="required">* </abbr>Number of limits per day</label>
+                <div class="slds-form-element__control">
+                    <input type="number" id="text-input-id-1" placeholder="Enter limit…" required="" aria-describedby="error-message-unique-id" class="slds-input" aria-invalid="true" min="0" autocomplete="off" value="{!v.dataObject.numberOfLimits}" oninput="{!c.handleLimitChange}"/>
+                </div>
+                <aura:if isTrue="{!v.errorObject.LimitsField}">
+                	<div class="slds-form-element__help" id="error-message-unique-id">Enter a valid value.</div>
+            	</aura:if>
+          	</div-->
+            <div class="slds-form-element">
+                <label class="slds-form-element__label" for="combobox-id-2"><abbr class="slds-required"
+                        title="required">* </abbr>{!v.dataObject.searchObject}</label>
+                <div class="slds-form-element__control">
+                    <div class="slds-combobox_container" aura:id="ProfileUserInput">
+                        <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-is-open"
+                            aria-expanded="true" aria-haspopup="listbox" role="combobox">
+                            <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right"
+                                role="none">
+                                <input type="text" class="slds-input slds-combobox__input-value slds-has-focus divInput"
+                                    id="combobox-id-2" aria-autocomplete="list" aria-controls="listbox-id-2"
+                                    autocomplete="off" role="textbox" placeholder="Search..."
+                                    oninput="{!c.handleSearchChange}" value="{!v.dataObject.SelectedOptionValue}"
+                                    disabled="{!v.optionSelected}" />
+                                <aura:if isTrue="{!v.optionSelected}">
+                                    <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right"
+                                        title="Remove selected option">
+                                        <lightning:buttonIcon iconName="utility:close" variant="bare"
+                                            onclick="{!c.removeSelectedOption}" alternativeText="Settings"
+                                            title="Settings" />
+                                    </button>
+                                </aura:if>
+                            </div>
+                            <aura:if isTrue="{!v.dataObject.UserOrProfileField}">
+                                <div class="slds-form-element__help validValueError" id="error-message-unique-id">Enter
+                                    a valid value.</div>
+                            </aura:if>
+                            <aura:if isTrue="{!v.lstUserOrProfileName}">
+                                <div id="listbox-id-2"
+                                    class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid"
+                                    role="listbox" onblur="{!c.hideOptions}">
+                                    <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                        <aura:iteration items="{!v.lstUserOrProfileName}" var="item">
+                                            <li role="presentation" class="slds-listbox__item"
+                                                onclick="{!c.optionClick}" data-id="{!item.Id}"
+                                                data-name="{!item.Name}">
+                                                <div id="option1"
+                                                    class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta"
+                                                    role="option">
+                                                    <span class="slds-media__figure slds-listbox__option-icon">
+                                                        <span class="slds-icon_container slds-icon-standard-account">
+                                                            <lightning:icon iconName="standard:user"
+                                                                alternativeText="User" title="User" />
+                                                        </span>
+                                                    </span>
+                                                    <span class="slds-media__body">
+                                                        <span
+                                                            class="slds-listbox__option-text slds-listbox__option-text_entity">{!item.Name}</span>
+                                                    </span>
+                                                </div>
+                                            </li>
+                                        </aura:iteration>
+
+                                        <!-- <li role="presentation" class="slds-listbox__item">
+                                <div id="option2" class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+                                    <span class="slds-media__figure slds-listbox__option-icon">
+                                        <span class="slds-icon_container slds-icon-standard-account">
+                                            
+                                        </span>
+                                    </span>
+                                    <span class="slds-media__body">
+                                        <span class="slds-listbox__option-text slds-listbox__option-text_entity">Dickenson plc</span>
+                                        <span class="slds-listbox__option-meta slds-listbox__option-meta_entity">Account • Lawrence, KS</span>
+                                    </span>
+                                </div>
+                            </li>
+                            <li role="presentation" class="slds-listbox__item">
+                                <div id="option3" class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+                                    <span class="slds-media__figure slds-listbox__option-icon">
+                                        <span class="slds-icon_container slds-icon-standard-account">
+                                            
+                                        </span>
+                                    </span>
+                                    <span class="slds-media__body">
+                                        <span class="slds-listbox__option-text slds-listbox__option-text_entity">Edge Communications</span>
+                                        <span class="slds-listbox__option-meta slds-listbox__option-meta_entity">Account • Austin, TX</span>
+                                    </span>
+                                </div>
+                            </li>-->
+                                    </ul>
+                                </div>
+                            </aura:if>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-col">
+            <div class="slds-form-element" aura:id="NumberOfLimitsField">
+                <label class="slds-form-element__label" for="text-input-id-1">
+                    <abbr class="slds-required" title="required">*</abbr>Number of Requests per day</label>
+                <div class="slds-form-element__control">
+                    <input type="number" id="text-input-id-1" placeholder="Enter limit…" required=""
+                        aria-describedby="error-message-unique-id" class="slds-input" aria-invalid="true" min="1"
+                        autocomplete="off" value="{!v.dataObject.numberOfLimits}" oninput="{!c.handleLimitChange}" />
+                </div>
+                <aura:if isTrue="{!v.dataObject.LimitsField}">
+                    <div class="slds-form-element__help validValueError" id="error-message-unique-id">Enter a valid
+                        value.</div>
+                </aura:if>
+            </div>
+            <!--	<label class="slds-form-element__label" for="combobox-id-2">Number of limits</label>
+            <input type="number" class="slds-input slds-combobox__input slds-has-focus" autocomplete="off" role="textbox" placeholder="Enter limit..." value="{!v.dataObject.numberOfLimits}" oninput="{!c.handleLimitChange}" min="0" required=""/-->
+            <!--lightning:input type="number" name="input1" label="Enter a limit" value="{v.dataObject.numberOfLimits}" autocomplete="off" onchange="{!c.handleLimitChange}"/-->
+        </div>
+        <div class="slds-col">
+            <!--aura:if isTrue="{!v.rowIndex == 0}">
+                <a onclick="{!c.AddNewRow}">
+                    <lightning:icon iconName="utility:add" class="slds-icon slds-icon_small" size="small" alternativeText="add"/>
+                    <span class="slds-assistive-text">Add Icon</span>
+                </a>
+                    
+                <aura:set attribute="else">
+                    
+                </aura:set> 
+                
+            </aura:if-->
+            <a onclick="{!c.removeRow}">
+                <lightning:buttonIcon variant="error" iconName="utility:delete"
+                    class="buttonSqr slds-icon slds-icon_small" size="small" alternativeText="Delete" />
+                <span class="slds-assistive-text">Delete Icon</span>
+            </a>
+        </div>
+    </div>
+
+
+</aura:component>

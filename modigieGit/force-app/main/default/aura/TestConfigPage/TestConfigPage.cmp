@@ -1,0 +1,450 @@
+<aura:component controller="ModigieConfiguration" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:isUrlAddressable">
+    <!--lightning:workspaceAPI aura:id="workspace"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doinit}"/>
+    <aura:attribute name="toggleSpinner" type="boolean" default="false"/>
+    <aura:attribute name="customerId" type="String"/>
+    <aura:attribute name="creditsId" type="String"/>
+    <aura:attribute name="apiKey" type="String"/>
+    <aura:attribute name="serviceCredentials" type="String"/>   
+    <aura:attribute name="privateKey" type="String"/>   
+    <aura:attribute name="isToggle" type="boolean" default="false"/>
+    <aura:attribute name="tokenCheck" type="boolean" default="false"/>
+    <aura:attribute name="tokenGenerated" type="boolean" default="false"/>
+    <aura:attribute name="credMap" type="Map"/>
+    <aura:attribute name="credLimit" type="String"/>
+    <aura:attribute name="canCreateToken" type="String"/>
+    <aura:attribute name="baseUrl" type="String"/>
+    <aura:attribute name="isTime" type="Boolean" default="true"/>
+    <aura:attribute name="isTimePick" type="Boolean" default="true"/>
+    <aura:attribute name="isInterval" type="Boolean" default="false"/>
+    <aura:attribute name="isIntervalPick" type="Boolean" default="false"/>
+    <aura:attribute name="optionsHourTime" type="List" />
+    <aura:attribute name="selectedHourTime" type="Integer" default="12"/>
+    <aura:attribute name="optionsMinuteTime" type="List" />
+    <aura:attribute name="optionsMinuteInterval" type="List" />
+    <aura:attribute name="selectedMinuteTime" type="Integer" default="01"/>
+    <aura:attribute name="selectedMinuteInterval" type="Integer" default="01"/>
+    <aura:attribute name="selectedmeridiem" type="String"/>
+    <aura:attribute name="optionsHoursInterval" type="List" />
+    <aura:attribute name="selectedHourInterval" type="Integer" default="00"/>
+    <aura:attribute name="jobTimeDetails" type="Object"/>
+    <aura:attribute name="selectedTab" type="String" default="one"/>
+    <aura:attribute name="showTabs" type="Boolean" default="false"/>
+    <aura:attribute name="openAbortModal" type="Boolean" default="false"/>
+    <aura:attribute name="batchJobsInfo" type="Object"/>
+    <aura:attribute name="batchJobsInfoOriginal" type="Object"/>
+    <aura:attribute name="abortedJobs" type="String"/>
+    <aura:attribute name="displayCurrentSchedule" type="Boolean"/>
+
+    
+    
+    
+    
+
+    
+
+    
+    <lightning:card variant="Narrow">
+        <div>
+            <div>
+                <div class="slds-align_absolute-center">
+                    <img src="{!$Resource.ModigieLogo}" style="height: 120px;padding-right:7%;"/>
+                </div>
+                
+            </div>
+            <lightning:tabset variant="scoped" selectedTabId="{!v.selectedTab}"> 
+                    
+            <div class="slds-is-relative">
+                <aura:if isTrue="{!v.toggleSpinner}">
+                    <div class="slds-spinner_container" style="background-color: white;">
+                    <div class="slds-spinnerbrand  slds-spinner slds-spinner_medium" role="alert">
+                        <span class="slds-assistive-text">Loading</span>
+                        <div class="slds-spinner__dot-a"></div>
+                        <div class="slds-spinner__dot-b"></div>
+                    </div>
+                    </div>
+                </aura:if>
+                <lightning:tab label="Authorization" id="one">
+                        <div>
+                            <div class="slds-grid slds-grid_vertical">
+                                <!-div class="slds-col"  style="padding-top: 3%;width: 70%;margin-left: 15%;">
+                    <span>
+                        <div class="slds-align_absolute-center">
+                            <div class="slds-size_1-of-2">
+                                <lightning:input label="Enter your username" value="{!v.uname}" disabled="{!v.tokenCheck}" placeholder="Enter Username..."/>
+                                <lightning:input type="password" label="Enter your password" value="{!v.passwd}" disabled="{!v.tokenCheck}" placeholder="Enter Password..."/>
+                            </div>
+                        </div>
+                    </span>
+                </div->
+                                
+                                <aura:if isTrue="{!v.customerId}">
+                                    <div class="slds-col" style="margin-right: 10%;margin-left: 10%;">
+                                        <span>
+                                            <div class="slds-grid">
+                                                <div class="slds-col slds-size_1-of-2 "> 
+                                                    <lightning:input label="Customer ID" value="{!v.customerId}" disabled="true" placeholder="Enter service account credentials..." class="customClass"/>
+                                                    <lightning:input label="Credits Account ID" value="{!v.creditsId}" disabled="{!v.tokenCheck}" placeholder="Enter credits account id..." class="customClass"/>
+                                                    <lightning:input label="Private key" value="{!v.privateKey}" disabled="{!v.tokenCheck}" placeholder="Enter private key..." class="customClass"/>
+                                                </div>
+                                                <div class="slds-col slds-size_1-of-2">
+                                                    <lightning:input type="password" label="API Key" value="{!v.apiKey}" disabled="{!v.tokenCheck}" placeholder="Enter API key..." class="customClass"/>
+                                                    <lightning:input type="password" label="Service Account Credentials" value="{!v.serviceCredentials}" disabled="{!v.tokenCheck}" placeholder="Enter service account credentials..." class="customClass"/>
+                                                </div>  
+                                            </div>
+                                            
+                                            
+                                            
+                                            <div class="slds-align_absolute-center">
+                                                <lightning:layout>
+                                                    <lightning:layoutItem padding="around-small">
+                                                        <aura:if isTrue="{!v.tokenCheck}">
+                                                            <lightning:button variant="brand" label="Edit" title="Edit" onclick="{! c.edit }" class="customButtonClass custom_margin_right"/>
+                                                        </aura:if>    
+                                                        <aura:if isTrue="{! !v.tokenCheck }">
+                                                            <lightning:button variant="brand" label="Submit" title="Submit" onclick="{! c.getAPIToken }" class="customButtonClass custom_margin_right"/>
+                                                        </aura:if>
+                                                    </lightning:layoutItem>
+                                                    <lightning:layoutItem padding="around-small">
+                                                        <lightning:button variant="brand" label="Cancel" title="Cancel" onclick="{! c.closeModel }"  class="customButtonClass custom_margin_right"/>
+                                                    </lightning:layoutItem>
+                                                    <lightning:layoutItem padding="around-small">
+                                                        <lightning:button variant="brand" label="Buy More Credits" title="Buy More Credits" onclick="{! c.navigateModigie }" class="customButtonClass custom_margin_right"/>
+                                                    </lightning:layoutItem>
+                                                    <lightning:layoutItem padding="around-small">
+                                                        <lightning:button variant="brand" label="Authenticate" title="Authenticate" onclick="{! c.navigate }" class = "customButtonClass"/>
+                                                    </lightning:layoutItem>
+                                                </lightning:layout>
+                                            </div>
+                                            
+                                        </span>
+                                    </div>
+                                    
+                                    <aura:set attribute="else">
+                                        <div class="slds-col" > 
+                                            <span>
+                                                <div class="slds-align_absolute-center" style="padding-right: 7%;padding-top: 3%;">
+                                                    <div class="slds-m-top_medium">
+                                                        <!- <aura:if isTrue="{!v.tokenCheck}">
+                                            <lightning:button variant="brand" label="Edit" title="Edit" onclick="{! c.edit }"/>
+                                        </aura:if>    
+                                        <aura:if isTrue="{! !v.tokenCheck }">
+                                        <lightning:button variant="brand" label="Submit" title="Submit" onclick="{! c.getAPIToken }"/>
+                                        </aura:if>
+                                        <lightning:button variant="brand" label="Cancel" title="Cancel" onclick="{! c.closeModel }" />
+                                        <lightning:button variant="brand" label="Buy More Credit" title="Buy More Credit" onclick="{! c.navigate }" />->
+                                                        
+                                                        <lightning:button variant="brand" label="Authenticate" title="Authenticate" onclick="{! c.navigate }" class = "buttonStyle"/>
+                                                        
+                                                    </div>
+                                                </div>
+                                            </span>
+                                        </div>
+                                    </aura:set>
+                                </aura:if>
+                                
+                            </div>  
+                            <aura:if isTrue="{!v.tokenGenerated}">
+                                <div class="slds-col">
+                                    <span>
+                                        <div class="slds-border_bottom">
+                                        </div>
+                                    </span>
+                                </div>
+                                <div class="slds-grid slds-grid_vertical">
+                                    <div class="slds-col">
+                                        <span>
+                                            <div class="slds-align_absolute-center">
+                                                <div class="slds-size_1-of-2">
+                                                    <lightning:input type="text" label="API Token" value="{!v.apiToken}" disabled="true"/>
+                                                </div>
+                                            </div>
+                                        </span>
+                                    </div>
+                                    <div class="slds-col">
+                                        <span>
+                                            <div class="slds-align_absolute-center">
+                                                <div class="slds-size_1-of-2">
+                                                    <lightning:input type="text" label="Credit Limit" value="{!v.credLimit}" disabled="true"/>
+                                                </div>
+                                            </div>
+                                        </span>
+                                    </div>
+                                </div>
+                            </aura:if>
+                            
+                            <!-div class="slds-col" style="margin-right: 10%;margin-left: 10%;text-align: center;padding:100px;font-size: large;">
+                                <span>
+                                    Do you want to schedule jobs now or it will be default to 1 minute?
+                                    
+                                    <div class="slds-align_absolute-center">
+                                        
+                                        <lightning:layout>
+                                            <lightning:layoutItem padding="around-small">
+                                                
+                                                    <lightning:button variant="brand" label="Yes" title="It will navigate to schedule jobs tab." class="customButtonClass custom_margin_right" onclick="{!c.navigteToScheduleTab}"/>
+                                            </lightning:layoutItem>
+                                            <lightning:layoutItem padding="around-small">
+                                                <lightning:button variant="brand" label="No" title="It will set the default time to 1 minute." class="customButtonClass custom_margin_right" onclick="{!c.shceduleForOneMinute}"/>
+                                            </lightning:layoutItem>
+                                        </lightning:layout>
+                                    </div>
+                                </span>
+                            </div->
+                        </div>
+                    </lightning:tab>
+                    
+                    <aura:if isTrue="{!v.showTabs}" >
+                    <lightning:tab label="Schedule Job" id="two">
+                        <div Style="max-width: 1080px !important;margin-right: 33%;margin-left: 33%;width: 150%;">
+                            <div class="slds-grid slds-gutters">
+                                <div class="slds-p-around_small slds-col slds-size_4-of-12">
+                                    <span><lightning:input type="radio" label="By Time" name="ManageScheduling" checked="{!v.isTime}" onchange="{!c.handleAction}"/></span>
+                                </div>
+                                <div class="slds-p-around_small slds-col slds-size_3-of-12">
+                                    <span><lightning:input type="radio" label="By Interval" name="ManageScheduling" checked="{!v.isInterval}" onchange="{!c.handleAction}" class="scheduleJobClass"/></span>
+                                </div>
+                            </div>
+                            <aura:if isTrue="{!v.isTimePick}" >
+                                <lightning:layout >
+                                    <lightning:layoutItem padding="around-small" flexibility="auto" size="5">
+                                        
+                                        <div class="slds-grid slds-grid_horizontal">
+                                            
+                                            
+                                            <div class="slds-col">
+                                                <span>
+                                                    <lightning:select name="HourTime" label="Hours" aura:id="HourTime" value="{!v.selectedHourTime}" class="scheduleClass">
+                                                        <aura:iteration items="{!v.optionsHourTime}" var="option">
+                                                            <option text="{!option}" value="{!option}"/>
+                                                        </aura:iteration>
+                                                    </lightning:select>
+                                                </span>
+                                            </div>
+                                            <div class="slds-col">
+                                                <span>
+                                                    <lightning:select name="MinuteTime" label="Minutes" aura:id="MinuteTime" value="{!v.selectedMinuteTime}" class="scheduleClass">
+                                                        <aura:iteration items="{!v.optionsMinuteTime}" var="option">
+                                                            <option text="{!option}" value="{!option}"/>
+                                                        </aura:iteration>
+                                                    </lightning:select>
+                                                </span>
+                                            </div>
+                                            <div class="slds-col" >
+                                                <span>
+                                                    <lightning:select name="AMPM" label="AM/PM" aura:id = "AMPM" value="{!v.selectedmeridiem}" class="scheduleClass">
+                                                        <option value="AM">AM</option>
+                                                        <option value="PM">PM</option>
+                                                    </lightning:select>
+                                                    
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </lightning:layoutItem>
+                                </lightning:layout>
+                            </aura:if>
+                            <aura:if isTrue="{!v.isIntervalPick}" >
+                                <lightning:layout>
+                                    <lightning:layoutItem padding="around-small" flexibility="auto" size="5"> 
+                                        
+                                        <div class="slds-grid slds-grid_horizontal" ><!-style="position:relative;left:140%;"->
+                                            
+                                            <div class="slds-col">
+                                                <span> 
+                                                    <lightning:select name="HourInterval" label="Hours" aura:id="HourInterval" value="{!v.selectedHourInterval}" class="scheduleClass">
+                                                        <aura:iteration items="{!v.optionsHoursInterval}" var="option">
+                                                            <option text="{!option}" value="{!option}"/>
+                                                        </aura:iteration>
+                                                    </lightning:select>
+                                                </span>
+                                            </div>
+                                            <div class="slds-col">
+                                                <span>
+                                                    <lightning:select name="MinuteInterval" label="Minutes" aura:id="MinuteInterval" value="{!v.selectedMinuteInterval}" class="scheduleClass">
+                                                        <aura:iteration items="{!v.optionsMinuteInterval}" var="option">
+                                                            <option text="{!option}" value="{!option}"/>
+                                                        </aura:iteration>
+                                                    </lightning:select>
+                                                </span>
+                                            </div>
+                                            
+                                            
+                                            
+                                        </div>
+                                    </lightning:layoutItem> 
+                                    
+                                    
+                                </lightning:layout>
+                            </aura:if>
+                            <lightning:layout class="layoutClass">
+                                <lightning:layoutItem padding="around-small">
+                                    <!-    <lightning-button variant="brand" label="Get Modigie Mobile" title="Primary action with lighter look" onclick={openModal} data-name="Get Modigie" style="background-color: green;"></lightning-button>->
+                                    
+                                    <button title="Submit" type="button" class="slds-button slds-button_brand" onclick="{!c.handleSubmit}">Submit</button>
+                                    
+                                </lightning:layoutItem>
+                                <lightning:layoutItem padding="around-small">
+                                    <!-lightning-button variant="brand" label="Get LinkedIn" title="Primary action with lighter look" onclick={openModal} class="slds-m-left_x-small" data-name="Get LinkedIn"></lightning-button->
+                                    
+                                    <button title="Cancel" type="button" class="slds-button slds-button_brand" onclick="{!c.cancelAction}">Cancel</button>
+                                    
+                                </lightning:layoutItem>
+                                <lightning:layoutItem padding="around-small">
+                                    <!-lightning-button variant="brand" label="Get LinkedIn" title="Primary action with lighter look" onclick={openModal} class="slds-m-left_x-small" data-name="Get LinkedIn"></lightning-button->
+                                    
+                                    <!-button title="Abort" type="button" class="slds-button slds-button_brand" onclick="{!c.openAbortModal}" disabled="{!!v.jobTimeDetails.Hour}">Abort</button->
+                                    
+                                </lightning:layoutItem>
+                            </lightning:layout>
+                        
+                            <lightning:layout>
+                                    <lightning:layoutItem padding="around-small" flexibility="auto" size="5"> 
+                                        
+                                    
+                                        <aura:if isTrue="{!v.jobTimeDetails.Hour}">
+                                            <div style="text-align: center;font-size: large;">Current schedule/interval</div>
+                                            <div class="slds-grid slds-grid_horizontal" ><!-style="position:relative;left:140%;"->
+                                                
+                                                
+                                                <div class="slds-col">
+                                                    <span> 
+                                                        <lightning:input value="{!v.jobTimeDetails.Hour}" disabled="true" class="customClass"/>
+                                                    </span>
+                                                </div>
+                                                <div class="slds-col">
+                                                    <span>
+                                                        <lightning:input value="{!v.jobTimeDetails.Minute}" disabled="true" class="customClass"/>
+                                                    </span>
+                                                </div>
+                                                
+                                                <aura:if isTrue="{!v.jobTimeDetails.isTime}">
+                                                    <div class="slds-col">
+                                                        <span>
+                                                            <lightning:input value="{!v.jobTimeDetails.Meridian}" disabled="true" class="customClass"/>
+                                                        </span>
+                                                    </div>
+                                                </aura:if>
+                                            </div>
+                                            <aura:set attribute="else">
+                                            <div style="text-align: center;font-size: large;">No schedule/interval exists!</div> 
+                                        </aura:set>
+                                        </aura:if>
+                                    </lightning:layoutItem>
+                                    
+                                    
+                                </lightning:layout> 
+                        </div>
+                        <aura:if isTrue="{!v.openAbortModal}">
+                        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                            <div class="slds-modal__container">
+                                <!-Modal/Popup Box Header Starts here->
+                                <header class="slds-modal__header">
+                                    <lightning:buttonIcon iconName="utility:close"
+                                                          onclick="{! c.closeAbortModal }"
+                                                          alternativeText="close"
+                                                          variant="bare-inverse"
+                                                          class="slds-modal__close"/>
+                                    
+                                                          <div class="logo" >
+                                                            <img src="{!$Resource.ModigieLogo}"/>
+                                                        </div>
+                                    <h1 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate" style="font-size: xx-large;">Abort</h1>
+                                    
+                                </header> 
+                                <!-Modal/Popup Box Body Starts here->
+                                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                    <div class="slds-grid slds-grid_vertical">
+                                        <div class="slds-col" style="font-size: large;text-align:center">
+                                        <span>
+                                           <!- Do you want to abort all the scheduled jobs?->
+                                            
+                                        
+                                        
+                                            <center>   
+                                                <div class="slds-grid">
+                                                    
+                                                        <div class="slds-col slds-size_1-of-2 ">
+                                                            <span style="font-size: large;">
+                                                            <div style="margin: 30px;">
+                                                                <!-input type="radio" name="ModigieServices" value="Get LinkedIn" style="margin: 5px;" disabled={serviceUsageMap.GetLinkedIn} onchange={handleChange} data-name="GetLinkedIn">
+                                                                <label for="Get LinkedIn">Get LinkedIn</label->
+                                                                <lightning:input type="checkbox" label="Get LinkedIn" name="input2" style="margin: 5px;" checked="{!v.batchJobsInfo.GetLinkedIn}" onchange = "{!c.handleCheckBoxChange}"/>
+                                                            </div>
+                                                                <!-lightning-output-field field-name="modigie__JOB_ID__c" class="slds-border_bottom customclass"></lightning-output-field->
+                                                            <div style="margin: 30px;">
+                                                                <!-input type="radio" name="ModigieServices" value="Get Modigie Mobile" style="margin: 5px;" disabled={serviceUsageMap.GetModigie} onchange={handleChange} data-name="GetModigieMobile">
+                                                                <label for="Get Mobile Number">Get Mobile Number</label->
+                                                                <lightning:input type="checkbox" label="Get Modigie" name="input3" checked="{!v.batchJobsInfo.GetMobileNumber}" onchange = "{!c.handleCheckBoxChange}" style="margin: 5px;"/>
+                                                            </div>
+                                                            </span>
+                                                        
+                                                        </div>
+                                                        <div class="slds-col slds-size_1-of-2">
+                                                            <span style="font-size: large;">
+                                                            <div style="margin: 30px;">
+                                                                <!-input type="radio" name="ModigieServices" value="Verify Employer" style="margin: 5px;" disabled={serviceUsageMap.VerifyEmployer} onchange={handleChange} data-name="VerifyEmployer">
+                                                                <label for="Verify Employer">Verify Employer</label->
+                                                                <lightning:input type="checkbox" label="Verify Employer" name="input3" checked="{!v.batchJobsInfo.VerifyEmployer}" onchange = "{!c.handleCheckBoxChange}" style="margin: 5px;"/>
+                                                            </div>
+                                                                <!-lightning-output-field field-name="modigie__JOB_ID__c" class="slds-border_bottom customclass"></lightning-output-field->
+                                                            <div style="margin: 30px;">
+                                                                <!-input type="radio" name="ModigieServices" value="Get Phone Intelligence" style="margin: 5px;" disabled={serviceUsageMap.GetPhoneIntelligence} onchange={handleChange} data-name="GetPhoneIntelligence">
+                                                                <label for="Get Phone Intelligence">Get Phone Insights</label->
+                                                                <lightning:input type="checkbox" label="Get Phone Insights" name="input3" checked="{!v.batchJobsInfo.GetPhoneInsights}" onchange = "{!c.handleCheckBoxChange}" style="margin: 5px;"/>
+                                                            </div>
+                                                        </span>
+                                                        </div>
+                                                    
+                                                </div>
+                                            </center>
+                                        
+                                        </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-Modal/Popup Box Footer Starts here->
+                                <footer class="slds-modal__footer">
+                                    <lightning:button variant="destructive"
+                              label="Confirm"
+                              title="Confirm"
+                              onclick="{! c.abortScheduledJobs }"/>
+            
+            <lightning:button variant="neutral"
+                              label="Cancel"
+                              title="Cancel"
+                              disabled="{!v.disableSubmit}"
+                              onclick="{! c.closeAbortModal }"/>
+                                </footer>
+                            </div>
+                        </section>
+                        <div class="slds-backdrop slds-backdrop_open"></div>
+                    </aura:if>
+                        
+                    </lightning:tab>
+                    
+                    <lightning:tab label="Modigie Job Automation" title="Automate all your tasks in Modigie" id="three">
+                        <div>
+                            <c:templatesComponent/>
+                        </div>
+                    </lightning:tab>
+                </aura:if>
+                </div>
+            </lightning:tabset>
+            
+            
+        </div> 
+        
+    </lightning:card>
+    
+    <!-loading spinner start->
+    <aura:if isTrue="{!v.toggleSpinner}">
+        <div class="slds-spinner_container" style="background-color: white;">
+            <div class="slds-spinner-brand  slds-spinner slds-spinner_medium" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+    <!- Loading spinner end-->
+</aura:component>

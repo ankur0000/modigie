@@ -1,0 +1,1997 @@
+<aura:component controller="TemplatesComponentController">
+
+
+    <!--aura:attribute name="switchData" type="Object" />
+    <aura:attribute name="toggleSpinner" type="Boolean" default="true" />
+    <aura:attribute name="toggleSpinnerObject" type="Object" />
+    <aura:attribute name="optionsInterval" type="List" default="Monthly,Quarterly,Half - yearly,Yearly" />
+    <aura:attribute name="selectedIntervalVerifyEmployer" type="String" default="Monthly" />
+    <aura:attribute name="selectedIntervalPhoneInsights" type="String" default="Monthly" />
+    <aura:attribute name="openSelectPhoneModal" type="Boolean" default="false" />
+    <aura:attribute name="serviceToggled" type="String" default="" />
+    <aura:attribute name="openConfirmModal" type="Boolean" default="false" />
+    <aura:attribute name="validationObject" type="Object" />
+    <aura:attribute name="tempValueObject" type="Object" />
+    <aura:attribute name="sameValue" type="Object" />
+    <aura:attribute name="LimitsSelector" type="Boolean" />
+    <aura:attribute name="showLimitsBox" type="Boolean" default="true" />
+    <aura:attribute name="hyperLinkModal" type="Boolean" default="false" />
+    <aura:attribute name="leadStageModal" type="Boolean" default="false" />
+    <aura:attribute name="OppStageModal" type="Boolean" default="false" />
+    <aura:attribute name="leadStageModalButton" type="Boolean" default="false" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <aura:attribute name="availableStages" type="List" />
+    <aura:attribute name="selectedStages" type="List" />
+    <aura:attribute name="alreadySelectedStages" type="List" />
+    <aura:attribute name="alreadySelectedStagesDemo" type="List" />
+
+    <aura:attribute name="availableOppStages" type="List" />
+    <aura:attribute name="alreadySelectedOppStages" type="List" />
+    <aura:attribute name="selectedOppStages" type="List" />
+    <aura:attribute name="alreadySelectedOppStagesDemo" type="List" />
+
+
+
+
+
+    <aura:attribute name="loadSpinner" type="boolean" default="false" />
+    <aura:attribute name="configurationToast" type="boolean" default="false" />
+    <aura:attribute name="configurationErrorToast" type="boolean" default="false" />
+    <aura:attribute name="toastMessage" type="string" />
+    <aura:method name="callChildJobAuto" action="{!c.scrollDiv}" />
+    <aura:attribute name="topSection" type="Boolean" default="true" />
+    <aura:attribute name="middleSection" type="Boolean" default="false" />
+    <aura:attribute name="bottomSection" type="Boolean" default="false" />
+    <aura:attribute name="variant" type="String" default="non-linear" />
+    <aura:attribute name="hideUpdateButton" type="Boolean" default="false" />
+
+
+
+
+    <aura:if isTrue="{!v.openConfirmModal}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+            aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!- Modal/Popup Box Header Starts here->
+                <header class="slds-modal__header">
+                    <!-lightning:buttonIcon iconName="utility:close"
+                                      onclick="{! c.closeAbortModal }"
+                                      alternativeText="close"
+                                      variant="bare-inverse"
+                                      class="slds-modal__close"/->
+
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                        title="Close" onclick="{!c.closeConfirmModal}">
+                        <lightning:icon iconName="utility:close" alternativeText="Connected" variant="inverse"
+                            size="small" class="confirmModalClose" />
+                        <!-lightning-icon icon-name="utility:close"
+                        alternative-text="close"
+                        variant="inverse"
+                        size="small" ></lightning-icon->
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+
+                    <!- <div class="logo">
+                        <img src="{!$Resource.ModigieLogo}" />
+                    </div> ->
+                    <div class="headerDiv">
+                        <lightning:icon iconName="utility:warning" alternativeText="Warning!" class="headerDivIcon"  />
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate"
+                        >Warning</h2>
+                    </div>
+                </header>
+                <!-Modal/Popup Box Body Starts here->
+                <div class="slds-modal__content slds-p-around_medium slds-is-relative confirmModalBody" id="modal-content-id-1"
+                     >
+                    This automation will run against the entire database, we strongly recommend you to go into process
+                    builder and create additional filters to maximize the efficiency of this automation.
+                </div>
+                <!-Modal/Popup Box Footer Starts here->
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="destructive" label="Confirm" title="Confirm"
+                        onclick="{! c.handleConfirmSubmit}" class="modalButtonMargin" />
+
+                    <lightning:button variant="neutral" label="Cancel" title="Cancel" onclick="{!c.closeConfirmModal}"
+                        class="modalButtonMargin" />
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+
+    <aura:if isTrue="{!v.openSelectPhoneModal}">
+        <c:SelectPhoneNumberForInsightsComp method="{!c.closeModal}"></c:SelectPhoneNumberForInsightsComp>
+    </aura:if>
+
+
+    <aura:if isTrue="{!v.configurationToast}">
+        <div class="demo-only configurationToastDiv" >
+            <div class="slds-notify_container slds-is-relative">
+                <div class="slds-notify slds-notify_toast slds-theme_success" role="status">
+                    <span class="slds-assistive-text">success</span>
+                    <div class="slds-grid slds-gutters configurationToastSubDiv">
+                        <span
+                            class="slds-icon_container slds-icon-utility-success slds-m-right_small slds-no-flex slds-align-top configurationToastSpan"
+                            title="Description of icon when needed">
+                            <lightning:icon iconName="utility:success" alternativeText="Success!" variant="Success"
+                                title="success variant small" size="small" />
+                        </span>
+                        <div class="slds-notify__content">
+                            <h2 class="slds-text-heading_small ">{!v.toastMessage}</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+
+    <aura:if isTrue="{!v.configurationErrorToast}">
+        <div class="demo-only configurationErrorToastDiv" >
+            <div class="slds-notify_container slds-is-relative">
+                <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+                    <span class="slds-assistive-text">error</span>
+                    <div class="slds-grid slds-gutters configurationErrorToastSubDiv" >
+                        <span
+                            class="slds-icon_container slds-icon-utility-error slds-m-right_small slds-no-flex slds-align-top configurationErrorToastSpan"
+                            title="Description of icon when needed">
+                            <lightning:icon iconName="utility:error" alternativeText="Error!" variant="Error"
+                                title="error variant small" size="small" />
+                        </span>
+                        <div class="slds-notify__content">
+                            <h2 class="slds-text-heading_small ">{!v.toastMessage}</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+
+    <aura:if isTrue="{!v.hyperLinkModal}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+            aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                        title="Close">
+                        <lightning:icon iconName="utility:close" alternativeText="Connected" variant="inverse"
+                            size="small" title="Close" onclick="{!c.closeHyperLinkModal}" />
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">MODIGIE SERVICES Reference</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium textDiv" id="modal-content-id-1"
+                    >
+                    <p>Modigie provides multiple discrete functional elements (services) in the managed package; version
+                        (1.x). They are available using the user interface on the Lead, Lead List View, Contact, Contact
+                        List View, and Campaign (if enabled) using buttons, dialog boxes and verifications (toast
+                        messages). <span class="pSpan">Modigie services are also exposed through Salesforce
+                            native automation using
+                            invocable methods and process builder.</span> A user can access any combination of the
+                        exposed services
+                        using ad hoc and automation, stand-alone and in conjunction with one another.</p><br></br>
+
+                    <br></br>
+                    <p> <i>Get Modigie</i> - A service that takes first name, last name, company email and company name
+                        and
+                        returns
+                        all information available from all Modigie services*:</p>
+
+                    <ul class="slds-m-left_large textDivUl">
+                        <li>Get Mobile Phone</li>
+                        <li>Phone Insights</li>
+                        <li>Verify Employer</li>
+                        <li>Get LinkedIn URL </li>
+
+                    </ul>
+
+                    <p>*See a description of each API below.</p>
+
+                    
+
+
+                    <br></br>
+                    <p><i>Phone Insights</i> - A Modigie service that takes an existing phone number, from a variety of
+                        standard and custom fields, and returns:</p>
+
+                    <ul class="slds-m-left_large textDivUl">
+                        <li>Line type, Landline or Mobile</li>
+                        <li>If Mobile</li>
+                        <li>Best time to call</li>
+                        <li>Line activity</li>
+
+                    </ul>
+
+                    <br></br>
+                    <p> <i>Verify Employer</i> - A Modigie service that takes first name, last name, company email and
+                        company
+                        name and returns (if available):</p>
+
+                    <ul class="slds-m-left_large textDivUl">
+                        <li>Current employer</li>
+                        <li>Current title</li>
+
+
+                    </ul>
+
+                    <br></br>
+                    <p> <i>Get LinkedIn</i> - A Modigie service that takes first name, last name, company email and
+                        company
+                        name and returns (if available):</p>
+
+                    <ul class="slds-m-left_large textDivUl">
+                        <li>LinkedIn URL</li>
+
+                    </ul>
+
+
+
+
+
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+
+    <aura:if isTrue="{!v.leadStageModal}">
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open slds-modal_small"
+            aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                        title="Close">
+                        <lightning:icon iconName="utility:close" alternativeText="Connected" variant="inverse"
+                            size="small" title="Close" onclick="{!c.closeLeadStagesModal}" />
+                    </button>
+                    <h2 class="slds-modal__title slds-hyphenate">Select Lead Status</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium slds-is-relative">
+
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col slds-size_2-of-12">
+                        </div>
+                        <div class="slds-col slds-size_8-of-12">
+
+                            <aura:if isTrue="{!v.loadSpinner}">
+                                <div class="slds-spinner_container modalSpinner" >
+                                    <div class="slds-spinner-brand  slds-spinner slds-spinner_medium" role="alert">
+                                        <span class="slds-assistive-text">Loading</span>
+                                        <div class="slds-spinner__dot-a"></div>
+                                        <div class="slds-spinner__dot-b"></div>
+                                    </div>
+                                </div>
+                            </aura:if>
+
+                            <lightning:dualListbox name="leadStages" label="Select Status"
+                                sourceLabel="Available Status" selectedLabel="Selected Status"
+                                fieldLevelHelp="Select Your Preferred Status" options="{!v.availableStages}"
+                                value="{!v.alreadySelectedStages}" onchange="{! c.handleStageChange }" />
+                        </div>
+                        <div class="slds-col slds-size_2-of-12">
+                        </div>
+                    </div>
+
+
+                </div>
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_brand" onclick="{!c.doStageSave}">Save</button>
+                    <button class="slds-button slds-button_neutral" onclick="{!c.closeLeadStagesModal}">Cancel</button>
+
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+
+
+
+
+    <aura:if isTrue="{!v.OppStageModal}">
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open slds-modal_small"
+            aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                        title="Close">
+                        <lightning:icon iconName="utility:close" alternativeText="Connected" variant="inverse"
+                            size="small" title="Close" onclick="{!c.closeOppStagesModal}" />
+                    </button>
+                    <h2 class="slds-modal__title slds-hyphenate">Select Opportunity Stages</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium slds-is-relative">
+
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col slds-size_2-of-12">
+                        </div>
+                        <div class="slds-col slds-size_8-of-12">
+
+                            <aura:if isTrue="{!v.loadSpinner}">
+                                <div class="slds-spinner_container modalSpinner" >
+                                    <div class="slds-spinner-brand  slds-spinner slds-spinner_medium" role="alert">
+                                        <span class="slds-assistive-text">Loading</span>
+                                        <div class="slds-spinner__dot-a"></div>
+                                        <div class="slds-spinner__dot-b"></div>
+                                    </div>
+                                </div>
+                            </aura:if>
+
+                            <lightning:dualListbox name="oppStages" label="Select Stages" sourceLabel="Available Stages"
+                                selectedLabel="Selected Stages" fieldLevelHelp="Select Your Preferred Stage"
+                                options="{!v.availableOppStages}" value="{!v.alreadySelectedOppStages}"
+                                onchange="{! c.handleOppStageChange }" />
+                        </div>
+                        <div class="slds-col slds-size_2-of-12">
+                        </div>
+                    </div>
+
+
+                </div>
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_brand" onclick="{!c.doOppStageSave}">Save</button>
+                    <button class="slds-button slds-button_neutral" onclick="{!c.closeOppStagesModal}">Cancel</button>
+
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+
+
+
+
+    <div class="slds-page-header pageHeader">
+        <div class="slds-page-header__row">
+            <div class="slds-page-header__col-title">
+                <div class="slds-media">
+                    <div class="slds-media__figure">
+                        <span class="slds-icon_container " title="opportunity">
+                            <lightning:icon iconName="standard:settings" alternativeText="Event" title="Event" />
+
+                            <span class="slds-assistive-text">Authorization</span>
+                        </span>
+
+                    </div>
+                    <div class="slds-media__body">
+                        <div class="slds-page-header__name">
+                            <div class="slds-page-header__name-title">
+                                <h1>
+                                    <span class="slds-page-header__title slds-truncate">Job
+                                        Automation</span>
+
+                                </h1>
+
+                            </div>
+
+                        </div>
+                        <a onclick="{!c.hyperLink}">More Information</a>
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            <lightning:select name="LimitsSelection" aura:id="Limits_No_Limits_Selection"
+                value="{!v.switchData.Limits_No_Limits_Selection}" onchange="{!c.handleChange}" class="select">
+                <option text="Limits" value="Limits" />
+                <option text="No Limits" value="No Limits" />
+            </lightning:select>
+
+        </div>
+    </div>
+
+    <div class="slds-path slds-m-bottom_large">
+        <div class="slds-grid slds-path__track">
+            <div class="slds-grid slds-path__scroller-container">
+                <div class="slds-path__scroller">
+                    <div class="slds-path__scroller_inner">
+                        <ul class="slds-path__nav" role="listbox" aria-orientation="horizontal">
+                            <li class="slds-path__item  slds-is-active" role="presentation" aura:id="top">
+                                <a aria-selected="true" class="slds-path__link" href="#top" id="path-1" role="option"
+                                    tabindex="0" onclick="{!c.clickTop}">
+                                    <span class="slds-path__stage">
+
+                                        <span class="slds-assistive-text">Current Stage:</span>
+                                    </span>
+                                    <span class="slds-path__title">New Lead or Contact</span>
+                                </a>
+                            </li>
+                            <li class="slds-path__item slds-is-incomplete" role="presentation" aura:id="middle">
+                                <a aria-selected="false" class="slds-path__link" href="#middle" role="option"
+                                    tabindex="-1" onclick="{!c.clickMiddle}">
+                                    <span class="slds-path__stage">
+
+                                    </span>
+                                    <span class="slds-path__title">Existing Records that require hygiene and
+                                        enrichment</span>
+                                </a>
+                            </li>
+                            <li class="slds-path__item slds-is-incomplete" role="presentation" aura:id="bottom">
+                                <a aria-selected="false" class="slds-path__link" href="#bottom" id="path-3"
+                                    role="option" tabindex="-1" onclick="{!c.clickBottom}">
+                                    <span class="slds-path__stage">
+
+                                    </span>
+                                    <span class="slds-path__title">Existing Records that require data maintenance</span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+    </div>
+
+    <ui:scrollerWrapper class="scrollerSize">
+
+        <div class="slds-m-around_small textDiv ">
+
+
+
+            <aura:if isTrue="{!v.topSection}">
+                <h2 id="top">Modigie considers automation to be highly relevant to all our clients. In an effort to
+                    create a simplified model to support automation across the largest client landscape, Modigie
+                    has created three key areas of automation that most every sales and marketing organization
+                    will require:</h2><br></br>
+
+                <ul>
+                    <li>Top of the funnel = New Lead or Contact</li>
+                    <li>Middle of the funnel = Existing targets that require hygiene and enrichment</li>
+                    <li>Bottom of the funnel = Existing targets that require data maintenance</li>
+                </ul>
+
+                <h2>Modigie has exposed invocable methods in the Salesforce Managed Package. These
+                    methods allow
+                    customers to leverage pre-built automation found in the Modigie Configuration Page, custom
+                    process builder automation comation to crereated by customers, and APEX autate highly
+                    effective automation schemes to perform Enrichment, Hygiene and Data Maintenance of contact
+                    information. Each Modigie service discussed in the Modigie Service Reference is available as
+                    pre-built automation and an invocable method. Modigie has provided a selection of
+                    pre-built automation that can be used as cloned and customized or used as a template for
+                    completely custom automation using Salesforce Process Builder and custom APEX.
+                </h2><br></br><br></br>
+
+
+                <h2><b>Customized Settings for you</b> (using Process Builder, no custom code needed)</h2>
+                <h2> Contact Modigie directly to discuss developing customized rules, settings for you that
+                    match your unique business requirements.</h2><br></br>
+
+
+
+
+                <!- top of the funnel ->
+
+                <div>
+                    <h1 class="funnelTop"><b>&nbsp;Top of the funnel (Hygiene &amp; Enrichment): </b></h1>
+
+                    <ol>
+                        <li>
+                            <h2><b>Upon creation of a new lead or contact</b> (including Marketing
+                                Qualified Leads<b>(MQLs)</b>):</h2>
+                        </li>
+
+                        <article class="slds-m-around_small slds-card olDiv">
+
+                            <div class="slds-card__header slds-grid ">
+                                <header class="slds-media slds-media_center slds-has-flexi-truncate ">
+                                    <div class="slds-media__figure">
+                                        <span class="slds-icon_container">
+                                            <lightning:icon iconName="utility:right" alternativeText="Connected"
+                                                size="xx-small" />
+                                            <span class="slds-assistive-text">Get Modigie</span>
+
+                                        </span>
+
+                                    </div>
+
+                                    <div class="slds-text-heading_medium slds-media__body textDiv">
+                                        <h2>Get Modigie</h2>
+                                    </div>
+
+
+
+                                    <div class="slds-no-flex">
+                                        <div class="slds-form-element">
+                                            <aura:if
+                                                isTrue="{!or(v.toggleSpinner, v.toggleSpinnerObject.No_Mobile_Information)}">
+                                                <div class="slds-spinner_container modalSpinner"
+                                                    >
+                                                    <div class="slds-spinner-brand  slds-spinner slds-spinner_small"
+                                                        role="alert">
+                                                        <span class="slds-assistive-text">Loading</span>
+                                                        <div class="slds-spinner__dot-a"></div>
+                                                        <div class="slds-spinner__dot-b"></div>
+                                                    </div>
+                                                </div>
+                                            </aura:if>
+                                            <div class="slds-grid slds-gutters">
+
+
+
+
+                                                <aura:if
+                                                    isTrue="{!and(v.switchData.No_Mobile_Information,v.showLimitsBox)}">
+                                                    <div class="slds-form-element slds-col"
+                                                        aura:id="NumberOfLimitsField">
+
+                                                        <label class="slds-form-element__label" for="text-input-id-1">
+                                                            <abbr class="slds-required" title="required">* </abbr>Number
+                                                            of
+                                                            Requests per
+                                                            day</label>
+                                                        <div class="slds-form-element__control">
+                                                            <input type="number" id="text-input-id-1"
+                                                                placeholder="Enter limit…" required=""
+                                                                aria-describedby="error-message-unique-id"
+                                                                class="slds-input" aria-invalid="true" min="1"
+                                                                autocomplete="off"
+                                                                value="{!v.switchData.Get_Modigie_Invocable_Limit}"
+                                                                oninput="{!c.handleLimitChange}"
+                                                                data-name="Get_Modigie_Invocable_Limit" />
+                                                        </div>
+
+                                                        <aura:if isTrue="{!v.switchData.No_Mobile_Information}">
+                                                            <div class="c-container">
+                                                                <aura:if
+                                                                    isTrue="{!and(!or(v.validationObject.Get_Modigie_Invocable_Limit, v.sameValue.Get_Modigie_Invocable_Limit),v.showLimitsBox)}">
+                                                                    <lightning:layout horizontalAlign="space">
+                                                                        <lightning:layoutItem padding="around-small">
+                                                                            <div class="noMobileInfoSave"
+                                                                                >
+                                                                                
+                                                                                <button
+                                                                                    class="slds-button slds-button_brand noMobileInfoSaveButton"
+                                                                                    type="button" title="Brand action"
+                                                                                    
+                                                                                    onclick="{!c.confirmLimit}"
+                                                                                    data-name="Get_Modigie_Invocable_Limit">Save</button>
+                                                                            </div>
+                                                                            
+                                                                        </lightning:layoutItem>
+                                                                        <lightning:layoutItem padding="around-small">
+                                                                            <div class="noMobileInfoCancel">
+                                                                                
+                                                                                <button
+                                                                                    class="slds-button slds-button_brand noMobileInfoCancelButton"
+                                                                                    type="button" title="Brand action"
+                                                                                     
+                                                                                    onclick="{!c.displayExistingLimit}"
+                                                                                    data-name="Get_Modigie_Invocable_Limit">Cancel</button>
+                                                                            </div>
+                                                                            
+                                                                        </lightning:layoutItem>
+                                                                    </lightning:layout>
+                                                                </aura:if>
+                                                                <aura:if
+                                                                    isTrue="{!and(v.validationObject.Get_Modigie_Invocable_Limit,v.showLimitsBox)}">
+                                                                    <div class="slds-form-element__help validValueError"
+                                                                        id="error-message-unique-id"
+                                                                        >Enter a
+                                                                        valid
+                                                                        value.</div>
+                                                                </aura:if>
+                                                            </div>
+                                                        </aura:if>
+                                                    </div>
+                                                </aura:if>
+
+                                                <div class="slds-col togglePosition">
+                                                    <label class="slds-checkbox_toggle slds-grid">
+                                                        <!-input type="checkbox" name="checkbox-toggle-18" value="checkbox-toggle-18" aria-describedby="checkbox-toggle-18" /->
+                                                        <ui:inputCheckbox aura:id="No_Mobile_Information"
+                                                            class="slds-input" change="{!c.handleToggle}"
+                                                            value="{!v.switchData.No_Mobile_Information}" />
+                                                        <span id="checkbox-toggle-18"
+                                                            class="slds-checkbox_faux_container" aria-live="assertive">
+                                                            <aura:if
+                                                                isTrue="{!or(!v.toggleSpinner, v.toggleSpinnerObject.No_Mobile_Information)}">
+                                                                <span class="slds-checkbox_faux">a</span>
+                                                            </aura:if>
+                                                            <span class="slds-checkbox_on">Enabled</span>
+                                                            <span class="slds-checkbox_off">Disabled</span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </header>
+                            </div>
+
+                        </article>
+
+                        <article class="slds-m-around_small slds-card olDiv">
+                            <div class="slds-card__header slds-grid">
+                                <header class="slds-media slds-media_center slds-has-flexi-truncate ">
+                                    <div class="slds-media__figure">
+                                        <span class="slds-icon_container">
+                                            <lightning:icon iconName="utility:right" alternativeText="Connected"
+                                                size="xx-small" />
+                                            <span class="slds-assistive-text">Verify Employer (New Lead or
+                                                Contact)</span>
+                                        </span>
+                                    </div>
+
+                                    <div class="slds-text-heading_medium slds-media__body textDiv">
+                                        <h2>Verify Employer </h2>
+                                    </div>
+
+                                    <div class="slds-no-flex">
+                                        <div class="slds-form-element">
+                                            <aura:if
+                                                isTrue="{!or(v.toggleSpinner, v.toggleSpinnerObject.Validate_Employer)}">
+                                                <div class="slds-spinner_container modalSpinner"
+                                                    >
+                                                    <div class="slds-spinner-brand  slds-spinner slds-spinner_small"
+                                                        role="alert">
+                                                        <span class="slds-assistive-text">Loading</span>
+                                                        <div class="slds-spinner__dot-a"></div>
+                                                        <div class="slds-spinner__dot-b"></div>
+                                                    </div>
+                                                </div>
+                                            </aura:if>
+                                            <div class="slds-grid slds-gutters">
+                                                <aura:if
+                                                    isTrue="{!and(v.switchData.Validate_Employer,v.showLimitsBox)}">
+                                                    <div class="slds-form-element slds-col"
+                                                        aura:id="NumberOfLimitsField">
+                                                        <div>
+                                                            <label class="slds-form-element__label"
+                                                                for="text-input-id-1">
+                                                                <abbr class="slds-required" title="required">*
+                                                                </abbr>Number
+                                                                of
+                                                                Requests per
+                                                                day</label>
+                                                            <div class="slds-form-element__control">
+                                                                <input type="number" id="text-input-id-1"
+                                                                    placeholder="Enter limit…" required=""
+                                                                    aria-describedby="error-message-unique-id"
+                                                                    class="slds-input" aria-invalid="true" min="1"
+                                                                    autocomplete="off"
+                                                                    value="{!v.switchData.Validate_Employer_Invocable_Limit}"
+                                                                    oninput="{!c.handleLimitChange}"
+                                                                    data-name="Validate_Employer_Invocable_Limit" />
+                                                            </div>
+                                                        </div>
+                                                        <aura:if
+                                                            isTrue="{!and(v.switchData.Validate_Employer,v.showLimitsBox)}">
+                                                            <div class="c-container">
+                                                                <aura:if
+                                                                    isTrue="{!!or(v.validationObject.Validate_Employer_Invocable_Limit, v.sameValue.Validate_Employer_Invocable_Limit)}">
+                                                                    <lightning:layout horizontalAlign="space">
+                                                                        <lightning:layoutItem padding="around-small">
+                                                                            <div class="noMobileInfoSave"
+                                                                                >
+                                                                                
+                                                                                <button
+                                                                                    class="slds-button slds-button_brand noMobileInfoSaveButton"
+                                                                                    type="button" title="Brand action"
+                                                                                    
+                                                                                    onclick="{!c.confirmLimit}"
+                                                                                    data-name="Validate_Employer_Invocable_Limit">Save</button>
+                                                                            </div>
+                                                                            
+                                                                        </lightning:layoutItem>
+                                                                        <lightning:layoutItem padding="around-small">
+                                                                            <div class="noMobileInfoCancel">
+                                                                                
+                                                                                <button
+                                                                                    class="slds-button slds-button_brand noMobileInfoCancelButton"
+                                                                                    type="button" title="Brand action"
+                                                                                    
+                                                                                    onclick="{!c.displayExistingLimit}"
+                                                                                    data-name="Validate_Employer_Invocable_Limit">Cancel</button>
+                                                                            </div>
+                                                                            
+                                                                        </lightning:layoutItem>
+                                                                    </lightning:layout>
+                                                                </aura:if>
+                                                                <aura:if
+                                                                    isTrue="{!v.validationObject.Validate_Employer_Invocable_Limit}">
+                                                                    <div class="slds-form-element__help validValueError"
+                                                                        id="error-message-unique-id"
+                                                                        >Enter a
+                                                                        valid
+                                                                        value.</div>
+                                                                </aura:if>
+                                                            </div>
+                                                        </aura:if>
+                                                    </div>
+                                                </aura:if>
+                                                <div class="slds-col togglePosition" >
+
+                                                    <label class="slds-checkbox_toggle slds-grid">
+                                                        <ui:inputCheckbox aura:id="Validate_Employer" class="slds-input"
+                                                            change="{!c.handleToggle}"
+                                                            value="{!v.switchData.Validate_Employer}" />
+                                                        <!-input type="checkbox" name="checkbox-toggle-18" value="checkbox-toggle-18" aria-describedby="checkbox-toggle-18" /->
+                                                        <span id="checkbox-toggle-18"
+                                                            class="slds-checkbox_faux_container" aria-live="assertive">
+                                                            <aura:if
+                                                                isTrue="{!!or(v.toggleSpinner, v.toggleSpinnerObject.Validate_Employer)}">
+                                                                <span class="slds-checkbox_faux"></span>
+                                                            </aura:if>
+                                                            <span class="slds-checkbox_on">Enabled</span>
+                                                            <span class="slds-checkbox_off">Disabled</span>
+                                                        </span>
+                                                    </label>
+
+
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </header>
+
+                            </div>
+
+                        </article>
+
+                        <article class="slds-m-around_small slds-card olDiv">
+                            <lightning:spinner aura:id="mySpinnerhotLeads" alternativeText="Processing.."
+                                title="Processing.." variant="brand" size="large" class="slds-hide" />
+                            <div class="slds-card__header slds-grid">
+                                <header class="slds-media slds-media_center slds-has-flexi-truncate ">
+                                    <div class="slds-media__figure">
+                                        <span class="slds-icon_container">
+                                            <lightning:icon iconName="utility:right" alternativeText="Connected"
+                                                size="xx-small" />
+                                            <span class="slds-assistive-text">Modigie Phone Insights (New Lead or
+                                                Contact)</span>
+                                        </span>
+                                    </div>
+
+                                    <div class="slds-text-heading_medium slds-media__body textDiv">
+                                        <!-span>Modigie Phone Insights (New Lead or Contact)</span->
+                                        <h2>Get Phone Insights </h2>
+                                    </div>
+
+                                    <div class="slds-no-flex">
+
+                                        <div class="slds-form-element slds-is-relative">
+
+                                            <aura:if
+                                                isTrue="{!or(v.toggleSpinner, v.toggleSpinnerObject.Get_Phone_Insights)}">
+                                                <div class="slds-spinner_container modalSpinner"
+                                                   >
+                                                    <div class="slds-spinner-brand  slds-spinner slds-spinner_small"
+                                                        role="alert">
+                                                        <span class="slds-assistive-text">Loading</span>
+                                                        <div class="slds-spinner__dot-a"></div>
+                                                        <div class="slds-spinner__dot-b"></div>
+                                                    </div>
+                                                </div>
+                                            </aura:if>
+                                            <div class="slds-grid slds-gutters">
+
+                                                <aura:if
+                                                    isTrue="{!or(v.switchData.Get_Phone_Insights, v.switchData.Phone_Insights_Data_Maintenance)}">
+                                                    <!-aura:if isTrue="{!v.switchData.Get_Phone_Insights}"->
+                                                    <div class="slds-col xtraButton" >
+                                                        <span>
+                                                            <lightning:button variant="brand"
+                                                                label="Select Phone Numbers"
+                                                                title="Choose which of the phone numbers on lead and contact should process."
+                                                                onclick="{!c.openModal}" />
+                                                        </span>
+                                                    </div>
+                                                </aura:if>
+                                                <aura:if
+                                                    isTrue="{!and(v.switchData.Get_Phone_Insights,v.showLimitsBox)}">
+                                                    <div class="slds-form-element slds-col"
+                                                        aura:id="NumberOfLimitsField">
+                                                        <div>
+                                                            <label class="slds-form-element__label"
+                                                                for="text-input-id-1">
+                                                                <abbr class="slds-required" title="required">*
+                                                                </abbr>Number
+                                                                of
+                                                                Requests per
+                                                                day</label>
+                                                            <div class="slds-form-element__control">
+                                                                <input type="number" id="text-input-id-1"
+                                                                    placeholder="Enter limit…" required=""
+                                                                    aria-describedby="error-message-unique-id"
+                                                                    class="slds-input" aria-invalid="true" min="1"
+                                                                    autocomplete="off"
+                                                                    value="{!v.switchData.Modigie_Phone_Insights_Invocable_Limit}"
+                                                                    oninput="{!c.handleLimitChange}"
+                                                                    data-name="Modigie_Phone_Insights_Invocable_Limit" />
+                                                            </div>
+                                                        </div>
+
+                                                        <aura:if isTrue="{!v.switchData.Get_Phone_Insights}">
+                                                            <div class="c-container">
+                                                                <aura:if
+                                                                    isTrue="{!and(!or(v.validationObject.Modigie_Phone_Insights_Invocable_Limit, v.sameValue.Modigie_Phone_Insights_Invocable_Limit),v.showLimitsBox)}">
+                                                                    <lightning:layout horizontalAlign="space">
+                                                                        <lightning:layoutItem padding="around-small">
+                                                                            <div class="noMobileInfoSave"
+                                                                                >
+                                                                                
+                                                                                <button
+                                                                                    class="slds-button slds-button_brand noMobileInfoSaveButton"
+                                                                                    type="button" title="Brand action"
+                                                                                    onclick="{!c.confirmLimit}"
+                                                                                    data-name="Modigie_Phone_Insights_Invocable_Limit">Save</button>
+                                                                            </div>
+                                                                            
+                                                                        </lightning:layoutItem>
+                                                                        <lightning:layoutItem padding="around-small">
+                                                                            <div class="noMobileInfoCancel" >
+                                                                                
+                                                                                <button
+                                                                                    class="slds-button slds-button_brand noMobileInfoCancelButton"
+                                                                                    type="button" title="Brand action"
+                                                                                    
+                                                                                    onclick="{!c.displayExistingLimit}"
+                                                                                    data-name="Modigie_Phone_Insights_Invocable_Limit">Cancel</button>
+                                                                            </div>
+                                                                            
+                                                                        </lightning:layoutItem>
+                                                                    </lightning:layout>
+                                                                </aura:if>
+                                                                <aura:if
+                                                                    isTrue="{!and(v.validationObject.Modigie_Phone_Insights_Invocable_Limit,v.showLimitsBox)}">
+                                                                    <div class="slds-form-element__help validValueError"
+                                                                        id="error-message-unique-id "
+                                                                        >Enter a
+                                                                        valid
+                                                                        value.</div>
+                                                                </aura:if>
+                                                            </div>
+                                                        </aura:if>
+                                                    </div>
+                                                </aura:if>
+                                                <div class="slds-col togglePosition2">
+
+                                                    <label class="slds-checkbox_toggle slds-grid">
+
+                                                       
+
+                                                        <ui:inputCheckbox aura:id="Get_Phone_Insights"
+                                                            class="slds-input" change="{!c.handleToggle}"
+                                                            value="{!v.switchData.Get_Phone_Insights}" />
+
+                                                        <span id="checkbox-toggle-18"
+                                                            class="slds-checkbox_faux_container" aria-live="assertive">
+                                                            <aura:if
+                                                                isTrue="{!!or(v.toggleSpinner, v.toggleSpinnerObject.Get_Phone_Insights)}">
+                                                                <span class="slds-checkbox_faux"></span>
+                                                            </aura:if>
+                                                            <span class="slds-checkbox_on">Enabled</span>
+                                                            <span class="slds-checkbox_off">Disabled</span>
+                                                        </span>
+
+                                                    </label>
+
+
+                                                </div>
+                                            </div>
+
+
+
+
+                                        </div>
+                                    </div>
+                                </header>
+
+                            </div>
+
+
+                            <!- <div class="slds-card__body slds-is-close slds-card__body_inner">
+                                    <div class="slds-section" aura:id="phoneInsights">
+                                        <h3 class="slds-section__title">
+                                            <button aria-controls="phoneInsights" class="slds-button slds-section__title-action">
+                                                <span onclick="{!c.toggleSection}" data-auraId="phoneInsights">
+                                                    <lightning:icon iconName="utility:switch" alternativeText="button icon" size="x-small"
+                                                        class="slds-section__title-action-icon slds-button__icon_left" />
+                                                </span>
+                                                <span data-auraId="phoneInsights" onclick="{!c.toggleSection}" class="slds-truncate"
+                                                    title="phoneInsights">Modige Phone Insights (New Lead or Contact)</span>
+                                            </button>
+                                        </h3>
+                                        <div class="slds-section__content flows-section" id="phoneInsightsContentId">
+                                            Modigie will validate phone number data that already exists in the current Lead or Contact record if
+                                            it is mobile, in service and will provide best time to call
+                        
+                                            Enable this automation when existing phone number data already exists in the system, but needs
+                                            accuracy verification.
+                                            This automation executes on the creation of a new Lead or Contact.
+                        
+                        
+                                        </div>
+                                    </div>
+                                </div> ->
+                        </article>
+
+                        <article class="slds-m-around_small slds-card olDiv">
+                            <div class="slds-card__header slds-grid">
+                                <header class="slds-media slds-media_center slds-has-flexi-truncate ">
+                                    <div class="slds-media__figure">
+                                        <span class="slds-icon_container">
+                                            <lightning:icon iconName="utility:right" alternativeText="Connected"
+                                                size="xx-small" />
+                                            <span class="slds-assistive-text">LinkedIn URL </span>
+                                        </span>
+                                    </div>
+
+                                    <div class="slds-text-heading_medium slds-media__body textDiv">
+                                        <!-span>LinkedIn URL (New Lead or Contact)</span->
+                                        <h2>LinkedIn URL </h2>
+                                    </div>
+
+                                    <div class="slds-no-flex">
+                                        <div class="slds-form-element">
+                                            <aura:if
+                                                isTrue="{!or(v.toggleSpinner, v.toggleSpinnerObject.Get_linkedin_url)}">
+                                                <div class="slds-spinner_container modalSpinner"
+                                                    >
+                                                    <div class="slds-spinner-brand  slds-spinner slds-spinner_small"
+                                                        role="alert">
+                                                        <span class="slds-assistive-text">Loading</span>
+                                                        <div class="slds-spinner__dot-a"></div>
+                                                        <div class="slds-spinner__dot-b"></div>
+                                                    </div>
+                                                </div>
+                                            </aura:if>
+                                            <div class="slds-grid slds-gutters">
+                                                <aura:if isTrue="{!and(v.switchData.Get_linkedin_url,v.showLimitsBox)}">
+                                                    <div class="slds-form-element slds-col"
+                                                        aura:id="NumberOfLimitsField">
+
+                                                        <label class="slds-form-element__label" for="text-input-id-1">
+                                                            <abbr class="slds-required" title="required">* </abbr>Number
+                                                            of
+                                                            Requests per
+                                                            day</label>
+                                                        <div class="slds-form-element__control">
+                                                            <input type="number" id="text-input-id-1"
+                                                                placeholder="Enter limit…" required=""
+                                                                aria-describedby="error-message-unique-id"
+                                                                class="slds-input" aria-invalid="true" min="1"
+                                                                autocomplete="off"
+                                                                value="{!v.switchData.LinkedIn_Url_Invocable_Limits}"
+                                                                oninput="{!c.handleLimitChange}"
+                                                                data-name="LinkedIn_Url_Invocable_Limits" />
+                                                        </div>
+                                                        <aura:if
+                                                            isTrue="{!and(v.switchData.Get_linkedin_url,v.showLimitsBox)}">
+                                                            <div class="c-container">
+                                                                <aura:if
+                                                                    isTrue="{!!or(v.validationObject.LinkedIn_Url_Invocable_Limits, v.sameValue.LinkedIn_Url_Invocable_Limits)}">
+                                                                    <lightning:layout horizontalAlign="space">
+                                                                        <lightning:layoutItem padding="around-small">
+                                                                            <div class="noMobileInfoSave"
+                                                                                 >
+                                                                                 <button
+                                                                                    class="slds-button slds-button_brand noMobileInfoSaveButton"
+                                                                                    type="button" title="Brand action"
+                                                                                     
+                                                                                    onclick="{!c.confirmLimit}"
+                                                                                    data-name="LinkedIn_Url_Invocable_Limits">Save</button>
+                                                                            </div>
+                                                                           
+                                                                        </lightning:layoutItem>
+                                                                        <lightning:layoutItem padding="around-small">
+                                                                            <div class="noMobileInfoCancel" >
+                                                                                 <button
+                                                                                    class="slds-button slds-button_brand noMobileInfoCancelButton"
+                                                                                    type="button" title="Brand action"
+                                                                                   
+                                                                                    onclick="{!c.displayExistingLimit}"
+                                                                                    data-name="LinkedIn_Url_Invocable_Limits">Cancel</button>
+                                                                            </div>
+                                                                            
+                                                                        </lightning:layoutItem>
+                                                                    </lightning:layout>
+                                                                </aura:if>
+                                                                <aura:if
+                                                                    isTrue="{!v.validationObject.LinkedIn_Url_Invocable_Limits}">
+                                                                    <div class="slds-form-element__help validValueError"
+                                                                        id="error-message-unique-id"
+                                                                        >Enter a
+                                                                        valid
+                                                                        value.</div>
+                                                                </aura:if>
+                                                            </div>
+                                                        </aura:if>
+                                                    </div>
+                                                </aura:if>
+                                                <div class="slds-col togglePosition" >
+                                                    <label class="slds-checkbox_toggle slds-grid">
+                                                        <!-input type="checkbox" aura:id="chkbox" name="checkbox-toggle-18" value="checkbox-toggle-18" aria-describedby="checkbox-toggle-18"/->
+                                                        <ui:inputCheckbox aura:id="Get_linkedin_url" class="slds-input"
+                                                            change="{!c.handleToggle}"
+                                                            value="{!v.switchData.Get_linkedin_url}" />
+                                                        <span id="checkbox-toggle-18"
+                                                            class="slds-checkbox_faux_container" aria-live="assertive">
+                                                            <aura:if
+                                                                isTrue="{!!or(v.toggleSpinner, v.toggleSpinnerObject.Get_linkedin_url)}">
+                                                                <span class="slds-checkbox_faux"></span>
+                                                            </aura:if>
+                                                            <span class="slds-checkbox_on">Enabled</span>
+                                                            <span class="slds-checkbox_off">Disabled</span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </header>
+
+                            </div>
+
+
+
+                        </article>
+
+
+
+
+
+
+
+                        <li>
+                            <h2><b>Campaign - creation of a new campaign or adding a new lead or contact to a
+                                    campaign</b> </h2>
+                        </li>
+
+                        <article class="slds-m-around_small slds-card olDiv">
+                            <div class="slds-card__header slds-grid">
+                                <header class="slds-media slds-media_center slds-has-flexi-truncate ">
+                                    <div class="slds-media__figure">
+                                        <span class="slds-icon_container">
+                                            <lightning:icon iconName="utility:right" alternativeText="Connected"
+                                                size="xx-small" />
+                                            <span class="slds-assistive-text">Get Modigie</span>
+                                        </span>
+                                    </div>
+
+                                    <div class="slds-text-heading_medium slds-media__body textDiv">
+                                        <h2>Get Modigie</h2>
+                                    </div>
+
+                                    <div class="slds-no-flex">
+                                        <div class="slds-form-element">
+                                            <aura:if
+                                                isTrue="{!or(v.toggleSpinner, v.toggleSpinnerObject.No_Mobile_Information_campaign)}">
+                                                <div class="slds-spinner_container modalSpinner"
+                                                    >
+                                                    <div class="slds-spinner-brand  slds-spinner slds-spinner_small"
+                                                        role="alert">
+                                                        <span class="slds-assistive-text">Loading</span>
+                                                        <div class="slds-spinner__dot-a"></div>
+                                                        <div class="slds-spinner__dot-b"></div>
+                                                    </div>
+                                                </div>
+                                            </aura:if>
+                                            <div class="slds-grid slds-gutters">
+                                                <aura:if
+                                                    isTrue="{!and(v.switchData.No_Mobile_Information_campaign,v.showLimitsBox)}">
+                                                    <div class="slds-form-element slds-col"
+                                                        aura:id="NumberOfLimitsField">
+                                                        <label class="slds-form-element__label" for="text-input-id-1">
+                                                            <abbr class="slds-required" title="required">* </abbr>Number
+                                                            of
+                                                            Requests per
+                                                            day</label>
+                                                        <div class="slds-form-element__control">
+                                                            <input type="number" id="text-input-id-1"
+                                                                placeholder="Enter limit…" required=""
+                                                                aria-describedby="error-message-unique-id"
+                                                                class="slds-input" aria-invalid="true" min="1"
+                                                                autocomplete="off"
+                                                                value="{!v.switchData.Get_Modigie_Campaign_Invocable_Limits}"
+                                                                oninput="{!c.handleLimitChange}"
+                                                                data-name="Get_Modigie_Campaign_Invocable_Limits" />
+                                                        </div>
+                                                        <aura:if
+                                                            isTrue="{!and(v.switchData.No_Mobile_Information_campaign,v.showLimitsBox)}">
+                                                            <div class="c-container">
+                                                                <aura:if
+                                                                    isTrue="{!!or(v.validationObject.Get_Modigie_Campaign_Invocable_Limits, v.sameValue.Get_Modigie_Campaign_Invocable_Limits)}">
+                                                                    <lightning:layout horizontalAlign="space">
+                                                                        <lightning:layoutItem padding="around-small">
+                                                                            <div 
+                                                                                class="noMobileInfoSave">
+                                                                                <button
+                                                                                    class="slds-button slds-button_brand noMobileInfoSaveButton"
+                                                                                    type="button" title="Brand action"
+                                                                                    
+                                                                                    onclick="{!c.confirmLimit}"
+                                                                                    data-name="Get_Modigie_Campaign_Invocable_Limits">Save</button>
+                                                                            </div>
+                                                                            
+                                                                        </lightning:layoutItem>
+                                                                        <lightning:layoutItem padding="around-small">
+                                                                            <div class="noMobileInfoCancel">
+                                                                                <button
+                                                                                    class="slds-button slds-button_brand noMobileInfoCancelButton"
+                                                                                    type="button" title="Brand action"
+                                                                                     
+                                                                                    onclick="{!c.displayExistingLimit}"
+                                                                                    data-name="Get_Modigie_Campaign_Invocable_Limits">Cancel</button>
+                                                                            </div>
+                                                                            
+                                                                        </lightning:layoutItem>
+                                                                    </lightning:layout>
+                                                                </aura:if>
+                                                                <aura:if
+                                                                    isTrue="{!v.validationObject.Get_Modigie_Campaign_Invocable_Limits}">
+                                                                    <div class="slds-form-element__help validValueError"
+                                                                        id="error-message-unique-id"
+                                                                        >Enter a
+                                                                        valid
+                                                                        value.</div>
+                                                                </aura:if>
+                                                            </div>
+                                                        </aura:if>
+                                                    </div>
+                                                </aura:if>
+
+                                                <div class="slds-col togglePosition" >
+                                                    <label class="slds-checkbox_toggle slds-grid">
+                                                        <!-input type="checkbox" name="checkbox-toggle-18" value="checkbox-toggle-18" aria-describedby="checkbox-toggle-18" /->
+                                                        <ui:inputCheckbox aura:id="No_Mobile_Information_campaign"
+                                                            class="slds-input" change="{!c.handleToggle}"
+                                                            value="{!v.switchData.No_Mobile_Information_campaign}" />
+                                                        <span id="checkbox-toggle-18"
+                                                            class="slds-checkbox_faux_container" aria-live="assertive">
+                                                            <aura:if
+                                                                isTrue="{!!or(v.toggleSpinner, v.toggleSpinnerObject.No_Mobile_Information_campaign)}">
+                                                                <span class="slds-checkbox_faux"></span>
+                                                            </aura:if>
+                                                            <span class="slds-checkbox_on">Enabled</span>
+                                                            <span class="slds-checkbox_off">Disabled</span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </header>
+
+
+                            </div>
+
+
+                            
+                        </article>
+
+                        <article class="slds-m-around_small slds-card olDiv">
+                            <div class="slds-card__header slds-grid">
+                                <header class="slds-media slds-media_center slds-has-flexi-truncate ">
+                                    <div class="slds-media__figure">
+                                        <span class="slds-icon_container">
+                                            <lightning:icon iconName="utility:right" alternativeText="Connected"
+                                                size="xx-small" />
+                                            <span class="slds-assistive-text">Verify Employer</span>
+                                        </span>
+                                    </div>
+
+                                    <div class="slds-text-heading_medium slds-media__body textDiv">
+                                        <h2>Verify Employer </h2>
+                                    </div>
+
+                                    <div class="slds-no-flex">
+                                        <div class="slds-form-element">
+                                            <aura:if
+                                                isTrue="{!or(v.toggleSpinner, v.toggleSpinnerObject.Validate_Employer_campaign)}">
+                                                <div class="slds-spinner_container modalSpinner"
+                                                     >
+                                                    <div class="slds-spinner-brand  slds-spinner slds-spinner_small"
+                                                        role="alert">
+                                                        <span class="slds-assistive-text">Loading</span>
+                                                        <div class="slds-spinner__dot-a"></div>
+                                                        <div class="slds-spinner__dot-b"></div>
+                                                    </div>
+                                                </div>
+                                            </aura:if>
+                                            <div class="slds-grid slds-gutters">
+                                                <aura:if
+                                                    isTrue="{!and(v.switchData.Validate_Employer_campaign,v.showLimitsBox)}">
+                                                    <div class="slds-form-element slds-col"
+                                                        aura:id="NumberOfLimitsField">
+                                                        <label class="slds-form-element__label" for="text-input-id-1">
+                                                            <abbr class="slds-required" title="required">* </abbr>Number
+                                                            of
+                                                            Requests per
+                                                            day</label>
+                                                        <div class="slds-form-element__control">
+                                                            <input type="number" id="text-input-id-1"
+                                                                placeholder="Enter limit…" required=""
+                                                                aria-describedby="error-message-unique-id"
+                                                                class="slds-input" aria-invalid="true" min="1"
+                                                                autocomplete="off"
+                                                                value="{!v.switchData.Validate_employer_campaign_Limits}"
+                                                                oninput="{!c.handleLimitChange}"
+                                                                data-name="Validate_employer_campaign_Limits" />
+                                                        </div>
+                                                        <aura:if
+                                                            isTrue="{!and(v.switchData.Validate_Employer_campaign,v.showLimitsBox)}">
+                                                            <div class="c-container">
+                                                                <aura:if
+                                                                    isTrue="{!!or(v.validationObject.Validate_employer_campaign_Limits, v.sameValue.Validate_employer_campaign_Limits)}">
+                                                                    <lightning:layout horizontalAlign="space">
+                                                                        <lightning:layoutItem padding="around-small">
+                                                                            <div
+                                                                                class="noMobileInfoSave">
+                                                                                <button
+                                                                                    class="slds-button slds-button_brand noMobileInfoSaveButton"
+                                                                                    type="button" title="Brand action"
+                                                                                    
+                                                                                    onclick="{!c.confirmLimit}"
+                                                                                    data-name="Validate_employer_campaign_Limits">Save</button>
+                                                                            </div>
+                                                                            
+                                                                        </lightning:layoutItem>
+                                                                        <lightning:layoutItem padding="around-small">
+                                                                            <div class="noMobileInfoCancel">
+                                                                                <button
+                                                                                    class="slds-button slds-button_brand noMobileInfoCancelButton"
+                                                                                    type="button" title="Brand action"
+                                                                                     
+                                                                                    onclick="{!c.displayExistingLimit}"
+                                                                                    data-name="Validate_employer_campaign_Limits">Cancel</button>
+                                                                            </div>
+                                                                            
+                                                                        </lightning:layoutItem>
+                                                                    </lightning:layout>
+                                                                </aura:if>
+                                                                <aura:if
+                                                                    isTrue="{!v.validationObject.Validate_employer_campaign_Limits}">
+                                                                    <div class="slds-form-element__help validValueError"
+                                                                        id="error-message-unique-id"
+                                                                       >Enter a
+                                                                        valid
+                                                                        value.</div>
+                                                                </aura:if>
+                                                            </div>
+                                                        </aura:if>
+                                                    </div>
+                                                </aura:if>
+
+                                                <div class="slds-col togglePosition"  >
+                                                    <label class="slds-checkbox_toggle slds-grid">
+                                                        <ui:inputCheckbox aura:id="Validate_Employer_campaign"
+                                                            class="slds-input" change="{!c.handleToggle}"
+                                                            value="{!v.switchData.Validate_Employer_campaign}" />
+                                                        <!-input type="checkbox" name="checkbox-toggle-18" value="checkbox-toggle-18" aria-describedby="checkbox-toggle-18" /->
+                                                        <span id="checkbox-toggle-18"
+                                                            class="slds-checkbox_faux_container" aria-live="assertive">
+                                                            <aura:if
+                                                                isTrue="{!!or(v.toggleSpinner, v.toggleSpinnerObject.Validate_Employer_campaign)}">
+                                                                <span class="slds-checkbox_faux"></span>
+                                                            </aura:if>
+                                                            <span class="slds-checkbox_on">Enabled</span>
+                                                            <span class="slds-checkbox_off">Disabled</span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </header>
+
+                            </div>
+
+
+                            
+                        </article>
+
+
+                        <article class="slds-m-around_small slds-card olDiv">
+                            <div class="slds-card__header slds-grid">
+                                <header class="slds-media slds-media_center slds-has-flexi-truncate ">
+                                    <div class="slds-media__figure">
+                                        <span class="slds-icon_container">
+                                            <lightning:icon iconName="utility:right" alternativeText="Connected"
+                                                size="xx-small" />
+                                            <span class="slds-assistive-text">LinkedIn URL </span>
+                                        </span>
+                                    </div>
+
+                                    <div class="slds-text-heading_medium slds-media__body textDiv">
+                                        <!-span>LinkedIn URL (Campaign)</span->
+                                        <h2>LinkedIn URL </h2>
+                                    </div>
+
+                                    <div class="slds-no-flex">
+                                        <div class="slds-form-element">
+                                            <aura:if
+                                                isTrue="{!or(v.toggleSpinner, v.toggleSpinnerObject.Get_linkedin_campaign)}">
+                                                <div class="slds-spinner_container modalSpinner"
+                                                     >
+                                                    <div class="slds-spinner-brand  slds-spinner slds-spinner_small"
+                                                        role="alert">
+                                                        <span class="slds-assistive-text">Loading</span>
+                                                        <div class="slds-spinner__dot-a"></div>
+                                                        <div class="slds-spinner__dot-b"></div>
+                                                    </div>
+                                                </div>
+                                            </aura:if>
+                                            <div class="slds-grid slds-gutters">
+                                                <aura:if
+                                                    isTrue="{!and(v.switchData.Get_linkedin_campaign,v.showLimitsBox)}">
+                                                    <div class="slds-form-element slds-col"
+                                                        aura:id="NumberOfLimitsField">
+                                                        <label class="slds-form-element__label" for="text-input-id-1">
+                                                            <abbr class="slds-required" title="required">* </abbr>Number
+                                                            of
+                                                            Requests per
+                                                            day</label>
+                                                        <div class="slds-form-element__control">
+                                                            <input type="number" id="text-input-id-1"
+                                                                placeholder="Enter limit…" required=""
+                                                                aria-describedby="error-message-unique-id"
+                                                                class="slds-input" aria-invalid="true" min="1"
+                                                                autocomplete="off"
+                                                                value="{!v.switchData.Linkedin_Url_Campaign_Limits}"
+                                                                oninput="{!c.handleLimitChange}"
+                                                                data-name="Linkedin_Url_Campaign_Limits" />
+                                                        </div>
+                                                        <aura:if
+                                                            isTrue="{!and(v.switchData.Get_linkedin_campaign,v.showLimitsBox)}">
+                                                            <div class="c-container">
+                                                                <aura:if
+                                                                    isTrue="{!!or(v.validationObject.Linkedin_Url_Campaign_Limits, v.sameValue.Linkedin_Url_Campaign_Limits)}">
+                                                                    <lightning:layout horizontalAlign="space">
+                                                                        <lightning:layoutItem padding="around-small">
+                                                                            <div
+                                                                                class="noMobileInfoSave">
+                                                                                <button
+                                                                                    class="slds-button slds-button_brand noMobileInfoSaveButton"
+                                                                                    type="button" title="Brand action"
+                                                                                    
+                                                                                    onclick="{!c.confirmLimit}"
+                                                                                    data-name="Linkedin_Url_Campaign_Limits">Save</button>
+                                                                            </div>
+                                                                            
+                                                                        </lightning:layoutItem>
+                                                                        <lightning:layoutItem padding="around-small">
+                                                                            <div class="noMobileInfoCancel">
+                                                                                <button
+                                                                                    class="slds-button slds-button_brand noMobileInfoCancelButton"
+                                                                                    type="button" title="Brand action"
+                                                                                 
+                                                                                    onclick="{!c.displayExistingLimit}"
+                                                                                    data-name="Linkedin_Url_Campaign_Limits">Cancel</button>
+                                                                            </div>
+                                                                            
+                                                                        </lightning:layoutItem>
+                                                                    </lightning:layout>
+                                                                </aura:if>
+                                                                <aura:if
+                                                                    isTrue="{!v.validationObject.Linkedin_Url_Campaign_Limits}">
+                                                                    <div class="slds-form-element__help validValueError"
+                                                                        id="error-message-unique-id"
+                                                                       >Enter a
+                                                                        valid
+                                                                        value.</div>
+                                                                </aura:if>
+                                                            </div>
+                                                        </aura:if>
+                                                    </div>
+                                                </aura:if>
+
+                                                <div class="slds-col togglePosition"  >
+                                                    <label class="slds-checkbox_toggle slds-grid">
+                                                        <!-input type="checkbox" aura:id="chkbox" name="checkbox-toggle-18" value="checkbox-toggle-18" aria-describedby="checkbox-toggle-18"/->
+                                                        <ui:inputCheckbox aura:id="Get_linkedin_campaign"
+                                                            class="slds-input" change="{!c.handleToggle}"
+                                                            value="{!v.switchData.Get_linkedin_campaign}" />
+                                                        <span id="checkbox-toggle-18"
+                                                            class="slds-checkbox_faux_container" aria-live="assertive">
+                                                            <aura:if
+                                                                isTrue="{!!or(v.toggleSpinner, v.toggleSpinnerObject.Get_linkedin_campaign)}">
+                                                                <span class="slds-checkbox_faux"></span>
+                                                            </aura:if>
+                                                            <span class="slds-checkbox_on">Enabled</span>
+                                                            <span class="slds-checkbox_off">Disabled</span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </header>
+
+                            </div>
+
+
+                            
+                        </article>
+                    </ol>
+                </div>
+
+                <!- top of the funnel ends ->
+
+
+            </aura:if>
+
+
+
+            <!- middle funnel Starts ->
+
+            <aura:if isTrue="{!v.middleSection}">
+                <div id="middle">
+
+                    <h1 class="funnelTop"><b>&nbsp;Middle of the funnel (Ongoing outreach &amp; engagement) : </b></h1>
+
+                    <ol>
+                        <li>
+                            <h2><b>Subject: Lead Status - "Unreachable", "Recycled", "Rinse-Repeat", "Working",
+                                    whichever ones you choose from your pick list.</b> </h2>
+
+                                    <h2>This automation enables you to interrogate the Lead Status labels in your Salesforce instance and execute automation on any lead that meets whatever Status labels you choose from your “pick list."  </h2>
+
+
+                        </li>
+
+
+
+                        <div class="leadStatusButton" >
+                            <lightning:button label="Select Lead Status" variant="brand"
+                                onclick="{!c.openleadStagesModal}"></lightning:button>
+                        </div>
+
+
+
+
+                        <article class="slds-m-around_small slds-card olDiv">
+
+                            <div class="slds-card__header slds-grid ">
+                                <header class="slds-media slds-media_center slds-has-flexi-truncate ">
+                                    <div class="slds-media__figure">
+                                        <span class="slds-icon_container">
+                                            <lightning:icon iconName="utility:right" alternativeText="Connected"
+                                                size="xx-small" />
+                                            <span class="slds-assistive-text">Get Modigie </span>
+
+                                        </span>
+
+                                    </div>
+
+                                    <div class="slds-text-heading_medium slds-media__body textDiv">
+                                        <h2>Get Modigie </h2>
+                                    </div>
+
+                                    <div class="slds-no-flex">
+                                        <div class="slds-form-element">
+
+
+
+
+                                            <aura:if
+                                                isTrue="{!or(v.toggleSpinner, v.toggleSpinnerObject.Unresponsive_Lead_Get_Modigie)}">
+                                                <div class="slds-spinner_container modalSpinner"
+                                                    >
+                                                    <div class="slds-spinner-brand  slds-spinner slds-spinner_small"
+                                                        role="alert">
+                                                        <span class="slds-assistive-text">Loading</span>
+                                                        <div class="slds-spinner__dot-a"></div>
+                                                        <div class="slds-spinner__dot-b"></div>
+                                                    </div>
+                                                </div>
+                                            </aura:if>
+
+
+
+                                            <div class="slds-grid slds-gutters">
+
+
+                                                
+
+                                                <aura:if
+                                                    isTrue="{!and(v.switchData.Unresponsive_Lead_Get_Modigie,v.showLimitsBox)}">
+                                                    <div class="slds-form-element slds-col"
+                                                        aura:id="NumberOfLimitsField">
+                                                        <div>
+                                                            <label class="slds-form-element__label"
+                                                                for="text-input-id-1">
+                                                                <abbr class="slds-required" title="required">*
+                                                                </abbr>Number
+                                                                of
+                                                                Requests per
+                                                                day</label>
+                                                            <div class="slds-form-element__control">
+                                                                <input type="number" id="text-input-id-1"
+                                                                    placeholder="Enter limit…" required=""
+                                                                    aria-describedby="error-message-unique-id"
+                                                                    class="slds-input" aria-invalid="true" min="1"
+                                                                    autocomplete="off"
+                                                                    value="{!v.switchData.Unresponsive_Lead_Get_Modigie_Limit}"
+                                                                    oninput="{!c.handleLimitChange}"
+                                                                    data-name="Unresponsive_Lead_Get_Modigie_Limit" />
+                                                            </div>
+                                                        </div>
+                                                        <aura:if
+                                                            isTrue="{!and(v.switchData.Unresponsive_Lead_Get_Modigie,v.showLimitsBox)}">
+                                                            <div class="c-container">
+                                                                <aura:if
+                                                                    isTrue="{!!or(v.validationObject.Unresponsive_Lead_Get_Modigie_Limit, v.sameValue.Unresponsive_Lead_Get_Modigie_Limit)}">
+                                                                    <lightning:layout horizontalAlign="space">
+                                                                        <lightning:layoutItem padding="around-small">
+                                                                            <div
+                                                                                class="noMobileInfoSave">
+                                                                                <button
+                                                                                    class="slds-button slds-button_brand noMobileInfoSaveButton"
+                                                                                    type="button" title="Brand action"
+                                                                                   
+                                                                                    onclick="{!c.confirmLimit}"
+                                                                                    data-name="Unresponsive_Lead_Get_Modigie_Limit">Save</button>
+                                                                            </div>
+                                                                            
+                                                                        </lightning:layoutItem>
+                                                                        <lightning:layoutItem padding="around-small">
+                                                                            <div class="noMobileInfoCancel">
+                                                                                <button
+                                                                                    class="slds-button slds-button_brand noMobileInfoCancelButton"
+                                                                                    type="button" title="Brand action"
+                                                                                     
+                                                                                    onclick="{!c.displayExistingLimit}"
+                                                                                    data-name="Unresponsive_Lead_Get_Modigie_Limit">Cancel</button>
+                                                                            </div>
+                                                                            
+                                                                        </lightning:layoutItem>
+                                                                    </lightning:layout>
+                                                                </aura:if>
+                                                                <aura:if
+                                                                    isTrue="{!v.validationObject.Unresponsive_Lead_Get_Modigie_Limit}">
+                                                                    <div class="slds-form-element__help validValueError"
+                                                                        id="error-message-unique-id"
+                                                                         >Enter a
+                                                                        valid
+                                                                        value.</div>
+                                                                </aura:if>
+                                                            </div>
+                                                        </aura:if>
+                                                    </div>
+                                                </aura:if>
+                                                <div class="slds-col togglePosition" >
+
+                                                    <label class="slds-checkbox_toggle slds-grid">
+                                                        <ui:inputCheckbox aura:id="Unresponsive_Lead_Get_Modigie"
+                                                            class="slds-input" change="{!c.handleToggle}"
+                                                            value="{!v.switchData.Unresponsive_Lead_Get_Modigie}" />
+                                                        <!-input type="checkbox" name="checkbox-toggle-18" value="checkbox-toggle-18" aria-describedby="checkbox-toggle-18" /->
+                                                        <span id="checkbox-toggle-18"
+                                                            class="slds-checkbox_faux_container" aria-live="assertive">
+                                                            <aura:if
+                                                                isTrue="{!!or(v.toggleSpinner, v.toggleSpinnerObject.Unresponsive_Lead_Get_Modigie)}">
+                                                                <span class="slds-checkbox_faux"></span>
+                                                            </aura:if>
+                                                            <span class="slds-checkbox_on">Enabled</span>
+                                                            <span class="slds-checkbox_off">Disabled</span>
+                                                        </span>
+                                                    </label>
+
+
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </header>
+                            </div>
+
+                        </article>
+
+                        
+
+
+                    </ol>
+                </div>
+            </aura:if>
+
+            <!- middle funnel ends ->
+
+
+            <!- bottom funnel Starts ->
+
+            <aura:if isTrue="{!v.bottomSection}">
+                <div id="bottom">
+
+                    <h1 class="funnelTop"><b>&nbsp;Bottom of the funnel (CRM Data hygiene &amp; maintenance) : </b></h1>
+
+                    <ol>
+                        <li>
+                            <h2><b>Proactive High Velocity Pipeline -</b> Opportunity Contact Enrichment When a deal
+                                has moved through the pipeline to Opportunity or advanced stages, it is imperative
+                                to make sure you have all of the mobile contact information for each Opportunity
+                                related Contact, Influencer and Decision Makers so you can call and text as needed
+                                to get the deal closed. This automation enriches all key
+                                contacts associated with an opportunity in the pipeline to enable both voice and
+                                texting relationships and accelerate pipeline velocity.</h2>
+                        </li>
+
+                        <div class="oppStageButton">
+                            <lightning:button label="Select Opportunity Stages" variant="brand"
+                                onclick="{!c.openOppStagesModal}"></lightning:button>
+                        </div>
+
+                        <article class="slds-m-around_small slds-card olDiv">
+
+                            <div class="slds-card__header slds-grid ">
+                                <header class="slds-media slds-media_center slds-has-flexi-truncate ">
+                                    <div class="slds-media__figure">
+                                        <span class="slds-icon_container">
+                                            <lightning:icon iconName="utility:right" alternativeText="Connected"
+                                                size="xx-small" />
+                                            <span class="slds-assistive-text">Get Modigie </span>
+
+                                        </span>
+
+                                    </div>
+
+                                    <div class="slds-text-heading_medium slds-media__body textDiv">
+                                        <h2>Get Modigie </h2>
+                                    </div>
+
+                                    <div class="slds-no-flex">
+                                        <div class="slds-form-element">
+                                            <aura:if
+                                                isTrue="{!or(v.toggleSpinner, v.toggleSpinnerObject.Opportunity_Contact_Enrichment)}">
+                                                <div class="slds-spinner_container modalSpinner"
+                                                    >
+                                                    <div class="slds-spinner-brand  slds-spinner slds-spinner_small"
+                                                        role="alert">
+                                                        <span class="slds-assistive-text">Loading</span>
+                                                        <div class="slds-spinner__dot-a"></div>
+                                                        <div class="slds-spinner__dot-b"></div>
+                                                    </div>
+                                                </div>
+                                            </aura:if>
+                                            <div class="slds-grid slds-gutters">
+                                                <aura:if
+                                                    isTrue="{!and(v.switchData.Opportunity_Contact_Enrichment,v.showLimitsBox)}">
+                                                    <div class="slds-form-element slds-col"
+                                                        aura:id="NumberOfLimitsField">
+                                                        <div>
+                                                            <label class="slds-form-element__label"
+                                                                for="text-input-id-1">
+                                                                <abbr class="slds-required" title="required">*
+                                                                </abbr>Number
+                                                                of
+                                                                Requests per
+                                                                day</label>
+                                                            <div class="slds-form-element__control">
+                                                                <input type="number" id="text-input-id-1"
+                                                                    placeholder="Enter limit…" required=""
+                                                                    aria-describedby="error-message-unique-id"
+                                                                    class="slds-input" aria-invalid="true" min="1"
+                                                                    autocomplete="off"
+                                                                    value="{!v.switchData.Opportunity_Contact_Enrichment_Limit}"
+                                                                    oninput="{!c.handleLimitChange}"
+                                                                    data-name="Opportunity_Contact_Enrichment_Limit" />
+                                                            </div>
+                                                        </div>
+                                                        <aura:if
+                                                            isTrue="{!and(v.switchData.Opportunity_Contact_Enrichment,v.showLimitsBox)}">
+                                                            <div class="c-container">
+                                                                <aura:if
+                                                                    isTrue="{!!or(v.validationObject.Opportunity_Contact_Enrichment_Limit, v.sameValue.Opportunity_Contact_Enrichment_Limit)}">
+                                                                    <lightning:layout horizontalAlign="space">
+                                                                        <lightning:layoutItem padding="around-small">
+                                                                            <div
+                                                                                class="noMobileInfoSave">
+                                                                                <button
+                                                                                    class="slds-button slds-button_brand noMobileInfoSaveButton"
+                                                                                    type="button" title="Brand action"
+                                                                                     
+                                                                                    onclick="{!c.confirmLimit}"
+                                                                                    data-name="Opportunity_Contact_Enrichment_Limit">Save</button>
+                                                                            </div>
+                                                                            
+                                                                        </lightning:layoutItem>
+                                                                        <lightning:layoutItem padding="around-small">
+                                                                            <div class="noMobileInfoCancel">
+                                                                                <button
+                                                                                    class="slds-button slds-button_brand noMobileInfoCancelButton"
+                                                                                    type="button" title="Brand action"
+                                                                                    
+                                                                                    onclick="{!c.displayExistingLimit}"
+                                                                                    data-name="Opportunity_Contact_Enrichment_Limit">Cancel</button>
+                                                                            </div>
+                                                                            
+                                                                        </lightning:layoutItem>
+                                                                    </lightning:layout>
+                                                                </aura:if>
+                                                                <aura:if
+                                                                    isTrue="{!v.validationObject.Opportunity_Contact_Enrichment_Limit}">
+                                                                    <div class="slds-form-element__help validValueError"
+                                                                        id="error-message-unique-id"
+                                                                         >Enter a
+                                                                        valid
+                                                                        value.</div>
+                                                                </aura:if>
+                                                            </div>
+                                                        </aura:if>
+                                                    </div>
+                                                </aura:if>
+                                                <div class="slds-col togglePosition" >
+
+                                                    <label class="slds-checkbox_toggle slds-grid">
+                                                        <ui:inputCheckbox aura:id="Opportunity_Contact_Enrichment"
+                                                            class="slds-input" change="{!c.handleToggle}"
+                                                            value="{!v.switchData.Opportunity_Contact_Enrichment}" />
+                                                        <!-input type="checkbox" name="checkbox-toggle-18" value="checkbox-toggle-18" aria-describedby="checkbox-toggle-18" /->
+                                                        <span id="checkbox-toggle-18"
+                                                            class="slds-checkbox_faux_container" aria-live="assertive">
+                                                            <aura:if
+                                                                isTrue="{!!or(v.toggleSpinner, v.toggleSpinnerObject.Opportunity_Contact_Enrichment)}">
+                                                                <span class="slds-checkbox_faux"></span>
+                                                            </aura:if>
+                                                            <span class="slds-checkbox_on">Enabled</span>
+                                                            <span class="slds-checkbox_off">Disabled</span>
+                                                        </span>
+                                                    </label>
+
+
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </header>
+                            </div>
+
+                        </article>
+
+
+
+
+
+                        <li>
+                            <h2><b>CONTACT DATA MAINTENANCE keeps your CRM contact data FRESH and ACTIONABLE.</b>
+                                Contact data in CRMs decay at an average rate of 2.5% - 3% or more per month. Maintain
+                                your data
+                                automatically with Modigie’s Data Maintenance API.
+                                <b>Enabling this feature puts Contacts and Leads that have undergone Hygiene into a data
+                                    maintenance schedule for keeping them current and accurate, tracking any changes in
+                                    employment.
+                                </b>
+                            </h2>
+                        </li>
+
+                        <div class="selectDays">
+                            <lightning:select name="select1">
+                                <option value="">360 Days</option>
+                                <option value="1">180 Days</option>
+                                <option value="2">90 Days</option>
+                                <option value="3">30 Days</option>
+                            </lightning:select>
+                        </div>
+
+                        <!- <article class="slds-m-around_small slds-card olDiv">
+
+                            <div class="slds-card__header slds-grid ">
+                                <header class="slds-media slds-media_center slds-has-flexi-truncate ">
+                                    <div class="slds-media__figure">
+                                        <span class="slds-icon_container">
+                                            <lightning:icon iconName="utility:right" alternativeText="Connected"
+                                                size="xx-small" />
+                                            <span class="slds-assistive-text">Get Modigie </span>
+
+                                        </span>
+
+                                    </div>
+
+                                    <div class="slds-text-heading_medium slds-media__body textDiv">
+                                        <h2>Get Modigie </h2>
+                                    </div>
+
+                                    <lightning:input type="toggle" />
+                                </header>
+                            </div>
+
+                        </article> ->
+
+                        <article class="slds-m-around_small slds-card olDiv">
+
+                            <div class="slds-card__header slds-grid ">
+                                <header class="slds-media slds-media_center slds-has-flexi-truncate ">
+                                    <div class="slds-media__figure">
+                                        <span class="slds-icon_container">
+                                            <lightning:icon iconName="utility:right" alternativeText="Connected"
+                                                size="xx-small" />
+                                            <span class="slds-assistive-text">Verify Employer</span>
+
+                                        </span>
+
+                                    </div>
+
+                                    <div class="slds-text-heading_medium slds-media__body textDiv">
+                                        <h2>Verify Employer</h2>
+                                    </div>
+
+                                    <div class="slds-no-flex">
+                                        <div class="slds-form-element">
+                                            <aura:if
+                                                isTrue="{!or(v.toggleSpinner, v.toggleSpinnerObject.Validate_Employer_Data_Maintenance)}">
+                                                <div class="slds-spinner_container modalSpinner"
+                                                     >
+                                                    <div class="slds-spinner-brand  slds-spinner slds-spinner_small"
+                                                        role="alert">
+                                                        <span class="slds-assistive-text">Loading</span>
+                                                        <div class="slds-spinner__dot-a"></div>
+                                                        <div class="slds-spinner__dot-b"></div>
+                                                    </div>
+                                                </div>
+                                            </aura:if>
+                                            <div class="slds-grid slds-gutters">
+                                                <aura:if
+                                                    isTrue="{!and(v.switchData.Validate_Employer_Data_Maintenance,v.showLimitsBox)}">
+                                                    <div class="slds-form-element slds-col"
+                                                        aura:id="NumberOfLimitsField">
+                                                        <div>
+                                                            <label class="slds-form-element__label"
+                                                                for="text-input-id-1">
+                                                                <abbr class="slds-required" title="required">*
+                                                                </abbr>Number
+                                                                of
+                                                                Requests per
+                                                                day</label>
+                                                            <div class="slds-form-element__control">
+                                                                <input type="number" id="text-input-id-1"
+                                                                    placeholder="Enter limit…" required=""
+                                                                    aria-describedby="error-message-unique-id"
+                                                                    class="slds-input" aria-invalid="true" min="1"
+                                                                    autocomplete="off"
+                                                                    value="{!v.switchData.Validate_Employer_Data_Maintenance_Lmt}"
+                                                                    oninput="{!c.handleLimitChange}"
+                                                                    data-name="Validate_Employer_Data_Maintenance_Lmt" />
+                                                            </div>
+                                                        </div>
+                                                        <aura:if
+                                                            isTrue="{!and(v.switchData.Validate_Employer_Data_Maintenance,v.showLimitsBox)}">
+                                                            <div class="c-container">
+                                                                <aura:if
+                                                                    isTrue="{!!or(v.validationObject.Validate_Employer_Data_Maintenance_Lmt, v.sameValue.Validate_Employer_Data_Maintenance_Lmt)}">
+                                                                    <lightning:layout horizontalAlign="space">
+                                                                        <lightning:layoutItem padding="around-small">
+                                                                            <div
+                                                                                class="noMobileInfoSave">
+                                                                                <button
+                                                                                    class="slds-button slds-button_brand noMobileInfoSaveButton"
+                                                                                    type="button" title="Brand action"
+                                                                                     
+                                                                                    onclick="{!c.confirmLimit}"
+                                                                                    data-name="Validate_Employer_Data_Maintenance_Lmt">Save</button>
+                                                                            </div>
+                                                                            
+                                                                        </lightning:layoutItem>
+                                                                        <lightning:layoutItem padding="around-small">
+                                                                            <div class="noMobileInfoCancel">
+                                                                                <button
+                                                                                    class="slds-button slds-button_brand noMobileInfoCancelButton"
+                                                                                    type="button" title="Brand action"
+                                                                                     
+                                                                                    onclick="{!c.displayExistingLimit}"
+                                                                                    data-name="Validate_Employer_Data_Maintenance_Lmt">Cancel</button>
+                                                                            </div>
+                                                                            
+                                                                        </lightning:layoutItem>
+                                                                    </lightning:layout>
+                                                                </aura:if>
+                                                                <aura:if
+                                                                    isTrue="{!v.validationObject.Validate_Employer_Data_Maintenance_Lmt}">
+                                                                    <div class="slds-form-element__help validValueError"
+                                                                        id="error-message-unique-id"
+                                                                         >Enter a
+                                                                        valid
+                                                                        value.</div>
+                                                                </aura:if>
+                                                            </div>
+                                                        </aura:if>
+                                                    </div>
+                                                </aura:if>
+                                                <div class="slds-col togglePosition" >
+
+                                                    <label class="slds-checkbox_toggle slds-grid">
+                                                        <ui:inputCheckbox aura:id="Validate_Employer_Data_Maintenance"
+                                                            class="slds-input" change="{!c.handleToggle}"
+                                                            value="{!v.switchData.Validate_Employer_Data_Maintenance}" />
+                                                        <!-input type="checkbox" name="checkbox-toggle-18" value="checkbox-toggle-18" aria-describedby="checkbox-toggle-18" /->
+                                                        <span id="checkbox-toggle-18"
+                                                            class="slds-checkbox_faux_container" aria-live="assertive">
+                                                            <aura:if
+                                                                isTrue="{!!or(v.toggleSpinner, v.toggleSpinnerObject.Validate_Employer_Data_Maintenance)}">
+                                                                <span class="slds-checkbox_faux"></span>
+                                                            </aura:if>
+                                                            <span class="slds-checkbox_on">Enabled</span>
+                                                            <span class="slds-checkbox_off">Disabled</span>
+                                                        </span>
+                                                    </label>
+
+
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </header>
+                            </div>
+
+                        </article>
+
+                        <!- <article class="slds-m-around_small slds-card olDiv">
+
+                            <div class="slds-card__header slds-grid ">
+                                <header class="slds-media slds-media_center slds-has-flexi-truncate ">
+                                    <div class="slds-media__figure">
+                                        <span class="slds-icon_container">
+                                            <lightning:icon iconName="utility:right" alternativeText="Connected"
+                                                size="xx-small" />
+                                            <span class="slds-assistive-text">Get Phone Insights</span>
+
+                                        </span>
+
+                                    </div>
+
+                                    <div class="slds-text-heading_medium slds-media__body textDiv">
+                                        <h2>Get Phone Insights</h2>
+                                    </div>
+
+                                    <lightning:input type="toggle" />
+                                </header>
+                            </div>
+
+                        </article> ->
+
+                        <!- <article class="slds-m-around_small slds-card olDiv">
+
+                            <div class="slds-card__header slds-grid ">
+                                <header class="slds-media slds-media_center slds-has-flexi-truncate ">
+                                    <div class="slds-media__figure">
+                                        <span class="slds-icon_container">
+                                            <lightning:icon iconName="utility:right" alternativeText="Connected"
+                                                size="xx-small" />
+                                            <span class="slds-assistive-text">Get LinkedIn URL</span>
+
+                                        </span>
+
+                                    </div>
+
+                                    <div class="slds-text-heading_medium slds-media__body textDiv">
+                                        <h2>Get LinkedIn URL</h2>
+                                    </div>
+
+                                    <lightning:input type="toggle" />
+                                </header>
+                            </div>
+
+                        </article> ->
+
+
+
+
+                    </ol>
+                </div>
+            </aura:if>
+
+            <!- bottom funnel ends ->
+
+        </div>
+    </ui:scrollerWrapper-->
+
+
+
+</aura:component>

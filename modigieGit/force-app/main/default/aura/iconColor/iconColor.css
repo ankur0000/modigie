@@ -1,0 +1,29 @@
+.THIS.redOnYellow svg {
+    fill : red;
+}
+.THIS.redOnYellow {
+   background-color:yellow !important;
+}
+ 
+/* ---for custom icon 2--- */
+.THIS.orangeOnBlack svg{
+    fill:orange !important;
+}
+ 
+.THIS.orangeOnBlack {
+    background-color:black !important;
+}
+ 
+/* ---for standard icon 3--- */
+.THIS.blackOnRed svg{
+    fill:black !important;
+}
+ 
+.THIS.blackOnRed {
+    background-color:IndianRed !important;
+}
+ 
+/* ---for utility icon 4--- */
+.THIS.black svg{
+    fill: black;
+}

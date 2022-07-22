@@ -1,0 +1,490 @@
+<template>
+    <template if:true={showErrorMessage}>
+        <div class="slds-notify slds-notify_alert slds-alert_error banner" role="alert">
+          <span class="slds-assistive-text">Error</span>
+          <h2>
+            <template if:true={isOrgCalloutsDisabled}>
+              {orgStopReasonString}
+            </template>
+            <template if:true={isCreditAccountStopped}>
+              {stopReason}
+            </template>
+            <template if:true={isSelectedCreditAccountInactive}>
+              The Credit Account opted for you is inactive.
+            </template>
+          </h2>
+          
+        </div>
+      </template>
+
+    <template if:true={showSpinner}>
+        <div class="demo-only showSpinner">
+            <div class="slds-spinner_container spinnerBg">
+                <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template if:true={showtoast}>
+        <div class="showToast">
+            <div class="slds-notify_container slds-is-relative">
+                <div class="slds-notify slds-notify_toast slds-theme_success showToastDiv" role="status">
+                    <span class="slds-assistive-text">success</span>
+                    <span
+                        class=" spinnerBg slds-icon_container slds-icon-utility-success slds-m-right_small slds-no-flex slds-align-top slds-align_absolute-center"
+                        title="Success">
+                        <lightning-icon icon-name="utility:success" alternative-text="success" variant="Success"
+                            size="small"></lightning-icon>
+                    </span>
+                    <div class="slds-notify__content">
+                        <h2 class="slds-text-heading_small ">
+                            Modigie is actively identifying and validating the information you requested. Please check
+                            the records in a few minutes to see your results.</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template if:true={errorToast.showErrorToast}>
+        <div class="showToast">
+            <div class="slds-notify_container slds-is-relative">
+                <div class="slds-notify slds-notify_toast slds-theme_error showToastDiv" role="status">
+                    <span class="slds-assistive-text">error</span>
+                    <span
+                        class="spinnerBg slds-icon_container slds-icon-utility-success slds-m-right_small slds-no-flex slds-align-top slds-align_absolute-center"
+                        title="Error">
+                        <lightning-icon icon-name="utility:error" alternative-text="error" variant="Error" size="small">
+                        </lightning-icon>
+                    </span>
+                    <div class="slds-notify__content">
+                        <h2 class="slds-text-heading_small">{errorToast.errorMessage}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template if:true={modigieUser}>
+        <div class="slds-box slds-m-around_small">
+            <div class="slds-grid ">
+                <div class="slds-page-header pageHeader">
+                    <div class="slds-page-header__row">
+                        <template if:true={isEmbeddedInClassic}>
+                            <lightning-button-icon icon-name="utility:back" alternative-text="Back" title="Back"
+                                onclick={navigateToListView} style="margin-right: 1%;"></lightning-button-icon>
+                        </template>
+                        <div class="slds-page-header__col-title">
+                            <div class="slds-media">
+                                <div class="slds-media__figure">
+                                    <span class="slds-icon_container " title="opportunity">
+                                        <lightning-icon icon-name="standard:lead" alternative-text="Lead" title="Lead">
+                                        </lightning-icon>
+                                    </span>
+
+                                </div>
+                                <div class="slds-media__body">
+                                    <div class="slds-page-header__name">
+                                        <div class="slds-page-header__name-title">
+                                            <h1>
+                                                <span
+                                                    class="slds-page-header__title slds-truncate slds-p-top_xx-small">Selected
+                                                    Lead Records</span>
+                                            </h1>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <template if:true={showErrorMessage}>
+                            <button title="Mobile Number, Best Time To Call, Verify Employer, LinkedIn URL" type="button"
+                              onclick={openModal} data-name="GetModigie" class="slds-button slds-button_brand" disabled
+                              style="margin-bottom:0.5%; margin-top:0.5%">
+                              Get Modigie
+                            </button>
+                            <lightning-button class="slds-var-p-left_x-small" onclick={additionalModigieServices} variant="neutral" disabled
+                              label="Additional Modigie Services" title="Additional Modigie Services" style="margin-top:0.5%">
+                            </lightning-button>
+                          </template>
+                          
+                          <template if:false={showErrorMessage}>
+                            <button title="Mobile Number, Best Time To Call, Verify Employer, LinkedIn URL" type="button"
+                              onclick={openModal} data-name="GetModigie" class={buttonColors.GetModigie}
+                              style="margin-bottom:0.5%; margin-top:0.5%">
+                              Get Modigie
+                            </button>
+                            <lightning-button class="slds-var-p-left_x-small" onclick={additionalModigieServices} variant="neutral"
+                              label="Additional Modigie Services" title="Additional Modigie Services" style="margin-top:0.5%">
+                            </lightning-button>
+                          </template>
+                        
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="slds-box slds-m-around_small ">
+            <div class="dataTable">
+                <lightning-datatable key-field="id" data={data} columns={columns} hide-checkbox-column="true"
+                    class="dataTable">
+                </lightning-datatable>
+            </div>
+        </div>
+    </template>
+    <template if:false={modigieUser} style="width: 100%;height:100%;">
+        <template if:true={spinnerCheckModigieUser}>
+            <lightning-spinner></lightning-spinner>
+        </template>
+        <template if:false={spinnerCheckModigieUser}>
+            <div
+                style="font-size:x-large;display:flex;justify-content:center;align-items:center;width:100%;height:100%;background:white;margin:2rem 0rem;">
+                <div class="slds-size_2-of-12"><img src={modigieLogoUrl} class="mLogo" /></div>
+                <br /><span style="margin-top:0.5rem">You are not an authorized user!</span>
+            </div>
+        </template>
+    </template>
+
+    <template if:true={modigieAdditional}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+            aria-describedby="modal-content-id-1" class="slds-modal slds-modal_small slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                        title="Close" onclick={closeAdditionalModigie}>
+                        <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse"
+                            size="small"></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 class="slds-modal__title slds-hyphenate">Additional Modigie Services</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium ">
+
+
+
+                    <div class="slds-grid slds-gutters slds-m-left_large additionalModal">
+
+                        <div class="slds-col slds-size_4-of-12">
+                            <button title="Verify Employer" type="button" class={buttonColors.VerifyEmployer}
+                                onclick={openModal} data-name="VerifyEmployer">Verify Employer</button>
+                        </div>
+                        <div class="slds-col slds-size_4-of-12">
+                            <button title="Get Phone Insights" type="button" class={buttonColors.GetPhoneInsights}
+                                onclick={openModal} data-name="GetPhoneInsights">Get Phone Insights</button>
+
+                        </div>
+                        <div class="slds-col slds-size_4-of-12">
+                            <button title="Get LinkedIn" type="button" class={buttonColors.GetLinkedIn}
+                                onclick={openModal} data-name="GetLinkedIn">Get LinkedIn</button>
+                        </div>
+                    </div>
+
+
+                </div>
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" onclick={closeAdditionalModigie}>Cancel</button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+
+    <template if:true={showModel}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+            aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- Modal/Popup Box LWC header here -->
+                <header class="slds-modal__header">
+
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                        title="Close" onclick={closeModal}>
+                        <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse"
+                            size="small"></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+
+
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate modalHeader">{modallabel}
+                    </h2>
+                </header>
+                <!-- Modal/Popup Box LWC body starts here -->
+                <!--template if:true={limitError}-->
+                <div class="slds-modal__content slds-p-around_medium slds-is-relative" id="modal-content-id-1">
+                    <template if:true={toggleSpinner}>
+                        <div class="slds-spinner_container spinnerBg">
+                            <div class="slds-spinner--brand  slds-spinner slds-spinner_small" role="alert">
+                                <span class="slds-assistive-text">Loading</span>
+                                <div class="slds-spinner__dot-a"></div>
+                                <div class="slds-spinner__dot-b"></div>
+                            </div>
+                        </div>
+                    </template>
+
+                    <template if:false={limitError}>
+                        <div class="slds-grid slds-grid_vertical">
+                            <template if:true={toggleSpinner}>
+                                <div class="slds-spinner_container spinnerBg">
+                                    <div class="slds-spinner--brand  slds-spinner slds-spinner_small" role="alert">
+                                        <span class="slds-assistive-text">Loading</span>
+                                        <div class="slds-spinner__dot-a"></div>
+                                        <div class="slds-spinner__dot-b"></div>
+                                    </div>
+                                </div>
+                            </template>
+                            <!--div class="slds-col">
+                    <span>
+                        Your remaining daily API Limit is {remainingLimit}.
+                    </span>
+                </div-->
+                            <div class="slds-col">
+                                <span>
+                                    There are a total of {resMap.totalSize} record(s).
+                                </span>
+                            </div>
+                            <template if:true={isphoneinsights}>
+                                <lightning-accordion allow-multiple-sections-open active-section-name={activeSections}>
+
+                                    <lightning-accordion-section name="A" label="Lead (Standard Salesforce Fields)"
+                                        class="accordianSection">
+                                        <div class="slds-grid">
+                                            <div class="slds-col slds-size_1-of-2 ">
+                                                <span class="accordianSpan">
+                                                    <div class="accordianDiv">
+                                                        <input type="checkbox" name="PhoneNumbers" value="MobilePhone"
+                                                            class="accordianDivInput" onchange={handleChangeLead}
+                                                            data-name="Mobile">
+                                                        <label for="MobilePhone">Mobile</label>
+                                                    </div>
+                                                    <div class="accordianDiv">
+                                                        <input type="checkbox" name="PhoneNumbers" value="Phone"
+                                                            class="accordianDivInput" onchange={handleChangeLead}
+                                                            data-name="Phone">
+                                                        <label for="Phone">Phone</label>
+                                                    </div>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </lightning-accordion-section>
+                                </lightning-accordion>
+
+                            </template>
+                            <template if:false={isphoneinsights}>
+                                <div class="slds-col">
+                                    <span>
+                                        {resMap.recordsRunning} jobs are already in process.
+                                    </span>
+                                </div>
+                                <template if:true={buttonClickedInfo.GetLinkedIn}>
+                                    <div class="slds-col">
+                                        <span>
+                                            {resMap.alreadyValidated} currently have verified LinkedIn information.
+                                        </span>
+                                    </div>
+                                    <div class="slds-col">
+                                        <span>
+                                            {resMap.invalidatedRecords} have already been run and currently have ‘Not
+                                            Available’ for verified LinkedIn.
+                                            information.
+                                        </span>
+                                    </div>
+                                    <div class="slds-col">
+                                        <span>
+                                            {resMap.userFilled} currently have user filled LinkedIn information.
+                                        </span>
+                                    </div>
+                                    <div class="slds-col">
+                                        <span>
+                                            {resMap.notFulfill} record(s) does not have required information to use get
+                                            LinkedIn.
+                                        </span>
+                                    </div>
+                                </template>
+                                <template if:true={buttonClickedInfo.VerifyEmployer}>
+                                    <div class="slds-col">
+                                        <span>
+                                            {resMap.alreadyValidated} currently have verified employer information.
+                                        </span>
+                                    </div>
+                                    <div class="slds-col">
+                                        <span>
+                                            {resMap.invalidatedRecords} have already been run and currently have ‘Not
+                                            Available’ for verified employer.
+                                            information.
+                                        </span>
+                                    </div>
+                                    <div class="slds-col">
+                                        <span>
+                                            {resMap.notFulfill} record(s) does not have required information to use
+                                            verify employer.
+                                        </span>
+                                    </div>
+                                </template>
+                                <template if:true={buttonClickedInfo.GetModigie}>
+                                    <div class="slds-col">
+                                        <span>
+                                            {resMap.alreadyValidated} currently have verified mobile number.
+                                        </span>
+                                    </div>
+                                    <div class="slds-col">
+                                        <span>
+                                            {resMap.invalidatedRecords} have already been run and currently have ‘Not
+                                            Available’ for verified mobile number.
+                                            number.
+                                        </span>
+                                    </div>
+                                    <div class="slds-col">
+                                        <span>
+                                            {resMap.notFulfill} record(s) does not have required information to get
+                                            mobile number.
+                                        </span>
+                                    </div>
+                                </template>
+                                <template if:true={buttonClickedInfo.GetMobileNumber}>
+                                    <div class="slds-col">
+                                        <span>
+                                            {resMap.alreadyValidated} currently have verified mobile number.
+                                        </span>
+                                    </div>
+                                    <div class="slds-col">
+                                        <span>
+                                            {resMap.invalidatedRecords} have already been run and currently have ‘Not
+                                            Available’ for verified mobile number.
+                                            number.
+                                        </span>
+                                    </div>
+                                    <div class="slds-col">
+                                        <span>
+                                            {resMap.notFulfill} record(s) does not have required information to get
+                                            mobile number.
+                                        </span>
+                                    </div>
+                                </template>
+                                <template if:true={isphoneinsights}>
+                                    <lightning-accordion allow-multiple-sections-open
+                                        active-section-name={activeSections}>
+
+                                        <lightning-accordion-section name="A" label="Lead (Standard Salesforce Fields)"
+                                            class="accordianSection">
+                                            <div class="slds-grid">
+                                                <div class="slds-col slds-size_1-of-2 ">
+                                                    <span class="accordianSpan">
+                                                        <div class="accordianDiv">
+                                                            <input type="checkbox" name="PhoneNumbers"
+                                                                value="MobilePhone" class="accordianDivInput"
+                                                                onchange={handleChangeLead} data-name="Mobile">
+                                                            <label for="MobilePhone">Mobile</label>
+                                                        </div>
+                                                        <div class="accordianDiv">
+                                                            <input type="checkbox" name="PhoneNumbers" value="Phone"
+                                                                class="accordianDivInput" onchange={handleChangeLead}
+                                                                data-name="Phone">
+                                                            <label for="Phone">Phone</label>
+                                                        </div>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </lightning-accordion-section>
+                                    </lightning-accordion>
+
+                                </template>
+                                <template if:true={haveRecordsToProcess}>
+                                    <div class="slds-col">
+                                        <span>
+                                            Modigie will process the remaining {resMap.recordsToProcess}. You can check
+                                            the status of your request in the appropriate Lead or Contact record.
+                                        </span>
+                                    </div>
+                                </template>
+                            </template>
+                            <template if:true={limitsData.Ad_Hoc_Limits}>
+                                <div class="slds-col">
+                                    <span>
+                                        Your total daily API Limit is {totalLimit}, remaining is {remainingLimit}.
+                                    </span>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+
+                    <template if:true={limitError}>
+                        <div class="slds-notify_container slds-is-relative">
+                            <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+
+                                <div class="slds-notify__content">
+                                    <h2 class="slds-text-heading_small ">You do not have enough daily limit to call
+                                        modigie services.</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                </div>
+
+                <!--/template-->
+                <!-- Modal/Popup Box LWC footer starts here -->
+                <footer class="slds-modal__footer">
+                    <template if:false={limitError}>
+                        <lightning-button variant="destructive" label="Confirm" title="Confirm" disabled={disableSubmit}
+                            onclick={makecallout} class="accordianDivInput"></lightning-button>
+
+                        <lightning-button variant="neutral" label="Cancel" title="Cancel" onclick={closeModal}>
+                        </lightning-button>
+                    </template>
+                    <template if:true={limitError}>
+                        <lightning-button variant="neutral" label="Cancel" title="Cancel" onclick={closeModal}>
+                        </lightning-button>
+                    </template>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+
+    <template if:true={showModelZeroRecords}>
+        <!-- Modal/Popup Box LWC starts here -->
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+            aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- Modal/Popup Box LWC header here -->
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                        title="Close" onclick={closeModal}>
+                        <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse"
+                            size="small"></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+
+                    <h2 id="modal-heading-02" class="slds-text-heading_medium slds-hyphenate modalHeader">{modallabel}
+                    </h2>
+                </header>
+                <!-- Modal/Popup Box LWC body starts here -->
+                <div class="slds-modal__content slds-p-around_medium">
+                    <div class="slds-notify_container slds-is-relative">
+                        <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+
+                            <div class="slds-notify__content">
+                                <h2 class="slds-text-heading_small ">No records are selected to use modigie services.
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal/Popup Box LWC footer starts here -->
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" title="Back" onclick={backHandle}>Back</button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+
+</template>

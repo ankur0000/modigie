@@ -1,0 +1,29 @@
+.logo{
+    width: 40%;
+    margin-left: 165px;
+}
+
+.slds-spinner_container {
+    position: sticky;
+    top: 50%;
+}
+
+.modalHeader
+{
+    font-size: xx-large;
+}
+
+.apiLimit
+{
+    font-size: medium;text-align:center;
+}
+
+.statusMsg
+{
+    font-size: medium;text-align:center;
+}
+
+.confirmButton
+{
+    margin: 5px;
+}

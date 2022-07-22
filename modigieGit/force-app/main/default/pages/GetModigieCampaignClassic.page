@@ -1,0 +1,16 @@
+<apex:page showHeader="false" sidebar="true" standardController="Campaign" extensions="myExtension" lightningStylesheets="true">
+        
+   <apex:includeLightning />
+        <div id="LightningComponentid"/>    
+    <script>
+    $Lightning.use("modigie:GetModigieAppClassic", function() {
+        $Lightning.createComponent("modigie:modigieCampaignLightningTab",
+          { 
+          	recordId : 	'{!JSENCODE(currentRecordId)}'
+          },
+          "LightningComponentid",
+          function(cmp) {
+          });
+    });
+    </script>
+</apex:page>

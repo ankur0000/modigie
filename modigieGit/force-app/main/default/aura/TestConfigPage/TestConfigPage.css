@@ -1,0 +1,44 @@
+.THIS {
+    min-width: 50%;
+    max-width: 100%;
+    min-height: 100%;
+}
+.THIS .slds-border_bottom {
+    padding:1%;
+    width:60%;
+    margin:auto;
+}
+.THIS .toggle{
+    padding-top: 5%;
+    padding-left: 47%;
+}
+.THIS .buttonStyle{
+    width: 200%;
+}
+.THIS .customClass{
+    padding-left : 10%;
+    padding-right : 10%;
+}
+
+.THIS .slds-tabs_scoped__content {
+    border-width: 0px;    
+}
+.THIS .customButtonClass{
+    width: 100%;
+}
+
+.THIS .scheduleClass{
+    margin-right : 10%;
+}
+.THIS .layoutClass{
+    margin-left: 11%;
+    margin-right: 10%;
+}
+.THIS .logo{
+    width: 40%;
+    margin-left: 165px;
+}
+.THIS .slds-form-element__label {
+    font-size: inherit !important;   
+    
+}

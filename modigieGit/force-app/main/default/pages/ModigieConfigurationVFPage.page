@@ -1,0 +1,17 @@
+<apex:page lightningStylesheets="true" sidebar="false">
+    <apex:includeLightning />
+    <!-- <apex:slds />  -->
+    <!-- <apex:stylesheet value="{!URLFOR($Resource.jobAutomationCSS, 'text/jobAutomationCSS.css')}" /> -->
+    <apex:stylesheet value="{!$Resource.jobAutomationCSS}" />
+    <div style="width:100%;height:100%;" id="LightningContainer" />
+     
+    <script>
+        $Lightning.use("modigie:ModigieConfigurationAppClassic", function() {
+            $Lightning.createComponent("modigie:ModigieConfigurationPage", { },
+            "LightningContainer",
+            function(cmp) {
+                
+            });
+        });
+    </script>
+</apex:page>

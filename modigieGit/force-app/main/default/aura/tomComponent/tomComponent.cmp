@@ -1,0 +1,672 @@
+<aura:component
+    implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"
+    access="global" controller="tomControllerClass">
+    <aura:handler name="init" value="{!this}" action="{!c.doinit}" />
+    <aura:attribute name="leadPhoneFields" type="list" />
+    <aura:attribute name="allLeadFields" type="list" />
+    <aura:attribute name="contactPhoneFields" type="list" />
+    <aura:attribute name="allContactFields" type="list" />
+    <aura:attribute name="leadPriorities" type="list" />
+    <aura:attribute name="contactPriorities" type="list" />
+    <aura:attribute name="leadPriority1" type="String" />
+    <aura:attribute name="leadPriority1API" type="String" />
+    <aura:attribute name="leadPriority2" type="String" />
+    <aura:attribute name="leadOverwriteFF" type="Boolean" />
+    <aura:attribute name="leadPriority3" type="String" />
+    <aura:attribute name="leadOverwriteSF" type="Boolean" />
+    <aura:attribute name="leadPriority4" type="String" />
+    <aura:attribute name="leadPriority5" type="String" />
+    <aura:attribute name="leadPriority6" type="String" />
+
+    <aura:attribute name="leadResetPriority1" type="String" />
+    <aura:attribute name="leadResetPriority2" type="String" />
+    <aura:attribute name="leadResetPriority3" type="String" />
+
+    <aura:attribute name="contactPriority1" type="String" />
+    <aura:attribute name="contactPriority1API" type="String" />
+    <aura:attribute name="contactPriority2" type="String" />
+    <aura:attribute name="conOverwriteFF" type="Boolean" />
+    <aura:attribute name="contactPriority3" type="String" />
+    <aura:attribute name="conOverwriteSF" type="Boolean" />
+    <aura:attribute name="contactPriority4" type="String" />
+    <aura:attribute name="contactPriority5" type="String" />
+    <aura:attribute name="contactPriority6" type="String" />
+
+    <aura:attribute name="contactResetPriority1" type="String" />
+    <aura:attribute name="contactResetPriority2" type="String" />
+    <aura:attribute name="contactResetPriority3" type="String" />
+
+    <aura:attribute name="spinner" type="Boolean" />
+
+    <aura:handler event="c:modigieRuleSelectedField" action="{!c.getCustomSelectedValue}" />
+    <aura:attribute name="onChange" type="Boolean" />
+    <aura:attribute name="onChangeContact" type="Boolean" />
+    <aura:attribute name="toggleValue" type="Boolean" />
+    <aura:attribute name="showConfirmModal" type="Boolean" />
+    <aura:attribute name="disableToggle" type="Boolean" default="true" />
+    <aura:attribute name="noSubscription" type="Boolean" default="true" />
+    <aura:attribute name="isReferenceOpen" type="Boolean" default="false" />
+
+
+    <aura:attribute name="tomOrUntom" type="String" />
+    <aura:attribute name="showCriteriaModal" type="Boolean" default="false" />
+    <aura:handler name="getTomUntomData" event="c:tomUntomCriteriaEvent" action="{!c.closeCriteria}" />
+
+
+    <aura:if isTrue="{!v.showConfirmModal}">
+
+        <!--section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+            class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                    <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Are you Sure?</h1>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium disclaimer" id="modal-content-id-1">
+                    <h1>Please disable bi-directional sync from Sales Engagement Tool to Salesforce</h1>
+                </div>
+                <div class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" aria-label="Cancel and close"
+                        onclick="{!c.handleCancel}">Cancel</button>
+                    <button class="slds-button slds-button_brand" onclick="{!c.handleConfirm}">Confirm</button>
+                </div>
+            </div>
+        </section-->
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+            aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- Modal/Popup Box Header Starts here-->
+                <header class="slds-modal__header">
+                    <!--lightning:buttonIcon iconName="utility:close"
+                                    onclick="{! c.closeAbortModal }"
+                                    alternativeText="close"
+                                    variant="bare-inverse"
+                                    class="slds-modal__close"/-->
+
+                    <button class="
+                                slds-button slds-button_icon
+                                slds-modal__close
+                                slds-button_icon-inverse
+                                " title="Close" onclick="{!c.handleCancel}">
+                        <lightning:icon iconName="utility:close" alternativeText="Connected" variant="inverse"
+                            size="small" class="confirmModalClose" />
+                        <!--lightning-icon icon-name="utility:close"
+                        alternative-text="close"
+                        variant="inverse"
+                        size="small" ></lightning-icon-->
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+
+                    <!-- <div class="logo">
+                        <img src="{!$Resource.ModigieLogo}" />
+                    </div> -->
+                    <div class="headerDiv">
+                        <!--lightning:icon iconName="utility:warning" alternativeText="Warning!" class="headerDivIcon"  /-->
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium">
+                            <!--lightning:icon iconName="utility:warning" alternativeText="Warning!" variant="warning"
+                                title="warning variant x-small" size="small" /-->
+                            DISCLAIMER: Acknowledgement of this disclaimer is required to activate T.O.M.
+                        </h2>
+                    </div>
+                </header>
+                <!--Modal/Popup Box Body Starts here-->
+                <div class="
+                            slds-modal__content
+                            slds-p-around_medium
+                            slds-is-relative
+                            confirmModalBody
+                            " id="modal-content-id-1">
+                    In order to prevent possible data synchronization issues between Modigie and your sales engagement
+                    tool, disable bi-directional sync for the T.O.M. mapped fields in the sales
+                    engagement tool.
+                    <br />
+                    <!--from Salesforce <lightning:icon iconName="utility:forward" alternativeText="—>" class="setForward">
+                    </lightning:icon> your Sales Engagement Tool.
+                    <br />-->
+                    Contact Modigie Support with any questions on configuration best practices.
+                </div>
+                <!--Modal/Popup Box Footer Starts here-->
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="brand" label="Confirm" title="Confirm" onclick="{! c.handleConfirm}"
+                        class="modalButtonMargin" />
+
+                    <lightning:button variant="neutral" label="Cancel" title="Cancel" onclick="{!c.handleCancel}"
+                        class="modalButtonMargin" />
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </aura:if>
+    <div class="slds-grid">
+        <div class="slds-page-header pageHeader">
+            <div class="slds-page-header__row">
+                <div class="slds-page-header__col-title">
+                    <div class="slds-media">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container ">
+                                <!--lightning:icon iconName="standard:lightning_usage" /-->
+                                <img src="{!$Resource.tomstats}" class="tLogo" />
+                                <span class="slds-assistive-text">Telephony
+                                    Optimization Module</span>
+                            </span>
+
+                        </div>
+                        <div class="slds-media__body">
+                            <div class="slds-page-header__name">
+                                <div class="slds-page-header__name-title">
+                                    <h1>
+                                        <span class="slds-page-header__title slds-truncate tomHeader">T.O.M. (Telephony
+                                            Optimization Module)</span>
+                                    </h1>
+                                </div>
+
+                            </div>
+                            <a onclick="{!c.openReference}">Click Here for
+                                Overview</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slds-form-element">
+                    <label class="slds-checkbox_toggle slds-grid">
+                        <ui:inputCheckbox aura:id="Telephony_Optimization_Module" class="slds-input"
+                            change="{!c.handleToggleChange}" value="{!v.toggleValue}" disabled="{!v.disableToggle}" />
+                        <span id="checkbox-toggle-16" class="slds-checkbox_faux_container" aria-live="assertive">
+                            <span class="slds-checkbox_faux"></span>
+                            <span class="slds-checkbox_on">Enabled</span>
+                            <span class="slds-checkbox_off">Disabled</span>
+                        </span>
+                    </label>
+                </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <aura:if isTrue="{!v.spinner}">
+        <aura:if isTrue="{!v.noSubscription}">
+            <div class="noJobTimeHeading">There is no active subscription found for this feature. <br />
+                To enable this functionality please contact Modigie Support (support@modigie.com) or speak with your
+                Customer Success Manager.</div>
+            <aura:set attribute="else">
+                <!--
+                <lightning:button variant="brand" label="Configure T.O.M." title="Save"
+                    onclick="{! c.handleTomCriteria }" class="saveButton" />
+                <aura:if isTrue="{!v.showCriteriaModal}">
+                    <c:TomUntomCriteriaComponent onclose="{!c.closeCriteria}" tomOrUntom="{!v.tomOrUntom}">
+                    </c:TomUntomCriteriaComponent>
+                </aura:if>
+            -->
+                <lightning:tabset selectedTabId="one">
+                    <lightning:tab label="Lead" id="one">
+                        <!--
+                        <h2 class="heading">T.O.M. Fields<span>- Configure the mapping for fields 4, 5 &amp;
+                                6 when a lead or
+                                contact is active in your sales engagement tool.</span>
+                        </h2>
+                        <div class="slds-grid">
+                            <div class="slds-xx-small-size_2-of-12 slds-p-top_large"
+                                style="text-align: center;background-color: var(- -lwc-colorBrandDark,rgb(1, 118, 211));border-radius: var(- -lwc-borderRadiusMedium,0.25rem);color: var(- -lwc-colorTextIconInverse,rgb(255, 255, 255));margin-top: 19px;margin-left: 1rem;width: 2rem;padding-top: -0.5%;padding-top: 6px;max-height: 2rem;">
+                                1 </div>
+                            <div class="slds-col- -padded slds-size- -4-of-12 autoComplete">
+                                <span>
+                                    <lightning:input type="text" disabled="true" value="{!v.leadPriorities[0]}" />
+
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="slds-grid">
+                            <div class="slds-xx-small-size_2-of-12 slds-p-top_large"
+                                style="text-align: center;background-color: var(- -lwc-colorBrandDark,rgb(1, 118, 211));border-radius: var(- -lwc-borderRadiusMedium,0.25rem);color: var(- -lwc-colorTextIconInverse,rgb(255, 255, 255));margin-top: 19px;margin-left: 1rem;width: 2rem;padding-top: -0.5%;padding-top: 6px;max-height: 2rem;">
+                                2 </div>
+                            <div class="slds-col- -padded slds-size- -4-of-12 autoComplete">
+                                <span>
+                                    <lightning:input type="text" disabled="true" value="{!v.leadPriorities[1]}" />
+
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="slds-grid">
+                            <div class="slds-xx-small-size_2-of-12 slds-p-top_large"
+                                style="text-align: center;background-color: var(- -lwc-colorBrandDark,rgb(1, 118, 211));border-radius: var(- -lwc-borderRadiusMedium,0.25rem);color: var(- -lwc-colorTextIconInverse,rgb(255, 255, 255));margin-top: 19px;margin-left: 1rem;width: 2rem;padding-top: -0.5%;padding-top: 6px;max-height: 2rem;">
+                                3 </div>
+                            <div class="slds-col- -padded slds-size- -4-of-12 autoComplete">
+                                <span>
+                                    <lightning:input type="text" disabled="true" value="{!v.leadPriorities[2]}" />
+
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="slds-grid">
+                            <div class="slds-xx-small-size_2-of-12 slds-p-top_large"
+                                style="text-align: center;background-color: var(- -lwc-colorBrandDark,rgb(1, 118, 211));border-radius: var(- -lwc-borderRadiusMedium,0.25rem);color: var(- -lwc-colorTextIconInverse,rgb(255, 255, 255));margin-top: 19px;margin-left: 1rem;width: 2rem;padding-top: -0.5%;padding-top: 6px;max-height: 2rem;">
+                                4 </div>
+                            <div class="slds-col- -padded slds-size- -4-of-12 autoComplete">
+                                <span>
+                                    <c:CustomAutoComplete aura:id="lead" allOption="{!v.leadPhoneFields}"
+                                        selectedOption="{!v.leadPriority4}" noLabel="false" />
+
+                                </span>
+                            </div>
+                        </div>
+                        <div class="slds-grid">
+                            <div class="slds-xx-small-size_2-of-12 slds-p-top_large"
+                                style="text-align: center;background-color: var(- -lwc-colorBrandDark,rgb(1, 118, 211));border-radius: var(- -lwc-borderRadiusMedium,0.25rem);color: var(- -lwc-colorTextIconInverse,rgb(255, 255, 255));margin-top: 19px;margin-left: 1rem;width: 2rem;padding-top: -0.5%;padding-top: 6px;max-height: 2rem;">
+                                5 </div>
+                            <div class="slds-col- -padded slds-size- -4-of-12 autoComplete">
+                                <span>
+                                    <c:CustomAutoComplete aura:id="lead" allOption="{!v.leadPhoneFields}"
+                                        selectedOption="{!v.leadPriority5}" noLabel="false" />
+
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="slds-grid">
+                            <div class="slds-xx-small-size_2-of-12 slds-p-top_large"
+                                style="text-align: center;background-color: var(- -lwc-colorBrandDark,rgb(1, 118, 211));border-radius: var(- -lwc-borderRadiusMedium,0.25rem);color: var(- -lwc-colorTextIconInverse,rgb(255, 255, 255));margin-top: 19px;margin-left: 1rem;width: 2rem;padding-top: -0.5%;padding-top: 6px;max-height: 2rem;">
+                                6 </div>
+                            <div class="slds-col- -padded slds-size- -4-of-12 autoComplete">
+                                <span>
+                                    <c:CustomAutoComplete aura:id="lead" allOption="{!v.leadPhoneFields}"
+                                        selectedOption="{!v.leadPriority6}" noLabel="false" />
+
+                                </span>
+                            </div>
+                        </div>
+                        <hr />
+                        <h2 class="heading">Default Fields<span>- Configure the mapping when a lead or
+                                contact is NOT active in your sales engagement tool.</span>
+                        </h2>
+
+                        -->
+
+                        <div class="slds-grid slds-gutters slds-grid_align-space">
+                            <div class="slds-col slds-size--5-of-12">
+                                <div class="slds-grid" style="padding-top: 1rem; margin-left: 1rem">
+                                    <p>Target Fields</p>
+                                </div>
+                                <div class="slds-grid">
+                                    <div class="slds-xx-small-size_2-of-12 slds-p-top_large"
+                                        style="text-align: center;background-color: var(--lwc-colorBrandDark,rgb(1, 118, 211));border-radius: var(--lwc-borderRadiusMedium,0.25rem);color: var(--lwc-colorTextIconInverse,rgb(255, 255, 255));margin-top: 19px;margin-left: 1rem;width: 2rem;padding-top: -0.5%;padding-top: 6px;max-height: 2rem;">
+                                        1 </div>
+                                    <div class="slds-col--padded slds-size--10-of-12 autoComplete">
+                                        <span>
+                                            <c:CustomAutoComplete aura:id="lead" allOption="{!v.allLeadFields}"
+                                                selectedOption="{!v.leadResetPriority1}" noLabel="false" />
+
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="slds-grid slds-grid_reverse" style="padding-top: 4px; margin-right: 10%">
+                                    <!---->
+                                    <lightning:input type="checkbox" aura:id="lead_overwrite_firstField"
+                                        label="Overwrite according to priority" onclick="{!c.handleSelect}"
+                                        checked="{!v.leadOverwriteFF}" />
+                                </div>
+                                <div class="slds-grid" style="padding-top: 1rem; margin-left: 4rem">
+                                    <p>User can select one more field to copy to.</p>
+                                </div>
+                                <div class="slds-grid">
+                                    <div class="slds-xx-small-size_2-of-12 slds-p-top_large"
+                                        style="text-align: center;background-color: var(--lwc-colorBrandDark,rgb(1, 118, 211));border-radius: var(--lwc-borderRadiusMedium,0.25rem);color: var(--lwc-colorTextIconInverse,rgb(255, 255, 255));margin-top: 19px;margin-left: 1rem;width: 2rem;padding-top: -0.5%;padding-top: 6px;max-height: 2rem;">
+                                        2 </div>
+                                    <div class="slds-col--padded slds-size--10-of-12 autoComplete">
+                                        <span>
+                                            <c:CustomAutoComplete aura:id="lead" allOption="{!v.allLeadFields}"
+                                                selectedOption="{!v.leadResetPriority2}" noLabel="false" />
+
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="slds-grid slds-grid_reverse" style="padding-top: 4px; margin-right: 10%">
+                                    <!---->
+                                    <lightning:input type="checkbox" aura:id="lead_overwrite_socondField"
+                                        label="Update only when blank" onclick="{!c.handleSelect}"
+                                        checked="{!v.leadOverwriteSF}" />
+                                </div>
+                            </div>
+                            <div class="slds-col slds-grid_align-center slds-size--1-of-12">
+                                <div class="slds-grid slds-grid_align-center" style="padding-top: 3.5rem;">
+                                    <div class="slds-col--padded">
+                                        <span>
+                                            <lightning:icon style="margin-left:-1.5rem" iconName="utility:back"
+                                                alternativeText="&lt;—" class="setForward">
+                                            </lightning:icon>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size--5-of-12">
+                                <div class="slds-grid" style="padding-top: 1rem; margin-left: 1rem">
+                                    <p>Source Fields</p>
+                                </div>
+
+                                <div class="slds-grid">
+                                    <div class="slds-size_2-of-12 slds-p-top_large"
+                                        style="text-align: center;background-color: var(--lwc-colorBrandDark,rgb(1, 118, 211));border-radius: var(--lwc-borderRadiusMedium,0.25rem);color: var(--lwc-colorTextIconInverse,rgb(255, 255, 255));margin-top: 19px;margin-left: 1rem;width: 2rem;padding-top: -0.5%;padding-top: 6px;max-height: 2rem;">
+                                        1 </div>
+                                    <div class="slds-col--padded slds-size--10-of-12 autoComplete">
+                                        <span>
+                                            <!--c:CustomAutoComplete aura:id="lead" allOption="{!v.allLeadFields}"
+                                                selectedOption="{!v.leadPriority1}" noLabel="false" /-->
+                                            <lightning:input type="text" disabled="true" value="{!v.leadPriority1}" />
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="slds-grid" style="padding-top: 1rem; margin-left: 4rem">
+                                    <p>User can select upto 3 fields to draw value from.</p>
+                                </div>
+
+                                <div class="slds-grid">
+                                    <div class="slds-size_2-of-12 slds-p-top_large"
+                                        style="text-align: center;background-color: var(--lwc-colorBrandDark,rgb(1, 118, 211));border-radius: var(--lwc-borderRadiusMedium,0.25rem);color: var(--lwc-colorTextIconInverse,rgb(255, 255, 255));margin-top: 19px;margin-left: 1rem;width: 2rem;padding-top: -0.5%;padding-top: 6px;max-height: 2rem;">
+                                        2 </div>
+                                    <div class="slds-col--padded slds-size--10-of-12 autoComplete">
+                                        <span>
+                                            <c:CustomAutoComplete aura:id="lead" allOption="{!v.allLeadFields}"
+                                                selectedOption="{!v.leadPriority4}" noLabel="false" />
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="slds-grid">
+                                    <div class="slds-size_2-of-12 slds-p-top_large"
+                                        style="text-align: center;background-color: var(--lwc-colorBrandDark,rgb(1, 118, 211));border-radius: var(--lwc-borderRadiusMedium,0.25rem);color: var(--lwc-colorTextIconInverse,rgb(255, 255, 255));margin-top: 19px;margin-left: 1rem;width: 2rem;padding-top: -0.5%;padding-top: 6px;max-height: 2rem;">
+                                        3 </div>
+                                    <div class="slds-col--padded slds-size--10-of-12 autoComplete">
+                                        <span>
+                                            <c:CustomAutoComplete aura:id="lead" allOption="{!v.allLeadFields}"
+                                                selectedOption="{!v.leadPriority5}" noLabel="false" />
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="slds-grid">
+                                    <div class="slds-size_2-of-12 slds-p-top_large"
+                                        style="text-align: center;background-color: var(--lwc-colorBrandDark,rgb(1, 118, 211));border-radius: var(--lwc-borderRadiusMedium,0.25rem);color: var(--lwc-colorTextIconInverse,rgb(255, 255, 255));margin-top: 19px;margin-left: 1rem;width: 2rem;padding-top: -0.5%;padding-top: 6px;max-height: 2rem;">
+                                        4 </div>
+                                    <div class="slds-col--padded slds-size--10-of-12 autoComplete">
+                                        <span>
+                                            <c:CustomAutoComplete aura:id="lead" allOption="{!v.allLeadFields}"
+                                                selectedOption="{!v.leadPriority6}" noLabel="false" />
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <aura:if isTrue="{!v.onChange}">
+                            <div class="buttonDiv buttonDiv slds-docked-form-footer stickyFooter tomSaveFooter">
+                                <lightning:button variant="brand" label="Save" title="Save" onclick="{! c.onSave }"
+                                    class="saveButton" />
+                                <lightning:button label="Cancel" title="Cancel" onclick="{! c.onCancel }" />
+                            </div>
+                        </aura:if>
+
+                    </lightning:tab>
+
+
+                    <lightning:tab label="Contact" id="two">
+                        <!--
+                        <h2 class="heading">T.O.M. Fields<span>- Configure the mapping for fields 4, 5 &amp;
+                                6 when a lead or
+                                contact is active in your sales engagement tool.</span>
+                        </h2>
+                        <div class="slds-grid">
+                            <div class="slds-xx-small-size_2-of-12 slds-p-top_large"
+                                style="text-align: center;background-color: var(- -lwc-colorBrandDark,rgb(1, 118, 211));border-radius: var(- -lwc-borderRadiusMedium,0.25rem);color: var(- -lwc-colorTextIconInverse,rgb(255, 255, 255));margin-top: 19px;margin-left: 1rem;width: 2rem;padding-top: -0.5%;padding-top: 6px;max-height: 2rem;">
+                                1 </div>
+                            <div class="slds-col- -padded slds-size- -4-of-12 autoComplete">
+                                <span>
+                                    <lightning:input type="text" disabled="true" value="{!v.contactPriorities[0]}" />
+
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="slds-grid">
+                            <div class="slds-xx-small-size_2-of-12 slds-p-top_large"
+                                style="text-align: center;background-color: var(- -lwc-colorBrandDark,rgb(1, 118, 211));border-radius: var(- -lwc-borderRadiusMedium,0.25rem);color: var(- -lwc-colorTextIconInverse,rgb(255, 255, 255));margin-top: 19px;margin-left: 1rem;width: 2rem;padding-top: -0.5%;padding-top: 6px;max-height: 2rem;">
+                                2 </div>
+                            <div class="slds-col- -padded slds-size- -4-of-12 autoComplete">
+                                <span>
+                                    <lightning:input type="text" disabled="true" value="{!v.contactPriorities[1]}" />
+
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="slds-grid">
+                            <div class="slds-xx-small-size_2-of-12 slds-p-top_large"
+                                style="text-align: center;background-color: var(- -lwc-colorBrandDark,rgb(1, 118, 211));border-radius: var(- -lwc-borderRadiusMedium,0.25rem);color: var(- -lwc-colorTextIconInverse,rgb(255, 255, 255));margin-top: 19px;margin-left: 1rem;width: 2rem;padding-top: -0.5%;padding-top: 6px;max-height: 2rem;">
+                                3 </div>
+                            <div class="slds-col- -padded slds-size- -4-of-12 autoComplete">
+                                <span>
+                                    <lightning:input type="text" disabled="true" value="{!v.contactPriorities[2]}" />
+
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="slds-grid">
+                            <div class="slds-xx-small-size_2-of-12 slds-p-top_large"
+                                style="text-align: center;background-color: var(- -lwc-colorBrandDark,rgb(1, 118, 211));border-radius: var(- -lwc-borderRadiusMedium,0.25rem);color: var(- -lwc-colorTextIconInverse,rgb(255, 255, 255));margin-top: 19px;margin-left: 1rem;width: 2rem;padding-top: -0.5%;padding-top: 6px;max-height: 2rem;">
+                                4 </div>
+                            <div class="slds-col- -padded slds-size- -4-of-12 autoComplete">
+                                <span>
+                                    <c:CustomAutoComplete aura:id="contact" allOption="{!v.contactPhoneFields}"
+                                        selectedOption="{!v.contactPriority4}" noLabel="false" />
+
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="slds-grid">
+                            <div class="slds-xx-small-size_2-of-12 slds-p-top_large"
+                                style="text-align: center;background-color: var(- -lwc-colorBrandDark,rgb(1, 118, 211));border-radius: var(- -lwc-borderRadiusMedium,0.25rem);color: var(- -lwc-colorTextIconInverse,rgb(255, 255, 255));margin-top: 19px;margin-left: 1rem;width: 2rem;padding-top: -0.5%;padding-top: 6px;max-height: 2rem;">
+                                5 </div>
+                            <div class="slds-col- -padded slds-size- -4-of-12 autoComplete">
+                                <span>
+                                    <c:CustomAutoComplete aura:id="contact" allOption="{!v.contactPhoneFields}"
+                                        selectedOption="{!v.contactPriority5}" noLabel="false" />
+
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="slds-grid">
+                            <div class="slds-xx-small-size_2-of-12 slds-p-top_large"
+                                style="text-align: center;background-color: var(- -lwc-colorBrandDark,rgb(1, 118, 211));border-radius: var(- -lwc-borderRadiusMedium,0.25rem);color: var(- -lwc-colorTextIconInverse,rgb(255, 255, 255));margin-top: 19px;margin-left: 1rem;width: 2rem;padding-top: -0.5%;padding-top: 6px;max-height: 2rem;">
+                                6 </div>
+                            <div class="slds-col- -padded slds-size- -4-of-12 autoComplete">
+                                <span>
+                                    <c:CustomAutoComplete aura:id="contact" allOption="{!v.contactPhoneFields}"
+                                        selectedOption="{!v.contactPriority6}" noLabel="false" />
+
+                                </span>
+                            </div>
+                        </div>
+                        <hr />
+                        <h2 class="heading">Default Fields<span>- Configure the mapping when a lead or
+                                contact is NOT active in your sales engagement tool.</span>
+                        </h2>
+
+                        -->
+                        <div class="slds-grid slds-gutters slds-grid_align-space">
+                            <div class="slds-col slds-size--5-of-12">
+                                <div class="slds-grid" style="padding-top: 1rem; margin-left: 1rem">
+                                    <p>Target Fields</p>
+                                </div>
+                                <div class="slds-grid">
+                                    <div class="slds-xx-small-size_2-of-12 slds-p-top_large"
+                                        style="text-align: center;background-color: var(--lwc-colorBrandDark,rgb(1, 118, 211));border-radius: var(--lwc-borderRadiusMedium,0.25rem);color: var(--lwc-colorTextIconInverse,rgb(255, 255, 255));margin-top: 19px;margin-left: 1rem;width: 2rem;padding-top: -0.5%;padding-top: 6px;max-height: 2rem;">
+                                        1 </div>
+                                    <div class="slds-col--padded slds-size--10-of-12 autoComplete">
+                                        <span>
+                                            <c:CustomAutoComplete aura:id="contact" allOption="{!v.allContactFields}"
+                                                selectedOption="{!v.contactResetPriority1}" noLabel="false" />
+
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="slds-grid slds-grid_reverse" style="padding-top: 4px; margin-right: 10%">
+                                    <!---->
+                                    <lightning:input type="checkbox" aura:id="con_overwrite_firstField"
+                                        label="Overwrite according to priority" onclick="{!c.handleSelect}"
+                                        checked="{!v.conOverwriteFF}" />
+                                </div>
+
+                                <div class="slds-grid" style="padding-top: 1rem; margin-left: 4rem">
+                                    <p>User can select one more field to copy to.</p>
+                                </div>
+
+                                <div class="slds-grid">
+                                    <div class="slds-xx-small-size_2-of-12 slds-p-top_large"
+                                        style="text-align: center;background-color: var(--lwc-colorBrandDark,rgb(1, 118, 211));border-radius: var(--lwc-borderRadiusMedium,0.25rem);color: var(--lwc-colorTextIconInverse,rgb(255, 255, 255));margin-top: 19px;margin-left: 1rem;width: 2rem;padding-top: -0.5%;padding-top: 6px;max-height: 2rem;">
+                                        2 </div>
+                                    <div class="slds-col--padded slds-size--10-of-12 autoComplete">
+                                        <span>
+                                            <c:CustomAutoComplete aura:id="contact" allOption="{!v.allContactFields}"
+                                                selectedOption="{!v.contactResetPriority2}" noLabel="false" />
+
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="slds-grid slds-grid_reverse" style="padding-top: 4px; margin-right: 10%">
+                                    <!---->
+                                    <lightning:input type="checkbox" aura:id="con_overwrite_secondField"
+                                        label="Update only when blank" onclick="{!c.handleSelect}"
+                                        checked="{!v.conOverwriteSF}" />
+                                </div>
+
+                            </div>
+                            <div class="slds-col slds-size--1-of-12">
+                                <div class="slds-grid slds-grid_align-center" style="padding-top: 3.5rem;">
+                                    <div class="slds-col--padded">
+                                        <span>
+                                            <lightning:icon style="margin-left:-1.5rem" iconName="utility:back"
+                                                alternativeText="&lt;—" class="setForward">
+                                            </lightning:icon>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size--5-of-12">
+                                <div class="slds-grid" style="padding-top: 1rem; margin-left: 1rem">
+                                    <p>Source Fields</p>
+                                </div>
+                                <div class="slds-grid">
+                                    <div class="slds-xx-small-size_2-of-12 slds-p-top_large"
+                                        style="text-align: center;background-color: var(--lwc-colorBrandDark,rgb(1, 118, 211));border-radius: var(--lwc-borderRadiusMedium,0.25rem);color: var(--lwc-colorTextIconInverse,rgb(255, 255, 255));margin-top: 19px;margin-left: 1rem;width: 2rem;padding-top: -0.5%;padding-top: 6px;max-height: 2rem;">
+                                        1 </div>
+                                    <div class="slds-col--padded slds-size--10-of-12 autoComplete">
+                                        <span>
+                                            <!--c:CustomAutoComplete aura:id="contact" allOption="{!v.allContactFields}"
+                                                selectedOption="{!v.contactPriority4}" noLabel="false" /-->
+                                            <lightning:input type="text" disabled="true"
+                                                value="{!v.contactPriority1}" />
+
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="slds-grid" style="padding-top: 1rem; margin-left: 4rem">
+                                    <p>User can select upto 3 fields to draw value from.</p>
+                                </div>
+
+                                <div class="slds-grid">
+                                    <div class="slds-xx-small-size_2-of-12 slds-p-top_large"
+                                        style="text-align: center;background-color: var(--lwc-colorBrandDark,rgb(1, 118, 211));border-radius: var(--lwc-borderRadiusMedium,0.25rem);color: var(--lwc-colorTextIconInverse,rgb(255, 255, 255));margin-top: 19px;margin-left: 1rem;width: 2rem;padding-top: -0.5%;padding-top: 6px;max-height: 2rem;">
+                                        2 </div>
+                                    <div class="slds-col--padded slds-size--10-of-12 autoComplete">
+                                        <span>
+                                            <c:CustomAutoComplete aura:id="contact" allOption="{!v.allContactFields}"
+                                                selectedOption="{!v.contactPriority4}" noLabel="false" />
+
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="slds-grid">
+                                    <div class="slds-xx-small-size_2-of-12 slds-p-top_large"
+                                        style="text-align: center;background-color: var(--lwc-colorBrandDark,rgb(1, 118, 211));border-radius: var(--lwc-borderRadiusMedium,0.25rem);color: var(--lwc-colorTextIconInverse,rgb(255, 255, 255));margin-top: 19px;margin-left: 1rem;width: 2rem;padding-top: -0.5%;padding-top: 6px;max-height: 2rem;">
+                                        3 </div>
+                                    <div class="slds-col--padded slds-size--10-of-12 autoComplete">
+                                        <span>
+                                            <c:CustomAutoComplete aura:id="contact" allOption="{!v.allContactFields}"
+                                                selectedOption="{!v.contactPriority5}" noLabel="false" />
+
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="slds-grid">
+                                    <div class="slds-xx-small-size_2-of-12 slds-p-top_large"
+                                        style="text-align: center;background-color: var(--lwc-colorBrandDark,rgb(1, 118, 211));border-radius: var(--lwc-borderRadiusMedium,0.25rem);color: var(--lwc-colorTextIconInverse,rgb(255, 255, 255));margin-top: 19px;margin-left: 1rem;width: 2rem;padding-top: -0.5%;padding-top: 6px;max-height: 2rem;">
+                                        4 </div>
+                                    <div class="slds-col--padded slds-size--10-of-12 autoComplete">
+                                        <span>
+                                            <c:CustomAutoComplete aura:id="contact" allOption="{!v.allContactFields}"
+                                                selectedOption="{!v.contactPriority6}" noLabel="false" />
+
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <aura:if isTrue="{!v.onChangeContact}">
+                            <div class="buttonDiv buttonDiv slds-docked-form-footer stickyFooter tomSaveFooter">
+                                <lightning:button variant="brand" label="Save" title="Save"
+                                    onclick="{! c.onSaveContact }" class="saveButton" />
+                                <lightning:button label="Cancel" title="Cancel" onclick="{! c.onCancelContact }" />
+                            </div>
+                        </aura:if>
+
+                    </lightning:tab>
+                </lightning:tabset>
+                <div style="font-weight: 600; margin-top: 3rem; margin-left: 2rem">
+                    NOTE: The feature requires that the running users have the following permissions: (1) Assigned to
+                    the
+                    Modigie User permission set (2) READ
+                    permissions on the Source Fields and (3) UPDATE permissions on the Target Fields.</div>
+            </aura:set>
+        </aura:if>
+        <aura:set attribute="else">
+            <lightning:spinner alternativeText="Loading" />
+        </aura:set>
+    </aura:if>
+    <aura:if isTrue="{!v.isReferenceOpen}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+            aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="
+                    slds-button slds-button_icon
+                    slds-modal__close
+                    slds-button_icon-inverse
+                    " title="Close">
+                        <lightning:icon iconName="utility:close" alternativeText="Connected" variant="inverse"
+                            size="small" title="Close" onclick="{!c.closeReference}" />
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">
+                        T.O.M. Reference
+                    </h2>
+                </header>
+                <div class="slds-modal__content slds-p-horizontal_x-large slds-p-vertical_medium textDiv"
+                    id="modal-content-id-1">
+                    <p>The Modigie Telephony Optimization Module (T.O.M) provides clients a way to assure that their
+                        prioritized phone numbers are sent to the sales engagement tool.</p>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+
+    </aura:if>
+
+</aura:component>

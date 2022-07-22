@@ -1,0 +1,133 @@
+<template >
+    <template if:true={isLoaded}>
+     <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open slds-modal_small" aria-labelledby="modal-heading-01" aria-modal="true">
+          <div class="slds-modal__container">
+            <div class="slds-modal__header">
+              <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate fontHeader fontHeader" style="font-weight: bold;">
+                <!-- <template if:true={isPerformance}>
+                    Performance
+                </template> 
+                <template if:false={isPerformance}>
+                    Credit
+                </template>  -->
+                 Assignees</h1>
+            </div>
+
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                
+                    <table class = "table1">
+                        <tbody>
+                                 <tr class="slds-hint-parent">
+                                     <td role="gridcell">
+                                         <div class="slds-truncate customClass1 fontContent fontContent">Credit Account Id:
+                                         </div>
+                                     </td>
+                                     <td role="gridcell" class="fontContent" style="padding-left: 1rem;">
+                                         <div class="fontContent">
+                                       {encryptedId}
+                                     </div>
+                                         <!-- <ui:outputText value="{!v.customerId}" class="customClass"
+                                             /> -->
+                                     </td>
+                                  </tr>
+                                  <tr>
+                                     <td role="gridcell">
+                                         <div class="slds-truncate customClass1 fontContent">
+                                              Title:
+                                         </div>
+                                         
+                                     </td>
+                                     <td role="gridcell" style="padding-left: 1rem;">
+                                         <div class="slds-truncate customClass1 fontContent">{title}
+                                         </div>
+                                     </td>
+                                     
+                                 </tr>
+                         </tbody>
+                        </table>
+                        <lightning-input type="search" placeholder="Search User...." value={searchTerm} onchange={handleInputChange} class="marginClass"></lightning-input>
+                        <b class="dualListBoxLabel">Select Users</b>
+                        <lightning-dual-listbox
+                            id="selectOptions"
+                            name="Select Options"
+                            source-label="Available Users"
+                            selected-label="Selected Users"
+                            options={availableUsers}
+                            value={selectedUsers}
+                            onchange={handleChange}
+                            disable-reordering
+                            class="marginClass"
+                        >
+                        </lightning-dual-listbox>
+                        <!-- <template if:true={noData}>
+                            <div style="text-align: center;font-size: medium; margin: 2rem; background:lightgray">No Assigned Users Found</div>
+                        </template>
+                        <template if:false={noData}>
+                            <table
+                                class="slds-table slds-table_cell-buffer
+                                slds-table_bordered slds-table_fixed-layout"
+                                role="grid">
+                                <thead>
+                                    <tr class="slds-line-height_reset">
+                                        <th >
+                                            <div class="LeftAlignClass fontContent">User Id
+                                            </div>
+                                        </th>
+                                        <th role="gridcell">
+                                            <div class="slds-truncate customClass1 LeftAlignClass fontContent">Name
+                                            </div>
+                                        </th>
+                                        <th role="gridcell">
+                                            <div class="slds-truncate customClass1 action LeftAlignClass fontContent">Active Salesforce User
+                                            </div>
+                                        </th>
+                                        <th role="gridcell" style="text-align: center;">
+                                            <div class="slds-truncate customClass1 LeftAlignClass fontContent">Permission Set
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template for:each={UserDetails} for:item="UserDetail">
+                                        <tr class={UserDetail.TextColorClass} key={UserDetail.Userid}>
+                                        
+                                            <td role="gridcell" class="LeftAlignClass">
+                                                <div class="slds-truncate customClass1 fontContent">{UserDetail.UserId} 
+                                                </div>
+                                            </td>
+                                            <td role="gridcell" class="LeftAlignClass fontContent">
+                                                {UserDetail.Name}
+                                            </td>
+                                            <td role="gridcell" >
+                                                <div class="slds-truncate customClass1 Left fontContent">{UserDetail.Active}
+                                                </div>
+                                            </td>
+                                            <td role="gridcell" class="LeftAlignClass">
+                                            <div class="slds-truncate customClass1 fontContent">{UserDetail.PermissionSet}
+                                            </div>
+                                        </td>
+                                    
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </template> -->
+                        
+                
+
+            
+              
+            </div>
+            
+            <div class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" onclick={handleClose} title="Cancel">Close</button>
+                <button class="slds-button slds-button_brand" onclick={handleSave} title="Save">Save</button>
+            </div>
+     </div>
+        </section>
+    </template>
+    <template if:false={isLoaded}>
+        <lightning-spinner alternative-text="Loading"></lightning-spinner>
+    </template>
+        <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+</template>

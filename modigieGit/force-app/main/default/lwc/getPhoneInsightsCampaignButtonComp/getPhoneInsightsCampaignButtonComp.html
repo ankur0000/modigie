@@ -1,0 +1,126 @@
+<template>
+    <template if:true={credentialAvailable}>
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+            <!-- Modal/Popup Box LWC header here -->
+            <header class="slds-modal__header">
+                
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModel}>
+                    <lightning-icon icon-name="utility:close"
+                        alternative-text="close"
+                        variant="inverse"
+                        size="small" ></lightning-icon>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                
+                <!-- <div class="logo" >
+                    <img src={modigieLogoUrl}/>
+                </div> -->
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate modalHeader">Get Phone Insights</h2>
+            </header>
+            <!-- Modal/Popup Box LWC body starts here -->
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <template if:true={toggleSpinner}>
+                    <div class="slds-spinner_container">
+                        <div class="slds-spinner--brand  slds-spinner slds-spinner_small" role="alert">
+                            <span class="slds-assistive-text">Loading</span>
+                            <div class="slds-spinner__dot-a"></div>
+                            <div class="slds-spinner__dot-b"></div>
+                        </div>
+                    </div>
+                </template>
+                <template if:false={toggleSpinner}>
+                     <lightning-accordion allow-multiple-sections-open active-section-name={activeSections}>
+                        
+
+                        <lightning-accordion-section name="A" label="Contact (Standard Salesforce Fields)" data-name="SampleAtt" >
+                        
+                            <div class="slds-grid">
+                                    <div class="slds-col slds-size_1-of-2 ">
+                                        <span class="accordianSpan">
+                                            <div class="accordianDiv" >
+                                                <input type="checkbox" name="PhoneNumbers" value="MobilePhone" class="accordianInput"  onchange={handleChangeContact} data-name="Mobile">
+                                                <label for="MobilePhone">Mobile</label>
+                                            </div>
+                                            <div class="accordianDiv" >
+                                                <input type="checkbox" name="PhoneNumbers" value="Phone" class="accordianInput"  onchange={handleChangeContact} data-name="Phone">
+                                                <label for="Phone">Phone</label>
+                                            </div>
+
+                                            
+                                                <div class="accordianDiv" >
+                                                    <input type="checkbox" name="PhoneNumbers" value="OtherPhone" class="accordianInput"  onchange={handleChangeContact} data-name="Other">
+                                                    <label for="OtherPhone">Other Phone</label>
+                                                </div>
+                                            
+                                            
+                                            
+                                        </span>
+                                    </div>
+                            </div>
+                        </lightning-accordion-section>
+
+                        <lightning-accordion-section name="B" label="Lead (Standard Salesforce Fields)" class="customClass">
+                            <div class="slds-grid">
+                                    <div class="slds-col slds-size_1-of-2 ">
+                                        <span class="accordianSpan">
+                                            <div class="accordianDiv" >
+                                                <input type="checkbox" name="PhoneNumbers" value="MobilePhone" class="accordianInput" onchange={handleChangeLead} data-name="Mobile">
+                                                <label for="MobilePhone">Mobile</label>
+                                            </div>
+                                            <div class="accordianDiv" >
+                                                <input type="checkbox" name="PhoneNumbers" value="Phone" class="accordianInput"  onchange={handleChangeLead} data-name="Phone">
+                                                <label for="Phone">Phone</label>
+                                            </div>
+
+                                            
+                                        </span>
+                                    </div>
+                            </div>
+                        </lightning-accordion-section>
+                        <template if:true={limitsData.Ad_Hoc_Limits}>
+                        <div class="slds-grid slds-grid_vertical apiInfo" > 
+                            <div class="slds-col">
+                                <span>
+                                    Your total daily API Limit is {totalLimit}, remaining is {remainingLimit}.
+                                </span>
+                            </div>
+                            <!--div class="slds-col">
+                                <span>
+                                    Your remaining daily API Limit is {remainingLimit}.
+                                </span>
+                            </div-->
+                        </div>
+                        </template>
+                        
+                    </lightning-accordion>
+                </template>
+            </div>
+            <!-- Modal/Popup Box LWC footer starts here -->
+            <footer class="slds-modal__footer">
+                
+                <lightning-button variant="destructive"
+                label="Sync Only New Records"
+                title="Confirm"
+                disabled={disableSubmit}
+                onclick={syncNewRecords} class="accordianInput"></lightning-button> 
+
+                    <lightning-button variant="destructive"
+                                  label="Sync All Records"
+                                  title="Confirm"
+                                  disabled={disableSubmit}
+                                  onclick={syncAllRecords} class="accordianInput"></lightning-button> 
+                
+                    
+                    <lightning-button variant="neutral"
+                                  label="Cancel"
+                                  title="Cancel"
+                                  onclick={closeModel}></lightning-button>
+                
+                
+            </footer>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

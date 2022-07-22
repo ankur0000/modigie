@@ -1,0 +1,285 @@
+/*.THIS .slds-button{
+    margin-right: 20px;
+    height: fit-content;
+    margin-top:20px;
+}*/
+.THIS .modalButtonMargin{
+    margin:1%;
+}
+
+.THIS .flows-section{
+    font-size:109%;
+}
+
+/*.c-container.THIS{
+    
+}
+.THIS.padding-icons{
+    
+}*/
+.THIS .flows
+{
+    background-color: none;
+    padding: 1%;
+}
+
+.THIS .slds-section__title-action
+{
+    background-color: none !important;
+}
+
+.THIS .select
+{
+    margin: -1% !important;
+}
+
+.THIS .helpText
+{
+    margin-top: -2%;
+}
+
+.THIS .templateHeader
+{
+    padding-bottom: 1%;
+    border-bottom: 1px solid lightgrey;
+}
+
+.THIS .listTitle
+{
+    font-style: italic;
+}
+
+.THIS .btnClass
+{
+    margin-top: 2%;
+}
+
+
+.THIS .scrollable
+{
+    scroll-behavior: smooth;
+}
+
+.THIS.scrollerSize {
+    height: 70%;
+    width:100%;
+}
+
+
+
+/* new */
+
+.THIS .textDiv
+{
+    text-align: justify;
+    
+}
+
+.THIS .textDiv h2
+{
+    font-size: medium;
+    line-height: 2rem;
+    font-weight: 500;
+}
+
+
+
+.THIS .textDiv p
+{
+    font-size: medium;
+    line-height: 2rem;
+}
+
+.THIS .textDiv ul 
+{
+    list-style-type:disc;
+    margin-bottom:2%;
+    margin-left: 3%;
+}
+
+.THIS .textDiv ul li
+{
+    font-size: small;
+    line-height: 2rem;
+}
+
+.THIS .textDiv ol
+{
+    list-style-type: decimal;
+    margin-left: 3%;
+    margin-bottom:2%;
+
+}
+
+.THIS .olDiv 
+{
+    border-bottom: 1px solid grey;
+}
+
+
+.THIS .textDiv ol li
+{
+    margin-bottom: 1%;
+}
+
+.THIS .divP
+{
+    font-size: medium;
+    line-height: 2rem;
+}
+
+.THIS .navbar {
+    overflow: hidden;
+    background-color: #333;
+  }
+
+  .THIS .sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+  }
+
+  .THIS .selectDays
+  {
+    width: 10%;
+    margin-left: 90%;
+
+  }
+
+  .THIS .funnelTop
+  {
+    font-size: large;
+    line-height: 2rem;
+    font-weight: 500;
+    border-left: 4px solid #005fb2;
+    margin-bottom: 2%;
+    margin-top: 0% !important;
+    color:#005fb2;
+  }
+
+  .THIS .confirmModalClose
+  {
+    margin-top: -47%;margin-left: 51%;
+  }
+
+  .THIS .headerDiv
+  {
+    display: inline-flex;padding-right: inherit;
+  }
+
+  .THIS .headerDiv h2
+  {
+    font-size: xx-large;
+  }
+
+  .THIS .headerDivIcon
+  {
+    margin:auto
+  }
+
+  .THIS .confirmModalBody
+  {
+    font-size:medium;
+  }
+
+  .THIS .configurationToastDiv
+  {
+    height:1rem; position:static;top:-1.3rem;left:1rem;right:1rem
+  }
+
+  .THIS .configurationToastSubDiv
+  {
+    width:100%;
+  }
+
+  .THIS .configurationToastSpan
+  {
+    background-color: white; margin-right:3%;
+  }
+
+  .THIS .configurationErrorToastDiv
+  {
+    height:1rem; position:absolute;top:-1.3rem;left:1rem;right:1rem;
+  }
+
+  .THIS .configurationErrorToastSubDiv
+  {
+    width:100%;
+  }
+
+  .THIS .configurationErrorToastSpan
+  {
+    background-color: white; margin-right:3%;
+  }
+
+
+.THIS .pSpan
+{
+    font-weight: bold;
+}
+
+.THIS .textDivUl
+{
+    list-style-type: disc;
+}
+
+.THIS .modalSpinner
+{
+    background-color: white;
+}
+
+.THIS .pageHeader
+{
+    width:100%;
+}
+
+.THIS .noMobileInfoSave
+{
+    margin-bottom: -2%;margin-right: 25px;
+}
+
+.THIS .noMobileInfoSaveButton
+{
+    height: 22px;
+}
+
+.THIS .togglePosition2
+{
+    padding-top:6%;
+}
+
+
+.THIS .noMobileInfoCancel
+{
+    margin-bottom: -2%;
+}
+
+.THIS .noMobileInfoCancelButton
+{
+    height: 22px;width: 60px;
+}
+
+.THIS .validValueError
+{
+    color: red;text-align:center
+}
+
+.THIS .togglePosition
+{
+    padding-top:20px;
+}
+
+.THIS .xtraButton
+{
+    padding-top:5%
+}
+
+.THIS .leadStatusButton
+{
+    margin-left: 85%;
+}
+
+.THIS .oppStageButton
+{
+    margin-left: 80%;
+}

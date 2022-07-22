@@ -1,0 +1,192 @@
+<aura:component
+    implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"
+    access="global" controller="DynamicAutomationCriteriaCompController">
+    <aura:handler name="init" value="{!this}" action="{!c.doinit}" />
+    <aura:attribute name="fields" type="List" />
+    <aura:attribute name="isNullSelected" type="Boolean" />
+    <aura:attribute name="isExtraStringOprSel" type="Boolean" />
+    <aura:attribute name="showModal" type="Boolean" />
+    <aura:attribute name="selectedOperator" type="String" />
+    <aura:attribute name="fieldsDataType" type="Object" />
+    <aura:attribute name="selectedField" type="String" />
+    <aura:attribute name="selectedFieldDataType" type="String" />
+    <aura:attribute name="picklistValues" type="Object" />
+    <aura:attribute name="testVar" type="String" />
+    <aura:attribute name="availableOptions" type="List" />
+    <aura:attribute name="oldSelectedPicklistValues" type="Object" />
+    <aura:attribute name="selectedPicklistOptionStr" type="String" />
+    <aura:attribute name="selectedOptions" type="List" />
+    <aura:attribute name="alreadySelectedOptions" type="List" />
+    <aura:attribute name="fieldsLabel" type="Object" />
+    <aura:attribute name="modalHeader" type="String" />
+    <aura:attribute name="rowIndex" type="String" />
+    <aura:attribute name="criteriaValue" type="String" />
+    <aura:attribute name="objectName" type="String" />
+    <aura:registerEvent name="DeleteRowEvt" type="c:DeleteRowEvt" />
+    <aura:registerEvent name="AddRowEvt" type="c:AddNewRowEvt" />
+
+    <aura:handler event="c:modigieRuleSelectedField" action="{!c.getCustomSelectedValue}"/>
+    <aura:attribute type="String" name="customSelectedValue" />
+
+
+    <!--div class="slds-scrollable_y"-->
+
+    <div class="slds-grid" style="width:170%">
+        <div class="slds-xx-small-size_2-of-12 slds-p-top_large"
+            style="text-align: center;background-color: var(--lwc-colorBrandDark,rgb(1, 118, 211));border-radius: var(--lwc-borderRadiusMedium,0.25rem);color: var(--lwc-colorTextIconInverse,rgb(255, 255, 255));margin-top: 1.3rem;margin-left: 1rem;width: 2rem;padding-top: -0.5%;padding-top: 6px;max-height: 2rem;">
+            {!v.rowIndex + 1} </div>
+        <div class="slds-col--padded slds-size--2-of-12 autoComplete">
+            <span>
+                <c:CustomAutoComplete aura:id="custom-option" allOption="{!v.fields}" selectedOption="{!v.selectedField}"/>
+                <!-- {!v.selectedField} -->
+                <!-- <lightning:select aura:id="FieldsSelectionList" value="{!v.selectedField}" label="Field" required="true"
+                    onchange="{!c.handleSelectFieldChange}">
+                    <aura:iteration items="{!v.fields}" var="acc" indexVar="key">
+                        <option text="{!acc.label}" value="{!acc.apiname}" />
+                    </aura:iteration>
+                </lightning:select> -->
+            </span>
+        </div>
+        <div class="slds-col--padded slds-size--2-of-12">
+            <span>
+                <lightning:select aura:id="Attribute_Name__c" value="{!v.selectedOperator}" label="Operator"
+                    required="true" onchange="{!c.handleOperatorChange}">
+                    <option text="Equals" value="equals" />
+                    <option text="Not Equals" value="notEquals" />
+                    <option text="Is Null" value="null" />
+                    <!--aura:if isTrue="{!or(or(v.selectedFieldDataType  == 'DATETIME',v.selectedFieldDataType  == 'DATE'),or(v.selectedFieldDataType  == 'INTEGER',v.selectedFieldDataType  == 'DOUBLE'))}"-->
+                    <aura:if isTrue="{!v.selectedFieldDataType  == 'DATETIME'|| v.selectedFieldDataType  == 'DATE' || v.selectedFieldDataType  == 'INTEGER' || v.selectedFieldDataType  == 'DOUBLE'}">
+                            <option text="greater than" value="gt" />
+                            <option text="less than" value="lt" />
+                            <option text="greater than or equal" value="gte" />
+                            <option text="less than or equal" value="lte" />
+                    </aura:if>
+                    <aura:if isTrue="{!v.selectedFieldDataType  == 'STRING'}">
+                        <option text="does contain" value="ct" />
+                        <option text="does not contain" value="nct" />
+                        <option text="starts with" value="sw" />
+                        <option text="does not start with" value="nsw" />
+                        <option text="ends with" value="ew" />
+                        <option text="does not end with" value="new" />
+                    </aura:if>
+                    <!--/aura:if-->
+                </lightning:select>
+            </span>
+        </div>
+        <div class="slds-col--padded slds-size--2-of-12">
+            <span>
+                <aura:if isTrue="{!v.isNullSelected}">
+                    <lightning:select aura:id="Attribute_Name__c" value="{!v.criteriaValue}" label="Value"
+                        required="true">
+                        <option text="True" value="true" />
+                        <option text="False" value="false" />
+                    </lightning:select>
+                    <aura:set attribute="else">
+                        <aura:if
+                            isTrue="{!or(v.selectedFieldDataType  == 'DATETIME',v.selectedFieldDataType  == 'DATE')}">
+                            <lightning:input type="date" name="input2" label="Value" value="{!v.criteriaValue}"
+                                required="true" />
+                            <aura:set attribute="else">
+                                <aura:if isTrue="{!v.selectedFieldDataType  == 'PICKLIST'}">
+                                    <label class="slds-form-element__label" for="text-input-id-1">
+                                        <abbr class="slds-required" title="required">* </abbr>Value</label>
+                                    <div class="slds-form-element__control slds-input" onclick="{!c.openModal}">
+                                        <aura:if isTrue="{!and(v.criteriaValue  != '',v.criteriaValue != undefined)}">
+                                            <p class="slds-truncate" title="{!v.criteriaValue}">{!v.criteriaValue}</p>
+                                        </aura:if>
+
+                                    </div>
+                                    <aura:if isTrue="{!v.showModal}">
+                                        <section role="dialog" tabindex="-1"
+                                            class="slds-modal slds-fade-in-open slds-modal_small"
+                                            aria-labelledby="modal-heading-01" aria-modal="true"
+                                            aria-describedby="modal-content-id-1">
+                                            <div class="slds-modal__container">
+                                                <header class="slds-modal__header">
+                                                    <button
+                                                        class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                                                        title="Close">
+                                                        <lightning:icon iconName="utility:close"
+                                                            alternativeText="Connected" variant="inverse" size="small"
+                                                            title="Close" onclick="{!c.closeModal}" />
+                                                    </button>
+                                                    <h2 class="slds-modal__title slds-hyphenate">{!v.modalHeader}</h2>
+                                                </header>
+                                                <div class="slds-modal__content slds-p-around_medium slds-is-relative">
+
+                                                    <div class="slds-grid slds-gutters">
+                                                        <div class="slds-col slds-size_2-of-12">
+                                                        </div>
+                                                        <div class="slds-col slds-size_8-of-12">
+
+                                                            <aura:if isTrue="{!v.loadSpinner}">
+                                                                <div class="slds-spinner_container modalSpinner">
+                                                                    <div class="slds-spinner--brand  slds-spinner slds-spinner_medium"
+                                                                        role="alert">
+                                                                        <span class="slds-assistive-text">Loading</span>
+                                                                        <div class="slds-spinner__dot-a"></div>
+                                                                        <div class="slds-spinner__dot-b"></div>
+                                                                    </div>
+                                                                </div>
+                                                            </aura:if>
+
+                                                            <lightning:dualListbox name="leadStages"
+                                                                label="Select Status" sourceLabel="Available Status"
+                                                                selectedLabel="Selected Status"
+                                                                fieldLevelHelp="Select Your Preferred Status"
+                                                                options="{!v.availableOptions}"
+                                                                value="{!v.selectedOptions}" />
+                                                        </div>
+                                                        <div class="slds-col slds-size_2-of-12">
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+                                                <footer class="slds-modal__footer">
+                                                    <button class="slds-button slds-button_brand"
+                                                        onclick="{!c.handleSave}">Save</button>
+                                                    <button class="slds-button slds-button_neutral"
+                                                        onclick="{!c.closeModal}">Cancel</button>
+
+                                                </footer>
+                                            </div>
+                                        </section>
+                                    </aura:if>
+                                    <aura:set attribute="else">
+                                        <!--Need to be single value for ticket SFD-21-->
+                                        <aura:if isTrue="{!v.isExtraStringOprSel}">
+                                            <lightning:input name="input-ex" label="Value" required="true" autocomplete='off'
+                                            value="{!v.criteriaValue}" onchange="{!c.testChange}"
+                                            placeholder="Enter a string" />
+                                            <aura:set attribute="else">
+                                                <!--Bug with Number/Currency Field-->
+                                                <aura:if isTrue="{!or(v.selectedFieldDataType  == 'DOUBLE',v.selectedFieldDataType  == 'INTEGER')}">
+                                                    <lightning:input name="input-num" label="Value" required="true" autocomplete='off'
+                                                    value="{!v.criteriaValue}" onchange="{!c.testChange}"
+                                                    type="Number" step="0.01" placeholder="Enter a value" />
+                                                    <aura:set attribute="else">
+                                                        <lightning:input name="input1" label="Value" required="true" autocomplete='off'
+                                                        value="{!v.criteriaValue}" onchange="{!c.testChange}"
+                                                        placeholder="Enter multiple values seprated with ';;'" />
+                                                    </aura:set>
+                                                </aura:if>
+                                            </aura:set>
+                                        </aura:if>
+                                    </aura:set>
+                                </aura:if>
+                            </aura:set>
+                        </aura:if>
+
+
+                    </aura:set>
+                </aura:if>
+            </span>
+        </div>
+        <div class="slds-col--padded slds-size--2-of-12 slds-p-top_large">
+            <lightning:icon iconName="utility:close" alternativeText="close" title="close" size="x-small"
+                onclick="{!c.removeRow}" />
+        </div>
+    </div>
+    <!--/div-->
+</aura:component>

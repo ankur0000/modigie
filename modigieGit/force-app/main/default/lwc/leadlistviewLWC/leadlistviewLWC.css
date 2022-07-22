@@ -1,0 +1,72 @@
+.buttonColor{
+    background: green;
+}
+
+.showSpinner
+{
+    height:6rem;
+}
+
+.spinnerBg
+{
+    background-color:white;
+}
+
+.showToast
+{
+    height:4rem;
+}
+
+.showToastDiv
+{
+    width: 50%;
+}
+
+.pageHeader
+{
+    width:100%; 
+}
+
+.dataTable
+{
+    height:fit-content;
+}
+
+.additionalModal
+{
+    margin-left: 10%;
+}
+
+.modalHeader
+{
+    font-size: xx-large;
+}
+
+.accordianSection
+{
+    font-size: large !important;
+}
+
+.accordianSpan
+{
+    font-size: medium;
+}
+
+.accordianDiv
+{
+    margin: 30px;
+}
+
+.accordianDivInput
+{
+    margin: 5px;
+}
+
+.mLogo
+{
+    height: auto; width:calc(3.235rem * 3.5rem); margin:5%; max-width: 90% !important;
+}
+
+.banner{
+    border-radius: 0.2rem;
+}

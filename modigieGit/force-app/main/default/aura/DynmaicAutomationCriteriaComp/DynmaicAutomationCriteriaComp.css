@@ -1,0 +1,43 @@
+.THIS .slds-radio{
+    display:inline-block;
+    margin-left: 27%;
+    margin-bottom: 2%;
+    margin-top: 2%;
+}
+.THIS .no-inline > fieldset > div > span {
+    display: block !important;
+    margin: 0 !important;
+    padding-top: 0.35rem;
+}
+.THIS .logic-input {
+    width: 12rem !important;
+    display: inline-block;
+}
+.THIS .inside-save > div {
+    width: 1em;
+}
+.THIS .inside-save > div::before {
+    width: .15rem;
+    height: .15rem;
+}
+.THIS .inside-save > div::after {
+    width: .15rem;
+    height: .15rem;
+}
+.THIS .inside-save > div > div::before {
+    width: .15rem;
+    height: .15rem;
+}
+.THIS .inside-save > div > div::after {
+    width: .15rem;
+    height: .15rem;
+}
+.THIS .logic-error {
+    position: relative;
+    top: -.25em;
+    padding-left: .25em;
+}
+.THIS .spinner {
+    background: transparent;
+    margin-top: 150px;
+}

@@ -1,0 +1,115 @@
+/* .THIS .slds-form-element__label {
+    display: none;
+} */
+.THIS .no-inline > fieldset > div > span {
+    display: block !important;
+    margin: 0 !important;
+    padding-top: 0.35rem;
+}
+.THIS .spinner {
+    background: transparent;
+    margin-left: -200px;
+}
+.THIS .table{
+    margin: 0 60px 0 20px;
+}
+.THIS .limits{
+    width: 20%;
+    margin-left: 80%;
+    margin-top: -25px;
+}
+/* .THIS .requestLimit{
+    margin-left: 50%;
+} */
+.THIS .logic-input {
+    width: 12rem !important;
+    display: inline-block;
+}
+.THIS .logic-error {
+    position: relative;
+    top: -.25em;
+    padding-left: .25em;
+}
+/* .THIS .description{
+    height: 300px;
+} */
+.THIS textarea {
+    height: 10rem;
+}
+.THIS .slds-form-element{
+    padding-bottom: 12px;
+}
+.THIS .mqCheckbox{
+    margin-top: 10px;
+}
+.THIS .preAnalysis{
+    width: 20%;
+    margin-left: 80%;
+    margin-top: 10px;
+}
+/* .THIS .slds-select_container{
+    width: 230px;
+} */
+.THIS .tdStyle{
+    vertical-align: top;
+    padding-top: 20px; 
+    padding-left:50px;
+}
+.THIS .tableData{
+    margin-right: -50px;
+}
+.THIS .calculation{
+    text-align: end;
+}
+.THIS .fixPositionTooltip div{
+    left: -9.4rem;
+    bottom: -0.25rem;
+}
+.THIS .flexObjectRadio fieldset div{
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 1rem;
+}
+.THIS .limitsTopPadding div, .THIS .flexTopPadding fieldset div{
+    margin-top: 0.75rem;
+}
+.THIS .marginTopRadio{
+    margin-top: 0.25rem;
+}
+.THIS .limitPerRuleSet {
+    width: 3.75rem;
+}
+.THIS .limitPerRuleSetClassic {
+    padding-bottom: 0px;
+}
+.THIS .limitPerRuleSet div input {
+    height: 1.5rem;
+    padding-left: 0.25rem;
+    min-height: 1.5rem;
+    width: 3.75rem;
+}
+.THIS .revertDateContainer{
+    width: 100%;
+}
+.THIS .RevertDateClassic {
+    padding-bottom: 0px;
+    padding-top: 1rem;
+}
+.THIS .RevertDateLabel {
+    padding-top: 1rem;
+}
+.THIS .RevertDate div input {
+    height: 2rem;
+    padding-left: 0.25rem;
+    min-height: 1.5rem;
+    width: 3.75rem;
+}
+.THIS .title{
+    font-size: medium !important;
+    line-height: 2rem !important;
+    font-weight: 500 !important;
+}
+.THIS .tooltipClass div{
+    bottom: -1.25rem;
+    left: -1rem;
+}

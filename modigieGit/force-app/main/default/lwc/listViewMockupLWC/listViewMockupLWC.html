@@ -1,0 +1,108 @@
+<template>
+ 
+       
+            <!--div class="c-container">
+                <lightning-layout horizontal-align="space" vertical-align="center" style="padding-right: 12px;">
+                
+                    <lightning-layout-item padding="around-small" style="margin-left: 5%;">
+                        <div style="padding-top: 15%;width: max-content;margin-left: 4%;">
+                            <button title="Get Modigie" type="button" onclick={openModal} data-name="GetMobileNumber" class={buttonColors.modigie} style="width: 150%;">Get Modigie</button><br></br>
+                        </div>   
+                    </lightning-layout-item>
+                    <lightning-layout-item padding="around-small" style="margin-right: 23%;">
+                        <div style="font-size: medium;font-weight: bold;width: max-content;">
+                            Mobile Number, Best time to call, Verify Employer, LinkedIn Profile
+                        </div>   
+                    </lightning-layout-item>
+                   </lightning-layout>
+            </div>
+            <div class="slds-box">
+            <lightning-accordion class="example-accordion" allow-multiple-sections-open>
+                <lightning-accordion-section name="AdditionalModigieServices" label="Additional Modigie Services"> 
+                    <div class="c-container" style = "padding-top: 2%;">
+                        <lightning-layout horizontal-align="space">
+                           
+                            <lightning-layout-item padding="around-small">
+                                <!-lightning-button variant="brand" label="Get Modigie Mobile" title="Primary action with lighter look" onclick={openModal} class="slds-m-left_x-small" data-name="Get Modigie"></lightning-button->
+                                <button title="Get Modigie" type="button" class={buttonColors.modigie} onclick={openModal} data-name="GetMobileNumber">Get Mobile Number</button><br></br>
+                            </lightning-layout-item>
+                            <lightning-layout-item padding="around-small">
+                                <!-lightning-button variant="brand" label="Get Verified Employer" title="Primary action with lighter look" onclick={openModal} class="slds-m-left_x-small" data-name="Get Verified Employer"></lightning-button->
+                                <button title="Verify Employer" type="button" class={buttonColors.verifyEmployer} onclick={openModal} data-name="VerifyEmployer">Verify Employer</button><br></br>
+                            </lightning-layout-item>
+                            <lightning-layout-item padding="around-small">
+                                <!-lightning-button variant="brand" label="Get Phone Intelligence" title="Primary action with lighter look" onclick={openModal} class="slds-m-left_x-small" data-name="Get Phone Intelligence"></lightning-button->
+                                <button title="Get Phone Insights" type="button" class={buttonColors.phoneIntelligence} onclick={openModal} data-name="GetPhoneInsights">Get Phone Insights</button><br></br>
+                            </lightning-layout-item>
+                            
+                            
+                            <lightning-layout-item padding="around-small">
+                                <!-lightning-button variant="brand" label="Get LinkedIn" title="Primary action with lighter look" onclick={openModal} class="slds-m-left_x-small" data-name="Get LinkedIn"></lightning-button->
+                                <button title="Get LinkedIn" type="button" class={buttonColors.linkedIn} onclick={openModal} data-name="GetLinkedIn">Get LinkedIn</button><br></br>
+                            </lightning-layout-item>
+                        </lightning-layout>
+
+        </div>
+    </lightning-accordion-section>
+</lightning-accordion>
+</div>
+        <div class="slds-box" style="margin-top: 2%;">
+            <div style="margin-top: 0%;">
+                <h1 style="font-size:large">Selected Lead Records</h1>
+                <table
+                    class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered slds-border_left slds-border_right">
+                    <thead>
+                        <tr class="slds-line-height_reset">
+
+                            <th scope="col">
+                                <div>FirstName</div>
+                            </th>
+                            <th scope="col">
+                                <div>LastName</div>
+                            </th>
+                            <th scope="col">
+                                <div>Email</div>
+                            </th>
+                            <th scope="col">
+                                <div>Company </div>
+                            </th>
+                            <th scope="col">
+                                <div>MobilePhone </div>
+                            </th>
+                            <th scope="col">
+                                <div>LinkedIn URL</div>
+                            </th>
+                            <!-th scope="col">
+                                <div>Get Phone Insights Status</div>
+                            </th->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={resultList} for:item="con">
+                        <tr key={con.Id}>
+                            <th scope="col">
+                                <div>{con.FirstName}</div>
+                            </th>
+                            <th scope="col">
+                                <div>{con.LastName}</div>
+                            </th>
+                            <th scope="col">
+                                <div>{con.Email}</div>
+                            </th>
+                            <th scope="col">
+                                <div>{con.Company}</div>
+                            </th>
+                            <th scope="col">
+                                <div>{con.MobilePhone}</div>
+                            </th>
+                            <th scope="col">
+                                <div>{con.modigie__linkedin_url__c}</div>
+                            </th>
+                        </tr>
+                    </template>
+                    </tbody>
+                </table>
+            </div>
+        </div-->
+  
+</template>

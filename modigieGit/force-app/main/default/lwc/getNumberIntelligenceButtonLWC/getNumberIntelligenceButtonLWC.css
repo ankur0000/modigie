@@ -1,0 +1,9 @@
+.logo{
+    width: 40%;
+    margin-left: 165px;
+}
+
+.slds-spinner_container {
+    position: sticky;
+    top: 50%;
+}

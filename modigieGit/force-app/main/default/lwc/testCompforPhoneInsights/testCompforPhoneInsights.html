@@ -1,0 +1,92 @@
+<template>
+    <!--template if:true={creditsAvailable}-->
+    <!--section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+            <!- Modal/Popup Box LWC header here ->
+            <header class="slds-modal__header">
+                
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModel}>
+                    <lightning-icon icon-name="utility:close"
+                        alternative-text="close"
+                        variant="inverse"
+                        size="small" ></lightning-icon>
+                 <span class="slds-assistive-text">Close</span>
+                </button>
+                
+                <div class="logo" >
+                    <img src={modigieLogoUrl}/>
+                </div>
+                <h1 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate" style="font-size: xx-large;">Get Phone Insights</h1>
+            </header>
+            <!- Modal/Popup Box LWC body starts here ->
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <ul class="slds-accordion">
+                    <li class="slds-accordion__list-item">
+                      <section class="slds-accordion__section">
+                        <div class="slds-accordion__summary">
+                          <h3 class="slds-accordion__summary-heading">
+                            <button aria-controls="accordion-details-01" aria-expanded="false" class="slds-button slds-button_reset slds-accordion__summary-action">
+                              <svg class="slds-accordion__summary-action-icon slds-button__icon slds-button__icon_left" aria-hidden="true">
+                                <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#switch"></use>
+                              </svg>
+                              <span class="slds-accordion__summary-content" title="Accordion summary">Accordion summary</span>
+                            </button>
+                          </h3>
+                        </div>
+                        <div hidden="" class="slds-accordion__content" id="accordion-details-01">Accordion details - A</div>
+                      </section>
+                    </li>
+                    <li class="slds-accordion__list-item">
+                      <section class="slds-accordion__section">
+                        <div class="slds-accordion__summary">
+                          <h3 class="slds-accordion__summary-heading">
+                            <button aria-controls="accordion-details-02" aria-expanded="false" class="slds-button slds-button_reset slds-accordion__summary-action">
+                              <svg class="slds-accordion__summary-action-icon slds-button__icon slds-button__icon_left" aria-hidden="true">
+                                <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#switch"></use>
+                              </svg>
+                              <span class="slds-accordion__summary-content" title="Accordion summary">Accordion summary</span>
+                            </button>
+                          </h3>
+                        </div>
+                        <div hidden="" class="slds-accordion__content" id="accordion-details-02">Accordion details - B</div>
+                      </section>
+                    </li>
+                    <li class="slds-accordion__list-item">
+                      <section class="slds-accordion__section slds-is-open">
+                        <div class="slds-accordion__summary">
+                          <h3 class="slds-accordion__summary-heading">
+                            <button aria-controls="accordion-details-03" aria-expanded="true" class="slds-button slds-button_reset slds-accordion__summary-action">
+                              <svg class="slds-accordion__summary-action-icon slds-button__icon slds-button__icon_left" aria-hidden="true">
+                                <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#switch"></use>
+                              </svg>
+                              <span class="slds-accordion__summary-content" title="Accordion summary">Accordion summary</span>
+                            </button>
+                          </h3>
+                        </div>
+                        <div class="slds-accordion__content" id="accordion-details-03">Accordion details - C</div>
+                      </section>
+                    </li>
+                  </ul>
+            </div>
+            <!- Modal/Popup Box LWC footer starts here ->
+            <footer class="slds-modal__footer">
+                
+                    <lightning-button variant="destructive"
+                                  label="Confirm"
+                                  title="Confirm"
+                                  disabled={disableSubmit}
+                                  onclick={syncNewRecords} style="margin: 5px;"></lightning-button> 
+                
+                    
+                    <lightning-button variant="neutral"
+                                  label="Cancel"
+                                  title="Cancel"
+                                  onclick={closeModel}></lightning-button>
+                
+                
+            </footer>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+    <!-/template-->
+</template>

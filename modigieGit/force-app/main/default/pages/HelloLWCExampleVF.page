@@ -1,0 +1,21 @@
+<apex:page showHeader="false" sidebar="true" standardController="Lead" extensions="myExtension" lightningStylesheets="true">
+        
+   <!--apex:includeLightning />
+        <div id="LightningComponentid"/>    
+    
+    <style type="text/css">
+.container { overflow:scroll; height:100%; width: 100%; }
+</style>
+    <script>
+    $Lightning.use("modigie:GetModigieAppClassic", function() {
+        $Lightning.createComponent("modigie:modigieCustomLightningTab",
+          { 
+          	recordId : 	'{!currentRecordId}'
+          },
+          "LightningComponentid",
+          function(cmp) {
+            
+          });
+    });
+    </script-->
+</apex:page>

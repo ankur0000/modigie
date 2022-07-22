@@ -1,0 +1,393 @@
+<template>
+  <template if:true={isDataLoaded}>
+    <div>
+        <lightning-button class="button buttonClass" type="submit" label="Authenticate" variant="brand" icon-name="utility:lock" onclick={handleAuthenticateButton} disabled={isCustomerIdNull}>
+        </lightning-button>
+        <lightning-button class="button" type="submit" label="Refresh" variant="brand" icon-name="utility:refresh" onclick={handleRefreshBalanceButton} disabled={isCustomerIdNull}>
+        </lightning-button>
+        <lightning-button class="button" type="submit" label="Kill Switch" variant="destructive" icon-name="utility:error" onclick={handleKillSwitchButton} disabled={isCustomerIdNull}>
+        </lightning-button>
+        <!-- <lightning-button-icon icon-name="utility:refresh" alternative-text="Refresh CreditIds" class="slds-m-left_xx-small" title="Refresh Credit Accounts" onclick={handleRefreshButton}></lightning-button-icon> -->
+        <!-- <lightning-button class="button buttonClass" type="submit" icon-name="utility:refresh">
+        </lightning-button> -->
+    </div>
+    
+    <br>
+    <template if:true={noCreditIds}>  
+      <div style="text-align: center;font-size: medium;">No Credit Account found !</div>
+    </template>
+    <template if:false={noCreditIds}>
+      <table
+          class="slds-table slds-table_cell-buffer
+          slds-table_bordered slds-table_fixed-layout"
+          role="grid">
+          <thead>
+              <tr class="slds-line-height_reset">
+                  <th style="width: 15rem;" >
+                      <div class="">Title
+                      </div>
+                  </th>
+                  <th role="gridcell" class="centerAlignClass" style="width: 11rem;">
+                      <div class="slds-truncate customClass1">Credit Account Id
+                      </div>
+                  </th>
+                  <th role="gridcell" class="centerAlignClass" style="width: 5rem;">
+                    <div class="slds-truncate customClass1 action">Status
+                    </div>
+                  </th>
+                  <th role="gridcell" class="centerAlignClass" style="width: 6rem;">
+                      <div class="slds-truncate customClass1 action">Default
+                      </div>
+                  </th>
+                  <th role="gridcell" class="centerAlignClass" style="width: 9rem;">
+                      <div class="slds-truncate customClass1">Credit Balance
+                      </div>
+                  </th>
+                  
+                  <th role="gridcell" style="width: 10rem;">
+                      <div class="slds-truncate customClass1">
+                      </div>
+                  </th>
+                  <th role="gridcell" style="width: 8rem;">
+                      <div class="slds-truncate customClass1 action">
+                      </div>
+                  </th>
+              </tr>
+          </thead>
+          <tbody>
+              <template for:each={creditIds} for:item="creditId" for:index="index">
+                  <tr class="slds-hint-parent" key={creditId.Id}>
+                      <td role="gridcell">
+                          <div class="slds-truncate customClass1">
+                            {creditId.Title}
+                            <template if:true={creditId.showTooltip}>
+                              <lightning-icon style="padding-left: 0.5rem;" icon-name="utility:error" variant="error" alternative-text="Error!" size="xx-small" title={creditId.reason}></lightning-icon>
+                              <!-- <lightning:icon class="logic-error" iconName="utility:error" alternativeText="Error!"
+                              variant="error" title={creditId.reason} size="xx-small" ></lightning:icon> -->
+                              <!-- <lightning-helptext content={creditId.reason}></lightning-helptext> -->
+                            </template>
+                          </div>
+                      </td>
+                      <td role="gridcell" class="slds-truncate centerAlignClass">
+                          {creditId.encryptedId}
+                          <!-- <ui:outputText value="{!v.customerId}" class="customClass"
+                              /> -->
+                      </td>
+                      <td role="gridcell" class="centerAlignClass">  
+                        {creditId.Status}
+                        <!-- <div class="slds-form-element" style="margin-left: 40%;">
+                            <label class="slds-checkbox_toggle slds-grid slds-m-vertical_small">
+                              <input type="checkbox" name="checkbox-toggle-16" value="checkbox-toggle-16" aria-describedby="checkbox-toggle-18" checked={creditId.Status} disabled={creditId.toggleDisabled} data-record-id={creditId.recordId} onchange={handleToggleChange} />
+                              <span class="slds-checkbox_faux_container" aria-live="assertive">
+                                <span class="slds-checkbox_faux"></span>
+                                <template if:true={creditId.toggleDisabled}>
+                                    <span class="slds-checkbox_on">Disabled</span>
+                                    <span class="slds-checkbox_off">Disabled</span>
+                                </template>
+                                <template if:false={creditId.toggleDisabled}>
+                                    <span class="slds-checkbox_on">Active</span>
+                                    <span class="slds-checkbox_off">Inactive</span>
+                                </template>
+                                
+                              </span>
+                            </label>
+                          </div> -->
+                        <!-- <input type="checkbox" aria-describedby="checkbox-toggle-18" checked={creditId.Status} disabled={creditId.disabled} label="disabled"/> -->
+                      </td>
+                      <td role="gridcell" class="centerAlignClass">
+                          <div class="slds-truncate customClass1">
+                              <input class="disableClass" style="transform: scale(1.2);" type="checkbox" data-record-id={creditId.recordId} onchange={handleCheckBoxChange} checked={creditId.Default} disabled={creditId.checkboxDisabled}/>
+                          </div>
+                      </td>
+                      <td role="gridcell" class="centerAlignClass">
+                          <div class="slds-truncate customClass1">
+                            <template if:false={showBalance}>
+                              -
+                            </template>
+                            <template if:true={showBalance}>
+                              {creditId.Balance} {creditId.currencyCode}
+                            </template>
+                            
+                          </div>
+                      </td>
+                      
+                      <td role="gridcell">
+                          <lightning-button type="submit" label="Buy more credits" data-encrypted-id={creditId.encryptedId} onclick={handleBuyMoreCreditsButton}>
+                          </lightning-button>
+                      </td>
+                      <td role="gridcell">
+                          <div class="slds-truncate customClass1">
+                            <template if:false={creditId.Default}>
+                              <lightning-button type="submit" label="Assignees" onclick={handleShowAssigneeButton} data-is-performance=false data-encrypted-id={creditId.encryptedId} data-record-id={creditId.recordId} data-credit-title = {creditId.Title}>
+                              </lightning-button>
+                            </template>
+                              
+                          </div>
+                      </td>
+                  </tr>
+              </template>
+          </tbody>
+      </table>
+    </template>
+    <div class="buttonsDiv">
+        
+        <lightning-button class="button" type="submit" label="Create New Credit Account" variant="brand" icon-name="utility:add" onclick={handleCreateNewAccountModal} disabled={isCustomerIdNull}>
+        </lightning-button>
+        <!-- <lightning-button class="button" type="submit" label="Assign User" variant="brand" icon-name="utility:adduser" onclick={handleAssignUserButton}>
+        </lightning-button> -->
+    </div>
+
+    <br>
+
+    <template if:true={noPerformanceIds}>
+      <div style="text-align: center;font-size: medium;">No Performance Account found!</div>
+    </template>
+    <template if:false={noPerformanceIds}>
+      <table
+          class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_fixed-layout"
+          role="grid">
+          <thead>
+              <tr class="slds-hint-parent">
+                  <th role="gridcell">
+                      <div class="slds-truncate customClass1"><b>Title</b>
+                      </div>
+                  </th>
+                  <th role="gridcell">
+                      <div class="slds-truncate customClass1"><b>Performance Account Id</b>
+                      </div>
+                  </th>
+                  <th role="gridcell">
+                      <div class="slds-truncate customClass1"><b>Status</b>
+                      </div>
+                  </th>
+                  <th role="gridcell">
+                      <div class="slds-truncate customClass1"><b></b>
+                      </div>
+                  </th>
+              </tr>
+          </thead>
+          <tbody>
+              <template for:each={performanceIds} for:item="creditId">
+                  <tr class="" key={creditId.Id}>
+                      <td role="gridcell">
+                          <div class="slds-truncate customClass1">{creditId.Title}
+                          </div>
+                      </td>
+                      <td role="gridcell">
+                          {creditId.encryptedId}
+                          <!-- <ui:outputText value="{!v.customerId}" class="customClass"
+                              /> -->
+                      </td>
+                      <td role="gridcell">
+                        {creditId.Status} 
+                          <!-- <div class="slds-form-element" style="margin-left: 5%;">
+                            <label class="slds-checkbox_toggle slds-grid slds-m-vertical_small">
+                              <input type="checkbox" name="checkbox-toggle-16" value="checkbox-toggle-16" aria-describedby="checkbox-toggle-18" checked={creditId.Status} disabled={creditId.toggleDisabled} data-is-performance=true data-record-id={creditId.recordId} onchange={handleToggleChangePerformance} />
+                              <span class="slds-checkbox_faux_container" aria-live="assertive">
+                                <span class="slds-checkbox_faux"></span>
+                                <template if:true={creditId.toggleDisabled}>
+                                    <span class="slds-checkbox_on">Disabled</span>
+                                    <span class="slds-checkbox_off">Disabled</span>
+                                </template>
+                                <template if:false={creditId.toggleDisabled}>
+                                    <span class="slds-checkbox_on">Active</span>
+                                    <span class="slds-checkbox_off">Inactive</span>
+                                </template>
+                                
+                              </span>
+                            </label>
+                          </div> -->
+
+                      </td>
+                      <td role="gridcell">
+                          <div class="slds-truncate customClass1">
+                              <lightning-button type="submit" label="Assignees" onclick={handleShowAssigneeButton} data-is-performance="true" data-encrypted-id={creditId.encryptedId} data-record-id={creditId.recordId} data-credit-title = {creditId.Title}>
+                              </lightning-button>
+                          </div>
+                      </td>
+                  </tr>
+              </template>
+          </tbody>
+      </table>
+    </template>
+    
+    <div class="buttonsDiv">
+        <lightning-button class="button" type="submit" label="Request Performance Account" variant="brand" icon-name="utility:contact_request" onclick={handleRequestPerformanceButton}>
+        </lightning-button>
+        <!-- <lightning-button class="button" type="submit" label="Assign User" variant="brand" icon-name="utility:adduser">
+        </lightning-button> -->
+    </div>
+
+    <template if:true={showConfirmationForDefault}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+              <div class="slds-modal__header">
+                <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate"><b>Warning</b></h1>
+              </div>
+              <div class="slds-modal__content slds-p-around_medium centerAlignClass" id="modal-content-id-1">
+                Changing the default Modigie Credit Account ID will cause credits to be deducted from the selected default account. Please assure you have enough credits to support your expected usage. If needed, use the “Buy more credits” button to request more credits.
+              </div>
+              <div class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" aria-label="Cancel and close" onclick={closeConfirmationModal}>Cancel</button>
+                <button class="slds-button slds-button_brand" onclick={confirmDefaultCheckbox}>Confirm</button>
+              </div>
+            </div>
+          </section>
+          <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+
+    <template if:true={showToggleChangeConfirmationModal}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+              <div class="slds-modal__header">
+                <h1 id="modal-heading-03" class="slds-modal__title slds-hyphenate"><b><lightning-icon icon-name="utility:warning" variant="warning" size="small" alternative-text="Approved" title="Approved"></lightning-icon>Warning<lightning-icon icon-name="utility:warning" variant="warning" size="small" alternative-text="Approved" title="Approved"></lightning-icon></b></h1>
+              </div>
+              <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
+                <span class="slds-assistive-text">warning</span>
+                <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small" title="Description of icon when needed">
+                  <svg class="slds-icon slds-icon_x-small" aria-hidden="true">
+                    <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#warning"></use>
+                  </svg>
+                </span>
+                <h2>Your browser is outdated. Your Salesforce experience may be degraded.
+                  <a href="javascript:void(0);">More Information</a>
+                </h2>
+                <div class="slds-notify__close">
+                  <button class="slds-button slds-button_icon slds-button_icon-small" title="Close">
+                    <svg class="slds-button__icon" aria-hidden="true">
+                      <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                    </svg>
+                    <span class="slds-assistive-text">Close</span>
+                  </button>
+                </div>
+              </div>
+              <!-- <div class="slds-modal__content slds-p-around_medium centerAlignClass" id="modal-content-id-3">
+                Are you sure you want to change the status?
+              </div> -->
+              <div class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" aria-label="Cancel and close" onclick={closeToggleChangeConfirmationModal}>Cancel</button>
+                <button class="slds-button slds-button_brand" onclick={confirmToggleChangeConfirmationModal}>Confirm</button>
+              </div>
+            </div>
+          </section>
+          <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+
+    <template if:true={showAuthenticationModal}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+              <div class="slds-modal__header">
+                <h1 id="modal-heading-02" class="slds-modal__title slds-hyphenate"><b>Authentication</b></h1>
+              </div>
+              <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2">
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-4">
+                    <div class="table">
+                      <table>
+                        <tbody>
+                          <tr>
+                            <td class="tdStyle">Customer Id</td>
+                            <td>
+                              {customerId}
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <td class="tdStyle">API Key</td>
+                            <td>
+                              <lightning-input type="password" name="ApiKey" value={ApiKey} onkeyup={handleChangeApiKey} ></lightning-input>
+                            </td>
+                          </tr>
+  
+                          <tr>
+                            <td class="tdStyle">Service Account Email</td>
+                            <td>
+                              <lightning-input type="password" value={AccountEmail} onkeyup={handleChangeAccountEmail}></lightning-input>
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <td class="tdStyle">Service Account Private Key</td>
+                            <td>
+                              <lightning-textarea type="password" placeholder="The Private Key is already saved. Insert new private key if you want to authorize with new private key." value={AccountPrivateKey} onkeyup={handleChangeAccountPrivateKey}></lightning-textarea>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+  
+                  </div>
+              </div>
+              <div class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" aria-label="Cancel and close" onclick={closeAuthenticationModal}>Cancel</button>
+                <button class="slds-button slds-button_brand" onclick={authenticateCredentials}>Authenticate</button>
+              </div>
+            </div>
+          </section>
+          <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+
+    <template if:true={showAssigneeList}>
+        <c-credit-assignee-list title={creditTitle} encrypted-id={encryptedId} record-id={recordId} is-performance={isPerformance} onclosemodel = {handleclosemodel}></c-credit-assignee-list>
+    </template>
+    <template if:true={showAssignUser}>
+      <c-assign-user-list oncloseassignuser = {handleAssignUserButtonFalse} onsaveassignuser = {handleAssignUserButtonSaveFalse}></c-assign-user-list>
+    </template>
+    <template if:true={showCreateNewAccountModal}>
+      <c-create-new-Credit-id onsave = {handleCreatenewAccountModal} oncallpasstoparent = {closeCreatenewAccountModal}></c-create-new-Credit-id>
+    </template>
+    <template if:true={showKillSwitchModal}>
+      <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open" >
+            <div class="slds-modal__container" style="width:32%;">
+              <div class="slds-modal__header">
+                <h1 id="modal-heading-04" class="slds-modal__title slds-hyphenate">Stop callouts</h1>
+              </div>
+              <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-5">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td style="padding-left:2rem; padding-top:1rem">
+                                        Stop callouts until
+                                    </td>
+                                    <td style = "width:60%; padding-right:2rem;">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element__control">
+                                              <lightning-combobox
+                                                      name="stopTime"
+                                                      placeholder="Select time in hrs"
+                                                      value={timeForStoppingCallout}
+                                                      options={timePicklist}
+                                                      onchange={handleTimeChange}
+                                              ></lightning-combobox>
+                                              <!-- <lightning-input type="datetime" name="input1" value={stopUntilTime} onchange={handleTimeChange} ></lightning-input> -->
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                  <td style="padding-left:2rem;">
+                                    Reason
+                                  </td>
+                                  <td style = "width:60%; padding-right:2rem;">
+                                      <div class="slds-form-element">
+                                          <div class="slds-form-element__control">
+                                            <lightning-textarea value={stopUntilReason} onkeyup={handleReasonChange} maxlength="255" placeholder="A maximum of 255 characters are allowed."></lightning-textarea>
+                                          </div>
+                                      </div>
+                                  </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                </div>
+              <div class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral"  onclick={closeKillSwitchModal} aria-label="Cancel">Cancel</button>
+                <button class="slds-button slds-button_brand" onclick={handleSaveKillSwitchModal}>Save</button>
+              </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+</template> 
+<template if:false={isDataLoaded}>
+    <lightning-spinner alternative-text="Loading" style="margin-top: 25%"></lightning-spinner>
+</template>
+</template>

@@ -1,0 +1,116 @@
+<template>
+    <template if:true={showModel}>
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+            <!-- Modal/Popup Box LWC header here -->
+            <header class="slds-modal__header">
+                
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModel}>
+                    <lightning-icon icon-name="utility:close"
+                        alternative-text="close"
+                        variant="inverse"
+                        size="small" ></lightning-icon>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                
+                <!-- <div class="logo" >
+                    <img src={modigieLogoUrl}/>
+                </div> -->
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate modalHeader" >Get LinkedIn</h2>
+            </header>
+            <!-- Modal/Popup Box LWC body starts here -->
+            <div class="slds-modal__content slds-p-around_medium slds-is-relative" id="modal-content-id-1">
+                <template if:true={toggleSpinner}>
+                    <div class="slds-spinner_container spinnerBg">
+                        <div class="slds-spinner--brand  slds-spinner slds-spinner_small" role="alert">
+                            <span class="slds-assistive-text">Loading</span>
+                            <div class="slds-spinner__dot-a"></div>
+                            <div class="slds-spinner__dot-b"></div>
+                        </div>
+                    </div>
+                </template>
+                <div class="slds-grid slds-grid_vertical">
+                    
+                    <!--div class="slds-col">
+                        <span>
+                            Your remaining daily API Limit is {remainingLimit}.
+                        </span>
+                    </div-->
+                    <div class="slds-col">
+                        <span>
+                            There are a total of {resMap.totalSize} records in your campaign.
+                        </span>
+                    </div>
+                    <div class="slds-col">
+                        <span>
+                            {resMap.recordsRunning} jobs are already in process.
+                        </span>
+                    </div>
+                    <div class="slds-col">
+                        <span>
+                            {resMap.alreadyValidated} currently have verified LinkedIn information.
+                        </span>
+                    </div>
+                    <div class="slds-col">
+                        <span>
+                            {resMap.invalidatedRecords} have already been run and currently have ‘Not Available’ for verified LinkedIn.
+                        </span>
+                    </div>
+                    <div class="slds-col">
+                        <span>
+                            {resMap.userFilled} currently have user filled LinkedIn information.
+                        </span>
+                    </div>
+                    <div class="slds-col">
+                        <span>
+                            {resMap.notFulfill} record(s) does not have required information to use get LinkedIn.
+                        </span>
+                    </div>
+                    <template if:true={haveRecordsToProcess}>
+                    <div class="slds-col">
+                        <span>
+                            Modigie will process the remaining {resMap.newRecordsToProcess}.  You can check the status of your request in the appropriate Lead or Contact record. 
+                        </span>
+                    </div>
+                </template>
+                <template if:true={limitsData.Ad_Hoc_Limits}>
+                <div class="slds-col">
+                    <span>
+                        Your total daily API Limit is {totalLimit}, remaining is {remainingLimit}.
+                    </span>
+                </div>
+                </template>
+                </div>
+            </div>
+            <!-- Modal/Popup Box LWC footer starts here -->
+            <footer class="slds-modal__footer">
+
+                <template if:true={haveRecordsToProcess}>
+                    <lightning-button variant="destructive"
+                              label="Sync Only New Records"
+                              title="Sync Only New Records"
+                              disabled={disableSubmit}
+                              onclick={syncNewRecords} class="syncButton"></lightning-button>
+                    </template>
+                    
+                <template if:true={haveTotalRecordsToProcess}>
+                    <lightning-button variant="destructive"
+                            label="Sync All Records"
+                            title="Sync All Records"
+                            disabled={disableSubmit}
+                            onclick={syncAllRecords} class="syncButton"></lightning-button>
+                </template>
+
+
+                
+        <lightning-button variant="neutral"
+                          label="Cancel"
+                          title="Cancel"
+                          disabled={disableSubmit}
+                          onclick={closeModel}></lightning-button>
+            </footer>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</template>
+</template>

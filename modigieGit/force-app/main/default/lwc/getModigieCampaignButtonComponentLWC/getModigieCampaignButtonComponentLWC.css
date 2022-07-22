@@ -1,0 +1,24 @@
+.logo{
+    width: 40%;
+    margin-left: 165px;
+}
+
+.slds-spinner_container {
+    top: 3%;
+    bottom: 3%;
+}
+
+.modalHeader
+{
+    font-size: xx-large;
+}
+
+.spinnerBg
+{
+    background-color: white;
+}
+
+.syncButton
+{
+    margin: 5px;
+}

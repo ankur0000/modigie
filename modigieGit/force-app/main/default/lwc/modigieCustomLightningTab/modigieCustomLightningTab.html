@@ -1,0 +1,1447 @@
+<template>
+  <template if:true={showErrorMessage}>
+    <div class="slds-notify slds-notify_alert slds-alert_error banner" role="alert">
+      <span class="slds-assistive-text">Error</span>
+      <h2>
+        <template if:true={isOrgCalloutsDisabled}>
+          {orgStopReasonString}
+        </template>
+        <template if:true={isCreditAccountStopped}>
+          {stopReason}
+        </template>
+        <template if:true={isSelectedCreditAccountInactive}>
+          The Credit Account opted for you is inactive.
+        </template>
+      </h2>
+      
+    </div>
+  </template>
+  
+  <template if:true={isReadable}>
+    <template if:true={toggleSpinner}>
+      <div class="slds-spinner_container spinnerBg">
+        <div class="slds-spinner--brand slds-spinner slds-spinner_large" role="alert">
+          <span class="slds-assistive-text">Loading</span>
+          <div class="slds-spinner__dot-a"></div>
+          <div class="slds-spinner__dot-b"></div>
+        </div>
+      </div>
+    </template>
+
+    <template if:true={toastVisible}>
+      <div>
+        <div class="slds-notify_container slds-is-relative">
+          <div class="
+              slds-notify slds-notify_toast
+              slds-theme_success
+              toastVisible
+            " role="status">
+            <span class="slds-assistive-text">success</span>
+            <span class="
+                toastVisibleSpan
+                slds-icon_container
+                slds-icon-utility-success
+                slds-m-right_small
+                slds-no-flex slds-align-top
+                slds-align_absolute-center
+              " title="Success">
+              <lightning-icon icon-name="utility:success" alternative-text="success" variant="Success" size="small">
+              </lightning-icon>
+            </span>
+            <div class="slds-notify__content">
+              <h2 class="slds-text-heading_small slds-text-align_left">
+                {classicMessage}
+              </h2>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+    <template if:true={errorToastVisible}>
+      <div>
+        <div class="slds-notify_container slds-is-relative">
+          <div class="slds-notify slds-notify_toast slds-theme_error errorToastDiv" role="status">
+            <span class="slds-assistive-text">success</span>
+            <span class="
+                spinnerBg
+                slds-icon_container
+                slds-icon-utility-error
+                slds-m-right_small
+                slds-no-flex slds-align-top
+                slds-align_absolute-center
+              " title="error">
+              <lightning-icon icon-name="utility:error" alternative-text="error" variant="error" size="small">
+              </lightning-icon>
+            </span>
+            <div class="slds-notify__content">
+              <h2 class="slds-text-heading_small">{classicErrorMessage}</h2>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <!-- update -->
+
+    <template if:true={modigieAdditional}>
+      <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open slds-modal_small"
+        aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1">
+        <div class="slds-modal__container">
+          <header class="slds-modal__header">
+            <button class="
+                slds-button slds-button_icon
+                slds-modal__close
+                slds-button_icon-inverse
+              " title="Close" onclick={closeAdditionalModigie}>
+              <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small">
+              </lightning-icon>
+              <span class="slds-assistive-text">Close</span>
+            </button>
+            <h2 class="slds-modal__title slds-hyphenate">
+              Additional Modigie Services
+            </h2>
+          </header>
+
+          <div class="slds-modal__content slds-p-around_medium additionalBody">
+            <div>
+              <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-size_1-of-3">
+                  <button title="Verify Employer" type="button" class={buttonColors.verifyEmployer} onclick={openModal}
+                    data-name="VerifyEmployer">
+                    Verify Employer
+                  </button>
+                </div>
+                <div class="slds-col slds-size_1-of-3">
+                  <button title="Get Phone Insights" type="button" class={buttonColors.phoneIntelligence}
+                    onclick={openModal} data-name="GetPhoneInsights">
+                    Get Phone Insights
+                  </button>
+                </div>
+                <div class="slds-col slds-size_1-of-3">
+                  <button title="Get LinkedIn" type="button" onclick={openModal} data-name="GetLinkedIn"
+                    class={buttonColors.linkedIn}>
+                    Get LinkedIn
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <footer class="slds-modal__footer">
+            <button class="slds-button slds-button_neutral" onclick={closeAdditionalModigie}>
+              Cancel
+            </button>
+          </footer>
+        </div>
+      </section>
+      <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+    <!-- <div class="slds-box slds-m-around_small"> -->
+    <div class="slds-grid paddingClass">
+      <div class="slds-page-header pageHeader">
+        <div class="slds-page-header__row">
+          <template if:true={isEmbeddedInClassic}>
+            <lightning-button-icon icon-name="utility:back" alternative-text="Back" title="Back"
+              onclick={navigateToRecordPage} style="margin-top: 0.5%"></lightning-button-icon>
+          </template>
+          <div class="slds-page-header__col-title modigieDetailsStyle">
+            <div class="slds-media pageHeaderMedia">
+              <div class="slds-media__figure">
+                <div class="pageHeaderText">
+                  Modigie Details
+
+                  <!--template if:true={recordData.modigie__Status__c}>
+                                        <font class={modigieStatusFontColor}> {recordData.modigie__Status__c}</font>
+                                    </template>
+                                    <template if:false={recordData.modigie__Status__c}>
+                                        <font> Not started</font>
+                                    </template-->
+                </div>
+              </div>
+              <div class="slds-media__body">
+                <div class="slds-page-header__name">
+                  <div class="slds-page-header__name-title"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <template if:true={isModigieUser}>
+            <template if:true={showErrorMessage}>
+              <button title="Mobile Number, Best Time To Call, Verify Employer, LinkedIn URL" type="button"
+                onclick={openModal} data-name="GetModigie" class="slds-button slds-button_brand" disabled
+                style="margin-bottom:0.5%; margin-top:0.5%">
+                Get Modigie
+              </button>
+              <lightning-button class="slds-var-p-left_x-small" onclick={additionalModigieServices} variant="neutral" disabled
+                label="Additional Modigie Services" title="Additional Modigie Services" style="margin-top:0.5%">
+              </lightning-button>
+            </template>
+            
+            <template if:false={showErrorMessage}>
+              <button title="Mobile Number, Best Time To Call, Verify Employer, LinkedIn URL" type="button"
+                onclick={openModal} data-name="GetModigie" class={buttonColors.modigie}
+                style="margin-bottom:0.5%; margin-top:0.5%">
+                Get Modigie
+              </button>
+              <lightning-button class="slds-var-p-left_x-small" onclick={additionalModigieServices} variant="neutral"
+                label="Additional Modigie Services" title="Additional Modigie Services" style="margin-top:0.5%">
+              </lightning-button>
+            </template>
+            
+          </template>
+
+        </div>
+      </div>
+    </div>
+    <!-- </div> -->
+
+    <div class="slds-p-around_small">
+      <table>
+        <tbody class="tableBody">
+          <tr>
+            <td>
+              <div class="
+                  tableData
+                  slds-form-element__control
+                  slds-border_bottom
+                  customclass
+                  slds-grid
+                ">
+                <div class="slds-form-element__label slds-col">
+                  Modigie Mobile Phone Number
+                </div>
+                <div class="slds-col field-value">
+                  <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                    value={modigieMobilePhoneNumber}>
+                  </lightning-formatted-rich-text>
+                </div>
+              </div>
+            </td>
+
+            <td>
+              <div class="
+                  tableData
+                  slds-form-element__control
+                  slds-border_bottom
+                  customclass
+                  slds-grid
+                ">
+                <div class="slds-form-element__label slds-col">
+                  Company Name Matches Public Records
+                </div>
+                <div class="slds-col field-value">
+                  <template if:true={recordData.modigie__Validate_Employer_Status__c}>
+                    <template if:true={recordData.modigie__Company_Name_Matches_Records_Get_Modigie__c}>
+                      <template if:true={isCompanyNameMatches}>
+                        <lightning-formatted-rich-text class="slds-form-element__static same-line blackText"
+                          value="Yes">
+                        </lightning-formatted-rich-text>
+                      </template>
+                      <template if:false={isCompanyNameMatches}>
+                        <lightning-formatted-rich-text class="slds-form-element__static same-line redText" value="No">
+                        </lightning-formatted-rich-text>
+                      </template>
+                    </template>
+                    <template if:false={recordData.modigie__Company_Name_Matches_Records_Get_Modigie__c}>
+                      <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                        value={recordData.modigie__Validate_Employer_Status__c}>
+                      </lightning-formatted-rich-text>
+
+                    </template>
+
+                  </template>
+
+
+
+                  <!-- <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                                        value={recordData.modigie__Company_Name_Matches_Records_Get_Modigie__c}>
+                                    </lightning-formatted-rich-text> -->
+                </div>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="
+                  tableData
+                  slds-form-element__control
+                  slds-border_bottom
+                  customclass
+                  slds-grid
+                ">
+                <div class="slds-form-element__label slds-col">
+                  Alternate Mobile Phone Number Available
+                </div>
+                <div class="slds-col field-value">
+                  <template if:true={isGetModigieValidated}>
+                    <template if:true={showAlternateAccordion}>
+                      <lightning-formatted-rich-text class="slds-form-element__static same-line greenText" value="Yes">
+                      </lightning-formatted-rich-text>
+                    </template>
+                    <template if:false={showAlternateAccordion}>
+                      <lightning-formatted-rich-text class="slds-form-element__static same-line redText" value="No">
+                      </lightning-formatted-rich-text>
+                    </template>
+                  </template>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="
+                  tableData tableData
+                  slds-form-element__control
+                  slds-border_bottom
+                  customclass
+                  slds-grid
+                ">
+                <template if:true={recordData.modigie__Employment_Ends_Get_Modigie__c}>
+                  <div class="slds-form-element__label slds-col">
+                    Employment changed
+                  </div>
+                  <div class="slds-col field-value">
+                    <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                      value={recordData.modigie__Employment_Ends_Get_Modigie__c}>
+                    </lightning-formatted-rich-text>
+                  </div>
+                </template>
+                <template if:false={recordData.modigie__Employment_Ends_Get_Modigie__c}>
+                  <div class="slds-form-element__label slds-col">
+                    Current Employer
+                  </div>
+                  <div class="slds-col field-value">
+                    <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                      value={recordData.modigie__Current_Employer_Get_Modigie__c}>
+                    </lightning-formatted-rich-text>
+                  </div>
+                </template>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <!-- <template if:true={alternateNumber1}> -->
+            <td>
+              <div class="
+                  tableData
+                  slds-form-element__control
+                  slds-border_bottom
+                  customclass
+                  slds-grid
+                ">
+                <div class="slds-form-element__label slds-col">
+                  Modigie Alternate Mobile Number 1
+                </div>
+                <div class="slds-col field-value">
+                  <lightning-formatted-rich-text class="slds-form-element__static same-line" value={alternateNumber1}>
+                  </lightning-formatted-rich-text>
+                </div>
+              </div>
+            </td>
+            <!-- </template> -->
+            <td>
+              <div class="
+                  tableData tableData
+                  slds-form-element__control
+                  slds-border_bottom
+                  customclass
+                  slds-grid
+                ">
+                <template if:true={recordData.modigie__Employment_Ends_Get_Modigie__c}>
+                  <div class="slds-form-element__label slds-col">
+                    Current Employer
+                  </div>
+                  <div class="slds-col field-value">
+                    <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                      value={recordData.modigie__Current_Employer_Get_Modigie__c}>
+                    </lightning-formatted-rich-text>
+                  </div>
+                </template>
+                <template if:false={recordData.modigie__Employment_Ends_Get_Modigie__c}>
+                  <div class="slds-form-element__label slds-col">
+                    Current Title
+                  </div>
+                  <div class="slds-col field-value">
+                    <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                      value={recordData.modigie__Current_Title_Get_Modigie__c}>
+                    </lightning-formatted-rich-text>
+                  </div>
+                </template>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <!-- <template if:true={alternateNumber2}> -->
+            <td>
+              <div class="
+                  tableData
+                  slds-form-element__control
+                  slds-border_bottom
+                  customclass
+                  slds-grid
+                ">
+                <div class="slds-form-element__label slds-col">
+                  Modigie Alternate Mobile Number 2
+                </div>
+                <div class="slds-col field-value">
+                  <lightning-formatted-rich-text class="slds-form-element__static same-line" value={alternateNumber2}>
+                  </lightning-formatted-rich-text>
+                </div>
+              </div>
+            </td>
+            <!-- </template> -->
+
+            <td>
+              <div class="
+                  tableData
+                  slds-form-element__control
+                  slds-border_bottom
+                  customclass
+                  slds-grid
+                ">
+                <template if:true={recordData.modigie__Employment_Ends_Get_Modigie__c}>
+                  <div class="slds-form-element__label slds-col">
+                    Current Title
+                  </div>
+                  <div class="slds-col field-value">
+                    <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                      value={recordData.modigie__Current_Title_Get_Modigie__c}>
+                    </lightning-formatted-rich-text>
+                  </div>
+                </template>
+                <template if:false={recordData.modigie__Employment_Ends_Get_Modigie__c}>
+                  <div class="slds-form-element__label slds-col">
+                    Current Location
+                  </div>
+                  <div class="slds-col field-value">
+                    <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                      value={recordData.modigie__Current_Country_Get_Modigie__c}>
+                    </lightning-formatted-rich-text>
+                  </div>
+                </template>
+              </div>
+            </td>
+          </tr>
+
+          <template if:true={modigieValNumberInsigts.LineActivity}>
+            <template if:true={recordData.modigie__Employment_Ends_Get_Modigie__c}>
+              <tr>
+                <td>
+                  <div class="
+                      tableData
+                      slds-form-element__control
+                      slds-border_bottom
+                      customclass
+                      slds-grid
+                    ">
+                    <div class="slds-form-element__label slds-col">
+                      Line Activity
+                    </div>
+                    <div class="slds-col field-value">
+                      <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                        value={modigieValNumberInsigts.LineActivity}>
+                      </lightning-formatted-rich-text>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="
+                      tableData
+                      slds-form-element__control
+                      slds-border_bottom
+                      customclass
+                      slds-grid
+                    ">
+                    <div class="slds-form-element__label slds-col">
+                      Current Location
+                    </div>
+                    <div class="slds-col field-value">
+                      <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                        value={recordData.modigie__Current_Country_Get_Modigie__c}>
+                      </lightning-formatted-rich-text>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="
+                      tableData
+                      slds-form-element__control
+                      slds-border_bottom
+                      customclass
+                      slds-grid
+                    ">
+                    <div class="slds-form-element__label slds-col">
+                      LinkedIn URL
+                    </div>
+                    <div class="slds-col field-value">
+                      <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                        value={recordData.modigie__LinkedIn_Url_Get_Mobile_Number__c}>
+                      </lightning-formatted-rich-text>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="
+                      tableData
+                      slds-form-element__control
+                      slds-border_bottom
+                      customclass
+                      slds-grid
+                    ">
+                    <div class="slds-form-element__label slds-col">
+                      Validation Date
+                    </div>
+                    <div class="slds-col field-value">
+                      <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                        value={recordData.modigie__Validation_Date_Get_Mobile_Number__c}>
+                      </lightning-formatted-rich-text>
+                    </div>
+                  </div>
+                </td>
+
+              </tr>
+            </template>
+            <template if:false={recordData.modigie__Employment_Ends_Get_Modigie__c}>
+              <tr>
+                <td>
+                  <div class="
+                      tableData
+                      slds-form-element__control
+                      slds-border_bottom
+                      customclass
+                      slds-grid
+                    ">
+                    <div class="slds-form-element__label slds-col">
+                      Line Activity
+                    </div>
+                    <div class="slds-col field-value">
+                      <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                        value={modigieValNumberInsigts.LineActivity}>
+                      </lightning-formatted-rich-text>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="
+                      tableData
+                      slds-form-element__control
+                      slds-border_bottom
+                      customclass
+                      slds-grid
+                    ">
+                    <template if:true={recordData.modigie__Employment_Ends_Get_Modigie__c}>
+                      <div class="slds-form-element__label slds-col">
+                        Current Location
+                      </div>
+                      <div class="slds-col field-value">
+                        <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                          value={recordData.modigie__Current_Country_Get_Modigie__c}>
+                        </lightning-formatted-rich-text>
+                      </div>
+                    </template>
+                    <template if:false={recordData.modigie__Employment_Ends_Get_Modigie__c}>
+                      <div class="slds-form-element__label slds-col">
+                        LinkedIn URL
+                      </div>
+                      <div class="slds-col field-value">
+                        <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                          value={recordData.modigie__LinkedIn_Url_Get_Mobile_Number__c}>
+                        </lightning-formatted-rich-text>
+                      </div>
+                    </template>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="
+                      tableData
+                      slds-form-element__control
+                      slds-border_bottom
+                      customclass
+                      slds-grid
+                    ">
+                    <div class="slds-form-element__label slds-col">
+                      Validation Date
+                    </div>
+                    <div class="slds-col field-value">
+                      <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                        value={recordData.modigie__Validation_Date_Get_Mobile_Number__c}>
+                      </lightning-formatted-rich-text>
+                    </div>
+                  </div>
+                </td>
+                <template if:true={recordData.modigie__Employment_Ends_Get_Modigie__c}>
+                  <td>
+                    <div class="
+                        tableData
+                        slds-form-element__control
+                        slds-border_bottom
+                        customclass
+                        slds-grid
+                      ">
+                      <div class="slds-form-element__label slds-col">
+                        LinkedIn URL
+                      </div>
+                      <div class="slds-col field-value">
+                        <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                          value={recordData.modigie__LinkedIn_Url_Get_Mobile_Number__c}>
+                        </lightning-formatted-rich-text>
+                      </div>
+                    </div>
+                  </td>
+                </template>
+              </tr>
+            </template>
+          </template>
+          <template if:false={modigieValNumberInsigts.LineActivity}>
+            <!--template if:true={recordData.modigie__Employment_Ends_Get_Modigie__c}>
+                            <tr>
+                            
+                                <td>
+                                    <div class="tableData slds-form-element__control slds-border_bottom customclass slds-grid">
+                                        <div class="slds-form-element__label slds-col">LinkedIn URL</div>
+                                        <div class="slds-col field-value">
+                                            <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                                                value={recordData.modigie__LinkedIn_Url_Get_Mobile_Number__c}>
+                                            </lightning-formatted-rich-text>
+                                        </div>
+                                    </div>
+        
+                                </td>
+                                
+                                <td>
+                                    <div class="tableData slds-form-element__control slds-border_bottom customclass slds-grid"
+                                         >
+                                        <div class="slds-form-element__label slds-col">Employment changed</div>
+                                        <div class="slds-col field-value">
+                                            <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                                                value={recordData.modigie__Employment_Ends_Get_Modigie__c}>
+                                            </lightning-formatted-rich-text>
+                                        </div>
+                                    </div>
+        
+                                </td>
+                           
+                            
+                                
+                            </tr>
+                             <tr>   
+                                <td>
+                                    <div class="tableData slds-form-element__control slds-border_bottom customclass slds-grid"
+                                         >
+                                        <div class="slds-form-element__label slds-col">Validation Date</div>
+                                        <div class="slds-col field-value">
+                                            <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                                                value={recordData.modigie__Validation_Date_Get_Mobile_Number__c}>
+                                            </lightning-formatted-rich-text>
+                                        </div>
+                                    </div>
+        
+                                </td>
+                            </tr>
+                             
+                        </template-->
+
+            <!--template if:false={recordData.modigie__Employment_Ends_Get_Modigie__c}-->
+            <tr>
+              <td>
+                <div class="
+                    tableData
+                    slds-form-element__control
+                    slds-border_bottom
+                    customclass
+                    slds-grid
+                  ">
+                  <div class="slds-form-element__label slds-col">
+                    Validation Date
+                  </div>
+                  <div class="slds-col field-value">
+                    <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                      value={recordData.modigie__Validation_Date_Get_Mobile_Number__c}>
+                    </lightning-formatted-rich-text>
+                  </div>
+                </div>
+              </td>
+
+              <td>
+                <div class="
+                    tableData
+                    slds-form-element__control
+                    slds-border_bottom
+                    customclass
+                    slds-grid
+                  ">
+                  <template if:true={recordData.modigie__Employment_Ends_Get_Modigie__c}>
+                    <div class="slds-form-element__label slds-col">
+                      Current Location
+                    </div>
+                    <div class="slds-col field-value">
+                      <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                        value={recordData.modigie__Current_Country_Get_Modigie__c}>
+                      </lightning-formatted-rich-text>
+                    </div>
+                  </template>
+                  <template if:false={recordData.modigie__Employment_Ends_Get_Modigie__c}>
+                    <div class="slds-form-element__label slds-col">
+                      LinkedIn URL
+                    </div>
+                    <div class="slds-col field-value">
+                      <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                        value={recordData.modigie__LinkedIn_Url_Get_Mobile_Number__c}>
+                      </lightning-formatted-rich-text>
+                    </div>
+                  </template>
+                </div>
+              </td>
+            </tr>
+            <template if:true={recordData.modigie__Employment_Ends_Get_Modigie__c}>
+              <tr>
+                <td></td>
+                <td>
+                  <div class="
+                      tableData
+                      slds-form-element__control
+                      slds-border_bottom
+                      customclass
+                      slds-grid
+                    ">
+                    <div class="slds-form-element__label slds-col">
+                      LinkedIn URL
+                    </div>
+                    <div class="slds-col field-value">
+                      <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                        value={recordData.modigie__LinkedIn_Url_Get_Mobile_Number__c}>
+                      </lightning-formatted-rich-text>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </template>
+
+            <!--/template-->
+          </template>
+        </tbody>
+      </table>
+
+      <!-- <div class="bestTimeDiv">
+        <template if:true={modigieValNumberInsigts.DayOfWeekDetail}>
+          <h1>Best Time to Call</h1>
+          <table class="
+              bestTimeTable
+              slds-table slds-table_bordered slds-table_col-bordered
+              slds-border_left slds-border_right
+            ">
+            <thead>
+              <tr class="slds-line-height_reset">
+                <th class="" scope="col">
+                  <div class="slds-truncate" title="Days">Week Days</div>
+                </th>
+                <th scope="col">
+                  <div>Monday</div>
+                </th>
+                <th scope="col">
+                  <div>Tuesday</div>
+                </th>
+                <th scope="col">
+                  <div>Wednesday</div>
+                </th>
+                <th scope="col">
+                  <div>Thursday</div>
+                </th>
+                <th scope="col">
+                  <div>Friday</div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th class="" scope="col">
+                  <div class="slds-truncate" title="TimeToCall">
+                    Time To Call
+                  </div>
+                </th>
+                <template for:each={modigieValNumberInsigts.DayOfWeekDetailTable} for:item="acc">
+                  <th scope="col" key={acc}>
+                    <div>{acc}</div>
+                  </th>
+                </template>
+              </tr>
+            </tbody>
+          </table>
+        </template>
+      </div> -->
+    </div>
+
+    <!-- update ends  -->
+
+    <template if:true={isModalOpen}>
+      <template if:true={buttonClickedInfo.GetModigie}>
+        <c-get-modigie-button-component-l-w-c recordid={recordId} onclose={closeModal} modallabel="Get Modigie">
+        </c-get-modigie-button-component-l-w-c>
+      </template>
+      <template if:true={buttonClickedInfo.GetMobileNumber}>
+        <c-get-modigie-button-component-l-w-c recordid={recordId} onclose={closeModal} modallabel="Get Modigie"
+          oncancel={showAdditionalAccordionModal}>
+        </c-get-modigie-button-component-l-w-c>
+      </template>
+      <template if:true={buttonClickedInfo.GetLinkedIn}>
+        <c-get-linkedin-button-component-l-w-c recordid={recordId} onclose={closeModal}
+          oncancel={showAdditionalAccordionModal}>
+        </c-get-linkedin-button-component-l-w-c>
+      </template>
+      <template if:true={buttonClickedInfo.GetPhoneInsights}>
+        <!--c-get-number-intelligence-button-l-w-c recordid={recordId} onclose={closeModal}></c-get-number-intelligence-button-l-w-c-->
+        <c-get-phone-insights-button-component recordid={recordId} onclose={closeModal}
+          oncancel={showAdditionalAccordionModal}>
+        </c-get-phone-insights-button-component>
+      </template>
+      <template if:true={buttonClickedInfo.VerifyEmployer}>
+        <c-validate-employer-button-l-w-c recordid={recordId} onclose={closeModal} onredirect={RedirectToLinkedin}
+          oncancel={showAdditionalAccordionModal}>
+        </c-validate-employer-button-l-w-c>
+      </template>
+      <template if:true={buttonClickedInfo.GetModigieSupport}>
+        <c-get-modigie-support-component onclose={closeModal} recordid={recordId}>
+        </c-get-modigie-support-component>
+      </template>
+      <!--template if:true={AbortJobClicked}>
+                    <c-abort-job-component onclose={closeModal} recordid = {recordId}></c-abort-job-component>
+                </template-->
+    </template>
+
+    <lightning-accordion class="example-accordion" allow-multiple-sections-open>
+      <lightning-accordion-section name="BestTimeToCall" label="Best Time To Call" class="additionalAccordian">
+        <table>
+          <tbody class="accordianTableBody">
+            <tr>
+              <td>
+                <div class="
+                    tableData
+                    slds-form-element__control
+                    slds-border_bottom
+                    customclass
+                    slds-grid
+                  ">
+                  <div class="slds-form-element__label slds-col">
+                    Monday
+                  </div>
+                  <div class="slds-col field-value">
+                    <lightning-formatted-rich-text class="slds-form-element__static same-line" value={monday}>
+                    </lightning-formatted-rich-text>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <div class="
+                    tableData
+                    slds-form-element__control
+                    slds-border_bottom
+                    customclass
+                    slds-grid
+                  ">
+                  <div class="slds-form-element__label slds-col">
+                    Tuesday
+                  </div>
+                  <div class="slds-col field-value">
+                    <lightning-formatted-rich-text class="slds-form-element__static same-line" value={tuesday}>
+                    </lightning-formatted-rich-text>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <div class="
+                    tableData
+                    slds-form-element__control
+                    slds-border_bottom
+                    customclass
+                    slds-grid
+                  ">
+                  <div class="slds-form-element__label slds-col">
+                    Wednesday
+                  </div>
+                  <div class="slds-col field-value">
+                    <lightning-formatted-rich-text class="slds-form-element__static same-line" value={wednesday}>
+                    </lightning-formatted-rich-text>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <div class="
+                    tableData
+                    slds-form-element__control
+                    slds-border_bottom
+                    customclass
+                    slds-grid
+                  ">
+                  <div class="slds-form-element__label slds-col">
+                    Thursday
+                  </div>
+                  <div class="slds-col field-value">
+                    <lightning-formatted-rich-text class="slds-form-element__static same-line" value={thursday}>
+                    </lightning-formatted-rich-text>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <div class="
+                    tableData
+                    slds-form-element__control
+                    slds-border_bottom
+                    customclass
+                    slds-grid
+                  ">
+                  <div class="slds-form-element__label slds-col">
+                    Friday
+                  </div>
+                  <div class="slds-col field-value">
+                    <lightning-formatted-rich-text class="slds-form-element__static same-line" value={friday}>
+                    </lightning-formatted-rich-text>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </lightning-accordion-section>
+      <lightning-accordion-section name="AdditionalModigieServices" label="Additional Modigie Services"
+        class="additionalAccordian">
+        <lightning-accordion allow-multiple-sections-open>
+          <lightning-accordion-section name="J" label="Emails">
+            <template if:true={BusinessMails.length}>
+
+              <table class="
+                bestTimeTable
+                slds-table slds-table_bordered slds-table_col-bordered
+                slds-border_left slds-border_right
+              ">
+                <tbody>
+                  <tr class="slds-line-height_reset">
+                    <th scope="col">
+                      <div class="slds-truncate" title="Days" style="font-weight: bold">
+                        Business Emails
+                      </div>
+                    </th>
+                    <template for:each={BusinessMails} for:item="mail">
+                      <th scope="col" key={mail}>
+                        <lightning-formatted-rich-text class="slds-form-element__static same-line" value={mail}>
+                        </lightning-formatted-rich-text>
+                      </th>
+                    </template>
+                  </tr>
+                </tbody>
+              </table>
+            </template>
+            <template if:true={PrivateMails.length}>
+
+              <table class="
+                bestTimeTable
+                slds-table slds-table_bordered slds-table_col-bordered
+                slds-border_left slds-border_right
+              ">
+                <tbody>
+                  <tr class="slds-line-height_reset">
+                    <th scope="col">
+                      <div class="slds-truncate" title="TimeToC  all" style="font-weight: bold">
+                        Personal Emails
+                      </div>
+                    </th>
+                    <template for:each={PrivateMails} for:item="mail">
+                      <th scope="col" key={mail}>
+                        <lightning-formatted-rich-text class="slds-form-element__static same-line" value={mail}>
+                        </lightning-formatted-rich-text>
+                      </th>
+                    </template>
+                  </tr>
+                </tbody>
+              </table>
+            </template>
+          </lightning-accordion-section>
+          <lightning-accordion-section name="D" label={accordionLabels.verifyEmployer}>
+            <table>
+              <tbody class="accordianTableBody">
+                <tr>
+                  <td>
+                    <div class="
+                        tableData
+                        slds-form-element__control
+                        slds-border_bottom
+                        customclass
+                        slds-grid
+                      ">
+                      <div class="slds-form-element__label slds-col">
+                        Company Name Matches Public Records
+                      </div>
+                      <div class="slds-col field-value">
+                        <!-- <lightning-formatted-rich-text
+                                                    class="slds-form-element__static same-line"
+                                                    value={recordData.modigie__Company_Name_Matches_Public_Records__c}>
+                                                </lightning-formatted-rich-text> -->
+
+                        <template if:true={recordData.modigie__Company_Name_Matches_Public_Records__c}>
+                          <template if:true={isCompanyNameMatchesVerifyEmployer}>
+                            <lightning-formatted-rich-text class="
+                                slds-form-element__static
+                                same-line
+                                blackText
+                              " value="Yes">
+                            </lightning-formatted-rich-text>
+                          </template>
+                          <template if:false={isCompanyNameMatchesVerifyEmployer}>
+                            <lightning-formatted-rich-text class="
+                                slds-form-element__static
+                                same-line
+                                redText
+                              " value="No">
+                            </lightning-formatted-rich-text>
+                          </template>
+                        </template>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="
+                        tableData
+                        slds-form-element__control
+                        slds-border_bottom
+                        customclass
+                        slds-grid
+                      ">
+                      <div class="slds-form-element__label slds-col">
+                        Current Employer
+                      </div>
+                      <div class="slds-col field-value">
+                        <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                          value={recordData.modigie__Current_Employer__c}>
+                        </lightning-formatted-rich-text>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="
+                        tableData
+                        slds-form-element__control
+                        slds-border_bottom
+                        customclass
+                        slds-grid
+                      ">
+                      <div class="slds-form-element__label slds-col">
+                        LinkedIn URL
+                      </div>
+                      <div class="slds-col field-value">
+                        <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                          value={recordData.modigie__LinkedIn_Url_Verify_Employer__c}>
+                        </lightning-formatted-rich-text>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td>
+                    <div class="
+                        tableData
+                        slds-form-element__control
+                        slds-border_bottom
+                        customclass
+                        slds-grid
+                      ">
+                      <div class="slds-form-element__label slds-col">
+                        Current Title
+                      </div>
+                      <div class="slds-col field-value">
+                        <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                          value={recordData.modigie__Current_Title__c}>
+                        </lightning-formatted-rich-text>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="
+                        tableData
+                        slds-form-element__control
+                        slds-border_bottom
+                        customclass
+                        slds-grid
+                      ">
+                      <div class="slds-form-element__label slds-col">
+                        Status
+                      </div>
+                      <div class="slds-col field-value">
+                        <template if:true={recordData.modigie__Validate_Employer_Status__c}>
+                          <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                            value={recordData.modigie__Validate_Employer_Status__c}>
+                          </lightning-formatted-rich-text>
+                        </template>
+                        <template if:false={recordData.modigie__Validate_Employer_Status__c}>
+                          <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                            value="Not started">
+                          </lightning-formatted-rich-text>
+                        </template>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td>
+                    <div class="
+                        tableData
+                        slds-form-element__control
+                        slds-border_bottom
+                        customclass
+                        slds-grid
+                      ">
+                      <div class="slds-form-element__label slds-col">
+                        Current Location
+                      </div>
+                      <div class="slds-col field-value">
+                        <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                          value={recordData.modigie__Current__c}>
+                        </lightning-formatted-rich-text>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="
+                        tableData
+                        slds-form-element__control
+                        slds-border_bottom
+                        customclass
+                        slds-grid
+                      ">
+                      <div class="slds-form-element__label slds-col">
+                        Validation Date
+                      </div>
+                      <div class="slds-col field-value">
+                        <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                          value={recordData.modigie__Validation_Date_Verify_Employer__c}>
+                        </lightning-formatted-rich-text>
+                      </div>
+                    </div>
+                  </td>
+                  <template if:true={recordData.modigie__Employment_Ends_Verify_Employer__c}>
+                    <td>
+                      <div class="
+                          tableData
+                          slds-form-element__control
+                          slds-border_bottom
+                          customclass
+                          slds-grid
+                        ">
+                        <div class="slds-form-element__label slds-col">
+                          Employment changed
+                        </div>
+                        <div class="slds-col field-value">
+                          <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                            value={recordData.modigie__Employment_Ends_Verify_Employer__c}>
+                          </lightning-formatted-rich-text>
+                        </div>
+                      </div>
+                    </td>
+                  </template>
+                </tr>
+              </tbody>
+            </table>
+          </lightning-accordion-section>
+
+          <lightning-accordion-section name="C" label={accordionLabels.phoneIntelligence}>
+            <lightning-accordion allow-multiple-sections-open>
+              <template for:each={phoneInsightsData} for:item="phoneInsight">
+                <lightning-accordion-section name={phoneInsight.ValidatedPhoneNumber}
+                  label={phoneInsight.ValidatedPhoneNumber} key={phoneInsight.ValidatedPhoneNumber}>
+                  <table>
+                    <tbody class="accordianTableBody">
+                      <tr>
+                        <td>
+                          <div class="
+                              tableData
+                              slds-form-element__control
+                              slds-border_bottom
+                              customclass
+                              slds-grid
+                            ">
+                            <div class="slds-form-element__label slds-col">
+                              Number Type
+                            </div>
+                            <div class="slds-col field-value">
+                              <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                                value={phoneInsight.NumberType}>
+                              </lightning-formatted-rich-text>
+                            </div>
+                          </div>
+                        </td>
+
+                        <td>
+                          <div class="
+                              tableData
+                              slds-form-element__control
+                              slds-border_bottom
+                              customclass
+                              slds-grid
+                            ">
+                            <div class="slds-form-element__label slds-col">
+                              Status
+                            </div>
+                            <div class="slds-col field-value">
+                              <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                                value={phoneInsight.Status}>
+                              </lightning-formatted-rich-text>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <div class="
+                              tableData
+                              slds-form-element__control
+                              slds-border_bottom
+                              customclass
+                              slds-grid
+                            ">
+                            <div class="slds-form-element__label slds-col">
+                              Overall Best Time to Call
+                            </div>
+                            <div class="slds-col field-value">
+                              <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                                value={phoneInsight.OverallTime}>
+                              </lightning-formatted-rich-text>
+                            </div>
+                          </div>
+                        </td>
+
+                        <td>
+                          <div class="
+                              tableData
+                              slds-form-element__control
+                              slds-border_bottom
+                              customclass
+                              slds-grid
+                            ">
+                            <div class="slds-form-element__label slds-col">
+                              Validation Date
+                            </div>
+                            <div class="slds-col field-value">
+                              <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                                value={phoneInsight.ValidationDate}>
+                              </lightning-formatted-rich-text>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      <template if:true={phoneInsight.LineActivity}>
+                        <tr>
+                          <td>
+                            <div class="
+                                tableData
+                                slds-form-element__control
+                                slds-border_bottom
+                                customclass
+                                slds-grid
+                              ">
+                              <div class="slds-form-element__label slds-col">
+                                Line Activity
+                              </div>
+                              <div class="slds-col field-value">
+                                <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                                  value={phoneInsight.LineActivity}>
+                                </lightning-formatted-rich-text>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      </template>
+                      <template if:true={phoneInsight.CarrierName}>
+                        <tr>
+                          <td>
+                            <div class="
+                                tableData
+                                slds-form-element__control
+                                slds-border_bottom
+                                customclass
+                                slds-grid
+                              ">
+                              <div class="slds-form-element__label slds-col">
+                                Carrier Name
+                              </div>
+                              <div class="slds-col field-value">
+                                <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                                  value={phoneInsight.CarrierName}>
+                                </lightning-formatted-rich-text>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      </template>
+                    </tbody>
+                  </table>
+
+                  <div>
+                    <template if:true={phoneInsight.DayOfWeekDetail}>
+                      <h1>Best Time to Call</h1>
+                      <table class="
+                          pageHeaderMedia
+                          slds-table
+                          slds-table_cell-buffer
+                          slds-table_bordered
+                          slds-table_col-bordered
+                          slds-border_left slds-border_right
+                        ">
+                        <thead>
+                          <tr class="slds-line-height_reset">
+                            <th class="" scope="col">
+                              <div class="slds-truncate" title="Days">
+                                Week Days
+                              </div>
+                            </th>
+
+                            <th scope="col">
+                              <div>Monday</div>
+                            </th>
+                            <th scope="col">
+                              <div>Tuesday</div>
+                            </th>
+                            <th scope="col">
+                              <div>Wednesday</div>
+                            </th>
+                            <th scope="col">
+                              <div>Thursday</div>
+                            </th>
+                            <th scope="col">
+                              <div>Friday</div>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <th class="" scope="col">
+                              <div class="slds-truncate" title="TimeToCall">
+                                Time To Call
+                              </div>
+                            </th>
+                            <template for:each={phoneInsight.DayOfWeekDetailTable} for:item="acc">
+                              <th scope="col" key={acc}>
+                                <div>{acc}</div>
+                              </th>
+                            </template>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </template>
+                  </div>
+                </lightning-accordion-section>
+              </template>
+            </lightning-accordion>
+          </lightning-accordion-section>
+
+          <lightning-accordion-section name="B" label={accordionLabels.linkedIn}>
+            <table>
+              <tbody class="accordianTableBody">
+                <tr>
+                  <td>
+                    <div class="
+                        tableData
+                        slds-form-element__control
+                        slds-border_bottom
+                        customclass
+                        slds-grid
+                      ">
+                      <div class="slds-form-element__label slds-col">
+                        LinkedIn URL
+                      </div>
+                      <div class="slds-col field-value">
+                        <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                          value={recordData.modigie__Linkedin_URL__c}>
+                        </lightning-formatted-rich-text>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="
+                        tableData
+                        slds-form-element__control
+                        slds-border_bottom
+                        customclass
+                        slds-grid
+                      ">
+                      <div class="slds-form-element__label slds-col">
+                        Validation Date
+                      </div>
+                      <div class="slds-col field-value">
+                        <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                          value={recordData.modigie__Validation_Date_Get_LinkedIn__c}>
+                        </lightning-formatted-rich-text>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="
+                        tableData
+                        slds-form-element__control
+                        slds-border_bottom
+                        customclass
+                        slds-grid
+                      ">
+                      <div class="slds-form-element__label slds-col">
+                        Status
+                      </div>
+                      <div class="slds-col field-value">
+                        <template if:true={recordData.modigie__Validate_Employer_Status__c}>
+                          <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                            value={recordData.modigie__Linkedin_Status__c}>
+                          </lightning-formatted-rich-text>
+                        </template>
+                        <template if:false={recordData.modigie__Validate_Employer_Status__c}>
+                          <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                            value="Not started">
+                          </lightning-formatted-rich-text>
+                        </template>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </lightning-accordion-section>
+        </lightning-accordion>
+      </lightning-accordion-section>
+    </lightning-accordion>
+
+    <template if:true={isModigieUser}>
+      <div class="slds-clearfix">
+        <lightning-button label="Get Modigie Support" data-name="GetModigieSupport" title="Modigie Support"
+          class="slds-float_right slds-m-top_x-small slds-m-right_small" onclick={openModal} variant="neutral">
+        </lightning-button>
+      </div>
+    </template>
+
+
+    <!-- </div> -->
+  </template>
+  <template if:false={isReadable}>
+    <div class="unauthorizedAccessBody">
+      Error : You do not have access to this component.
+    </div>
+  </template>
+</template>

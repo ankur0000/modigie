@@ -1,0 +1,517 @@
+<template>
+    <template if:true={showErrorMessage}>
+        <div class="slds-notify slds-notify_alert slds-alert_error banner" role="alert">
+          <span class="slds-assistive-text">Error</span>
+          <h2>
+            <template if:true={isOrgCalloutsDisabled}>
+              {orgStopReasonString}
+            </template>
+            <template if:true={isCreditAccountStopped}>
+              {stopReason}
+            </template>
+            <template if:true={isSelectedCreditAccountInactive}>
+              The Credit Account opted for you is inactive.
+            </template>
+          </h2>
+          
+        </div>
+      </template>
+    <template if:true={isReadable}>
+        <template if:true={toggleSpinner}>
+            <div class="slds-spinner_container spinnerBg">
+                <div class="slds-spinner--brand  slds-spinner slds-spinner_large" role="alert">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>
+        </template>
+        <template if:true={toastVisible}>
+            <div>
+                <div class="slds-notify_container slds-is-relative">
+                    <div class="slds-notify slds-notify_toast slds-theme_success toastDiv" role="status">
+                        <span class="slds-assistive-text">success</span>
+                        <span
+                            class="spinnerBg slds-icon_container slds-icon-utility-success slds-m-right_small slds-no-flex slds-align-top slds-align_absolute-center"
+                            title="Success">
+                            <lightning-icon icon-name="utility:success" alternative-text="success" variant="Success"
+                                size="small"></lightning-icon>
+                        </span>
+                        <div class="slds-notify__content">
+                            <h2 class="slds-text-heading_small ">{classicMessage}</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+        <template if:true={errorToastVisible}>
+            <div>
+                <div class="slds-notify_container slds-is-relative">
+                    <div class="slds-notify slds-notify_toast slds-theme_error toastDiv" role="status">
+                        <span class="slds-assistive-text">success</span>
+                        <span
+                            class="spinnerBg slds-icon_container slds-icon-utility-error slds-m-right_small slds-no-flex slds-align-top slds-align_absolute-center"
+                            title="error">
+                            <lightning-icon icon-name="utility:error" alternative-text="error" variant="error"
+                                size="small">
+                            </lightning-icon>
+                        </span>
+                        <div class="slds-notify__content">
+                            <h2 class="slds-text-heading_small ">{classicErrorMessage}</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+
+
+
+        <div class="slds-grid ">
+            <div class="slds-page-header pageHeader">
+                <div class="slds-page-header__row">
+                    <div class="slds-page-header__col-title">
+                        <div class="slds-media">
+                            <div class="pageHeaderDiv"> Total Campaign Members</div>
+
+                            <div class="slds-media__figure slds-m-left_small slds-m-top_xx-small">
+                                <span class="totalMember">{totalMembers}</span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <template if:true={isModigieUser}>
+                        <template if:true={showErrorMessage}>
+                            <button title="Mobile Number, Best Time To Call, Verify Employer, LinkedIn URL" type="button"
+                              onclick={openModal} data-name="GetModigie" class="slds-button slds-button_brand" disabled
+                              style="margin-bottom:0.5%; margin-top:0.5%">
+                              Get Modigie
+                            </button>
+                            <lightning-button class="slds-var-p-left_x-small" onclick={additionalModigieServices} variant="neutral" disabled
+                              label="Additional Modigie Services" title="Additional Modigie Services" style="margin-top:0.5%">
+                            </lightning-button>
+                          </template>
+                          
+                          <template if:false={showErrorMessage}>
+                            <button title="Mobile Number, Best Time To Call, Verify Employer, LinkedIn URL" type="button"
+                              onclick={openModal} data-name="GetModigie" class={buttonColors.modigie}
+                              style="margin-bottom:0.5%; margin-top:0.5%">
+                              Get Modigie
+                            </button>
+                            <lightning-button class="slds-var-p-left_x-small" onclick={additionalModigieServices} variant="neutral"
+                              label="Additional Modigie Services" title="Additional Modigie Services" style="margin-top:0.5%">
+                            </lightning-button>
+                          </template>
+
+                    </template>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="slds-p-around_small">
+            <table>
+                <tbody class="tableBody">
+                    <tr>
+                        <td>
+                            <div class="tableData slds-form-element__control slds-border_bottom customclass slds-grid">
+                                <div class="slds-form-element__label slds-col">Validated Members</div>
+                                <div class="slds-col field-value">
+                                    <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                                        value={getModigieData.Validated}>
+                                    </lightning-formatted-rich-text>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="tableData slds-form-element__control slds-border_bottom customclass slds-grid">
+                                <div class="slds-form-element__label slds-col">Not Validated</div>
+                                <div class="slds-col field-value">
+                                    <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                                        value={getModigieData.Invalidated}>
+                                    </lightning-formatted-rich-text>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <div class="tableData slds-form-element__control slds-border_bottom customclass slds-grid">
+                                <div class="slds-form-element__label slds-col">Jobs Running</div>
+                                <div class="slds-col field-value">
+                                    <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                                        value={getModigieData.Running}>
+                                    </lightning-formatted-rich-text>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="tableData slds-form-element__control slds-border_bottom customclass slds-grid">
+                                <div class="slds-form-element__label slds-col">Not Started</div>
+                                <div class="slds-col field-value">
+                                    <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                                        value={getModigieData.Remaining}>
+                                    </lightning-formatted-rich-text>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+
+
+        </div>
+
+
+
+        <template if:true={modigieAdditional}>
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                aria-describedby="modal-content-id-1" class="slds-modal slds-modal_small slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                            title="Close" onclick={closeAdditionalModigie}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse"
+                                size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 class="slds-modal__title slds-hyphenate">Additional Modigie Services</h2>
+                    </header>
+                    <!-- <div class="slds-modal__content slds-p-around_large ">
+                        <table class="slds-table  slds-m-left_xx-large">
+                            <tbody>
+                                <tr>
+                                    <td data-label="Account Name">
+                                        <button title="Verify Employer" type="button" class={buttonColors.verifyEmployer}
+                                            onclick={openModal} data-name="VerifyEmployer">Verify Employer</button>
+                                    </td>
+                                    <td data-label="Account Name">
+                                        <button title="Get Phone Insights" type="button"
+                                            class={buttonColors.phoneIntelligence} onclick={openModal}
+                                            data-name="GetPhoneInsights">Get Phone Insights</button>
+                                    </td>
+                                    <td data-label="Account Name">
+                                        <button title="Get LinkedIn" type="button" class={buttonColors.linkedIn}
+                                            onclick={openModal} data-name="GetLinkedIn">Get LinkedIn</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div> -->
+
+                    <div class="slds-modal__content slds-p-around_medium additionalBody">
+                        <div>
+                            <div class="slds-grid slds-gutters">
+
+                                <div class="slds-col slds-size_1-of-3">
+                                    <button title="Verify Employer" type="button" class={buttonColors.verifyEmployer}
+                                        onclick={openModal} data-name="VerifyEmployer">Verify Employer</button>
+                                </div>
+                                <div class="slds-col slds-size_1-of-3">
+                                    <button title="Get Phone Insights" type="button"
+                                        class={buttonColors.phoneIntelligence} onclick={openModal}
+                                        data-name="GetPhoneInsights">Get Phone Insights</button>
+
+                                </div>
+                                <div class="slds-col slds-size_1-of-3">
+                                    <button title="Get LinkedIn" type="button" onclick={openModal}
+                                        data-name="GetLinkedIn" class={buttonColors.linkedIn}>Get LinkedIn</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick={closeAdditionalModigie}>Cancel</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+
+
+
+
+        <lightning-accordion class="example-accordion" allow-multiple-sections-open>
+            <lightning-accordion-section name="AdditionalModigieServices" label="Additional Modigie Services">
+
+
+
+                <!-- <lightning-layout horizontal-align="space">
+                        
+                            <lightning-layout-item padding="around-small">
+                                <button title="Get LinkedIn" type="button" class={buttonColors.linkedIn} onclick={openModal} data-name="GetLinkedIn">Get LinkedIn</button><br></br>
+                            </lightning-layout-item>
+                            <lightning-layout-item padding="around-small">
+                                <button title="Verify Employer" type="button" class={buttonColors.verifyEmployer} onclick={openModal} data-name="VerifyEmployer">Verify Employer</button><br></br>
+                            </lightning-layout-item>
+                            <lightning-layout-item padding="around-small">
+                                <button title="Get Phone Insights" type="button" class={buttonColors.phoneIntelligence} onclick={openModal} data-name="GetPhoneInsights">Get Phone Insights</button><br></br>
+                            </lightning-layout-item>
+                            
+                            <lightning-layout-item padding="around-small">
+                                <button title="Get Modigie" type="button" class={buttonColors.modigie} onclick={openModal} data-name="GetMobileNumber">Get Mobile Number</button><br></br>
+                            </lightning-layout-item>
+                        
+                        </lightning-layout> -->
+
+
+                <!-- new -->
+
+                <!-- <lightning-layout horizontal-align="space">
+
+                            <lightning-layout-item padding="around-small">
+                                <button title="Get Mobile Number" type="button" class={buttonColors.modigie}
+                                    onclick={openModal} data-name="GetMobileNumber">Get Mobile Number</button>
+                            </lightning-layout-item>
+                            <lightning-layout-item padding="around-small">
+                                <button title="Verify Employer" type="button" class={buttonColors.verifyEmployer}
+                                    onclick={openModal} data-name="VerifyEmployer">Verify Employer</button>
+                            </lightning-layout-item>
+                            <lightning-layout-item padding="around-small">
+                                <button title="Get Phone Insights" type="button" class={buttonColors.phoneIntelligence}
+                                    onclick={openModal} data-name="GetPhoneInsights">Get Phone Insights</button>
+                            </lightning-layout-item>
+                            <lightning-layout-item padding="around-small">
+                                <button title="Get LinkedIn" type="button" class={buttonColors.linkedIn} onclick={openModal}
+                                    data-name="GetLinkedIn">Get LinkedIn</button>
+                            </lightning-layout-item>
+
+                        </lightning-layout> -->
+
+                <!-- new ends -->
+
+                <!-- </div> -->
+
+                <lightning-accordion class="example-accordion" allow-multiple-sections-open>
+                    <template for:each={allServicesData} for:item='item' for:index="index">
+                        <lightning-accordion-section name={index} label={item.Name} key={item.Name}>
+                            <template if:false={item.isGetPhoneInsights}>
+                                <div class="slds-grid">
+                                    <div class="slds-col slds-size_1-of-2 ">
+
+                                        <div class="slds-form-element__control slds-border_bottom customclass">
+                                            <span class="slds-form-element__label">Validated Members</span>
+                                            <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                                                value={item.Validated}></lightning-formatted-rich-text>
+                                        </div>
+
+                                        <div class="slds-form-element__control slds-border_bottom customclass">
+                                            <span class="slds-form-element__label">Jobs Running</span>
+                                            <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                                                value={item.Running}></lightning-formatted-rich-text>
+                                        </div>
+
+
+                                    </div>
+
+                                    <div class="slds-col slds-size_1-of-2">
+
+                                        <div class="slds-form-element__control slds-border_bottom customclass">
+                                            <span class="slds-form-element__label">Not Validated</span>
+                                            <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                                                value={item.Invalidated}></lightning-formatted-rich-text>
+                                        </div>
+                                        <div class="slds-form-element__control slds-border_bottom customclass">
+                                            <span class="slds-form-element__label">Not Started</span>
+                                            <lightning-formatted-rich-text class="slds-form-element__static same-line"
+                                                value={item.Remaining}></lightning-formatted-rich-text>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                            <template if:true={item.isGetPhoneInsights}>
+
+                                <template for:each={item.GetPhoneInsightsData} for:item='nestedItem'
+                                    for:index="nestedIndex">
+                                    <lightning-accordion-section name={nestedIndex} label={nestedItem.Name}
+                                        key={nestedItem.Name}>
+                                        <div class="slds-grid">
+                                            <div class="slds-col slds-size_1-of-2 ">
+
+                                                <div class="slds-form-element__control slds-border_bottom customclass">
+                                                    <span class="slds-form-element__label">Validated Members</span>
+                                                    <lightning-formatted-rich-text
+                                                        class="slds-form-element__static same-line"
+                                                        value={nestedItem.Validated}></lightning-formatted-rich-text>
+                                                </div>
+
+                                                <div class="slds-form-element__control slds-border_bottom customclass">
+                                                    <span class="slds-form-element__label">Jobs Running</span>
+                                                    <lightning-formatted-rich-text
+                                                        class="slds-form-element__static same-line"
+                                                        value={nestedItem.Running}></lightning-formatted-rich-text>
+                                                </div>
+
+
+                                            </div>
+
+                                            <div class="slds-col slds-size_1-of-2">
+
+                                                <div class="slds-form-element__control slds-border_bottom customclass">
+                                                    <span class="slds-form-element__label">Not Validated</span>
+                                                    <lightning-formatted-rich-text
+                                                        class="slds-form-element__static same-line"
+                                                        value={nestedItem.Invalidated}></lightning-formatted-rich-text>
+                                                </div>
+                                                <div class="slds-form-element__control slds-border_bottom customclass">
+                                                    <span class="slds-form-element__label">Not Started</span>
+                                                    <lightning-formatted-rich-text
+                                                        class="slds-form-element__static same-line"
+                                                        value={nestedItem.Remaining}></lightning-formatted-rich-text>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </lightning-accordion-section>
+                                </template>
+                            </template>
+                        </lightning-accordion-section>
+
+
+                    </template>
+                    <!--lightning-accordion-section name="B" label="Get LinkedIn">
+                                <div class="slds-grid">
+                                    <div class="slds-col slds-size_1-of-2 ">
+                                        
+                                        <div class="slds-form-element__control slds-border_bottom customclass">
+                                            <span class="slds-form-element__label">Validated Members</span>
+                                            <lightning-formatted-rich-text class="slds-form-element__static same-line" value={GetLinkedinMembers.Validated}></lightning-formatted-rich-text>
+                                        </div>
+                                        <div class="slds-form-element__control slds-border_bottom customclass">
+                                            <span class="slds-form-element__label">Jobs Running</span>
+                                            <lightning-formatted-rich-text class="slds-form-element__static same-line" value={GetLinkedinMembers.Running}></lightning-formatted-rich-text>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <div class="slds-form-element__control slds-border_bottom customclass">
+                                            <span class="slds-form-element__label">Not Validated</span>
+                                            <lightning-formatted-rich-text class="slds-form-element__static same-line" value={GetLinkedinMembers.Invalidated}></lightning-formatted-rich-text>
+                                        </div>
+                                        <div class="slds-form-element__control slds-border_bottom customclass">
+                                            <span class="slds-form-element__label">Not Started</span>
+                                            <lightning-formatted-rich-text class="slds-form-element__static same-line" value={GetLinkedinMembers.Remaining}></lightning-formatted-rich-text>
+                                        </div>
+                                    </div>
+                                </div>
+                            </lightning-accordion-section>
+                    
+                            <lightning-accordion-section name="C" label="Get Phone Intelligence">
+                                <div class="slds-grid">
+                                    <div class="slds-col slds-size_1-of-2 ">
+                                        
+                                        <div class="slds-form-element__control slds-border_bottom customclass">
+                                            <span class="slds-form-element__label">Validated Members</span>
+                                            <lightning-formatted-rich-text class="slds-form-element__static same-line" value={GetPhoneIntelligenceMembers.Validated}></lightning-formatted-rich-text>
+                                        </div>
+                                        <div class="slds-form-element__control slds-border_bottom customclass">
+                                            <span class="slds-form-element__label">Jobs Running</span>
+                                            <lightning-formatted-rich-text class="slds-form-element__static same-line" value={GetPhoneIntelligenceMembers.Running}></lightning-formatted-rich-text>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="slds-col slds-size_1-of-2">
+                                        
+                                        <div class="slds-form-element__control slds-border_bottom customclass">
+                                            <span class="slds-form-element__label">Not Validated</span>
+                                            <lightning-formatted-rich-text class="slds-form-element__static same-line" value={GetPhoneIntelligenceMembers.Invalidated}></lightning-formatted-rich-text>
+                                        </div>
+                                        <div class="slds-form-element__control slds-border_bottom customclass">
+                                            <span class="slds-form-element__label">Not Started</span>
+                                            <lightning-formatted-rich-text class="slds-form-element__static same-line" value={GetPhoneIntelligenceMembers.Remaining}></lightning-formatted-rich-text>
+                                        </div>
+                                    </div>
+                                </div>
+                            </lightning-accordion-section>
+                            <lightning-accordion-section name="D" label="Verify Employer">
+                                <div class="slds-grid">
+                                    <div class="slds-col slds-size_1-of-2 ">
+                                        
+                                        <div class="slds-form-element__control slds-border_bottom customclass">
+                                            <span class="slds-form-element__label">Validated Members</span>
+                                            <lightning-formatted-rich-text class="slds-form-element__static same-line" value={GetVerifiedEmployerMembers.Validated}></lightning-formatted-rich-text>
+                                        </div>
+                                        <div class="slds-form-element__control slds-border_bottom customclass">
+                                            <span class="slds-form-element__label">Jobs Running</span>
+                                            <lightning-formatted-rich-text class="slds-form-element__static same-line" value={GetVerifiedEmployerMembers.Running}></lightning-formatted-rich-text>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="slds-col slds-size_1-of-2">
+                                        
+                                        <div class="slds-form-element__control slds-border_bottom customclass">
+                                            <span class="slds-form-element__label">Not Validated</span>
+                                            <lightning-formatted-rich-text class="slds-form-element__static same-line" value={GetVerifiedEmployerMembers.Invalidated}></lightning-formatted-rich-text>
+                                        </div>
+                                        <div class="slds-form-element__control slds-border_bottom customclass">
+                                            <span class="slds-form-element__label">Not Started</span>
+                                            <lightning-formatted-rich-text class="slds-form-element__static same-line" value={GetVerifiedEmployerMembers.Remaining}></lightning-formatted-rich-text>
+                                        </div>
+                                    </div>
+                                </div>
+                            </lightning-accordion-section-->
+
+                </lightning-accordion>
+            </lightning-accordion-section>
+        </lightning-accordion>
+        <!-- </div> -->
+
+
+
+        <template if:true={isModalOpen}>
+
+            <template if:true={buttonClickedInfo.GetModigie}>
+                <c-get-modigie-campaign-button-component-l-w-c recordid={recordId} onclose={closeModal}
+                    modallabel="Get Modigie"></c-get-modigie-campaign-button-component-l-w-c>
+            </template>
+            <template if:true={buttonClickedInfo.GetMobileNumber}>
+                <c-get-modigie-campaign-button-component-l-w-c recordid={recordId} onclose={closeModal}
+                    modallabel="Get Modigie"></c-get-modigie-campaign-button-component-l-w-c>
+            </template>
+            <template if:true={buttonClickedInfo.GetLinkedIn}>
+                <c-get-linkedin-campaign-button-component-l-w-c recordid={recordId} onclose={closeModal}>
+                </c-get-linkedin-campaign-button-component-l-w-c>
+            </template>
+            <template if:true={buttonClickedInfo.GetPhoneInsights}>
+                <!--c-get-phone-intelligence-campaign-l-w-c recordid={recordId} onclose={closeModal}></c-get-phone-intelligence-campaign-l-w-c-->
+                <!--c-get-phone-insights-button-component recordid={recordId} onclose={closeModal}></c-get-phone-insights-button-component-->
+                <c-get-phone-insights-campaign-button-comp recordid={recordId} onclose={closeModal}>
+                </c-get-phone-insights-campaign-button-comp>
+                <!--c-test-compfor-phone-insights recordid={recordId} onclose={closeModal}></c-test-compfor-phone-insights-->
+            </template>
+            <template if:true={buttonClickedInfo.VerifyEmployer}>
+                <c-validate-employer-campaign-button-l-w-c recordid={recordId} onclose={closeModal}>
+                </c-validate-employer-campaign-button-l-w-c>
+            </template>
+        </template>
+
+
+
+        <template if:true={openSupportModal}>
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+
+                    </div>
+
+
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+    </template>
+    <template if:false={isReadable}>
+        <div class="unauthorizedAccessBody">
+            Error : You do not have access to this component.
+        </div>
+    </template>
+</template>

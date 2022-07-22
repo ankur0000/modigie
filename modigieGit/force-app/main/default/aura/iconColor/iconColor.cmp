@@ -1,0 +1,10 @@
+<aura:component >
+  <!--lightning:icon iconName="action:new_account" size="small"/>
+       <br/> <br/>  
+  <lightning:icon class="orangeOnBlack" iconName="custom:custom26" size="small"/>
+       <br/><br/> 
+  <lightning:icon class="blackOnRed" iconName="standard:account" size="small"/>
+       <br/><br/> 
+  <lightning:icon class="black" iconName="utility:comments" size="small" />
+       <br/><br/--> 
+</aura:component>

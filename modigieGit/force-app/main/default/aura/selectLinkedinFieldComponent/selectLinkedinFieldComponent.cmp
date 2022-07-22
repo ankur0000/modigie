@@ -1,0 +1,196 @@
+<aura:component access="global" controller="SelectLinkedinFieldController">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="disableContactToggle" type="Boolean" />
+    <aura:attribute name="disableLeadToggle" type="Boolean" />
+    <aura:attribute name="isActiveCon" type="Boolean" />
+    <aura:attribute name="isActiveLead" type="Boolean" />
+    <aura:attribute name="showContactSave" type="Boolean" />
+    <aura:attribute name="showLeadSave" type="Boolean" />
+    <aura:attribute name="disableContactField" type="Boolean" />
+    <aura:attribute name="disableLeadField" type="Boolean" />
+    <aura:attribute name="contactField" type="String" />
+    <aura:attribute name="leadField" type="String" />
+    <aura:attribute name="contactFieldOldValue" type="String" />
+    <aura:attribute name="leadFieldOldValue" type="String" />
+    <aura:attribute name="disableSettings" type="Boolean" default="true" />
+    <aura:attribute name="isReferenceOpen" type="Boolean" default="false" />
+
+    <div class="slds-page-header pageHeader">
+        <div class="slds-page-header__row">
+            <div class="slds-page-header__col-title">
+                <div class="slds-media">
+                    <div class="slds-media__figure">
+                        <span class="slds-icon_container">
+                            <lightning:icon iconName="standard:user_role" alternativeText="Event" />
+
+                        </span>
+
+                    </div>
+                    <div class="slds-media__body">
+                        <div class="slds-page-header__name">
+                            <div class="slds-page-header__name-title">
+                                <h1>
+                                    <span class="slds-page-header__title slds-truncate">
+                                        LinkedIn Field Mapping</span>
+
+                                </h1>
+                            </div>
+                        </div>
+                        <a onclick="{!c.openReference}">Click Here for
+                            Overview</a>
+                    </div>
+                </div>
+            </div>
+            <aura:if isTrue="{!v.disableSettings}">
+                <button class="slds-button slds-button_brand slds-float_right"
+                    onclick="{!c.editLinkedInSetting}">Edit</button>
+                <aura:set attribute="else">
+                    <button class="slds-button slds-button_brand slds-float_right"
+                        onclick="{!c.saveLinkedInSetting}">Save</button>
+                </aura:set>
+            </aura:if>
+
+        </div>
+    </div>
+
+
+    <!--lightning:input value="{!v.creditsId}" disabled="{!v.tokenCheck}" placeholder="Enter Credits Account ID" class="customClass" /-->
+
+    <div class="slds-grid slds-wrap">
+        <div class="slds-col slds-size_4-of-12">
+            <span>
+
+                <lightning:input value="{!v.contactField}" label="Select Contact LinkedIn Field"
+                    placeholder="Enter Linkedin field API name" disabled="{!v.disableSettings}"
+                    onchange="{!c.handleInputChange}" name="Contact API Name" messageWhenBadInput="You must say foo" />
+                <!--label class="slds-form-element__label" for="text-input-id-1">Select Contact LinkedIn Field</label>
+              <div class="slds-form-element__control">
+                  <input type="text" id="text-input-id-1" placeholder="Enter Linkedin field API name" required="" aria-describedby="error-message-unique-id" 
+                         class="slds-input" aria-invalid="true" min="1" autocomplete="off"
+                         value="{! v.contactField}" onchange="{!c.handleInputChange}" data-name="Contact_Linkedin_Field" />
+              </div-->
+            </span>
+        </div>
+        <!--div class="slds-col slds-size_4-of-12 " style="margin-top: 1.7%;"> 
+            <span data-name="Contact">
+                <aura:if isTrue="{!v.showContactSave}">
+                    <lightning:button variant="brand" label="Save" title="save" onclick="{! c.handleSave }" class="SaveButton" />
+                    <lightning:button variant="brand" label="Cancel" title="cancel" onclick="{! c.handleCancel }" />
+                </aura:if>
+            </span>
+        </div-->
+        <div class="slds-col slds-size_4-of-12 " style="margin-top: 1.8%;">
+            <span>
+                <lightning:input type="toggle" name="input3" checked="{!v.isActiveCon}" disabled="{!v.disableSettings}"
+                    required="false" />
+            </span>
+        </div>
+    </div>
+
+    <div class="slds-grid slds-wrap">
+        <div class="slds-col slds-size_4-of-12">
+            <span>
+                <lightning:input value="{!v.leadField}" label="Select Lead LinkedIn Field"
+                    placeholder="Enter Linkedin field API name" disabled="{!v.disableSettings}"
+                    onchange="{!c.handleInputChange}" name="Lead API Name" />
+                <!--label class="slds-form-element__label" for="text-input-id-1">Select Lead LinkedIn Field</label>
+              <div class="slds-form-element__control">
+                  <input type="text" id="text-input-id-1" placeholder="Enter Linkedin field API name" required="" aria-describedby="error-message-unique-id" 
+                         class="slds-input" aria-invalid="true" min="1" autocomplete="off"
+                         value="{! v.leadField}" oninput="{!c.handleInputChange}" data-name="Lead_Linkedin_Field" />
+              </div-->
+            </span>
+        </div>
+        <!--div class="slds-col slds-size_4-of-12" style="margin-top: 1.7%;">
+          <span>
+              <aura:if isTrue="{!v.showLeadSave}">
+                  <lightning:button variant="brand" label="Save" title="save" onclick="{! c.handleSave }" class="SaveButton"/>
+                  <lightning:button variant="brand" label="Cancel" title="cancel" onclick="{! c.handleCancel }" />
+              </aura:if>
+          </span>
+        </div-->
+        <div class="slds-col slds-size_4-of-12" style="margin-top: 1.8%;">
+            <span>
+                <lightning:input type="toggle" name="input3" checked="{!v.isActiveLead}"
+                    disabled="{! v.disableSettings }" required="false" />
+            </span>
+        </div>
+    </div>
+
+    <aura:if isTrue="{!v.isReferenceOpen}">
+        <!--div class="slds-grid pageHeader">
+                        <div class="slds-page-header pageHeader pageHeaderMedis">
+                            <div class="slds-page-header__row">
+                                <div class="slds-page-header__col-title">
+                                    <div class="slds-media">
+                                        <div class="slds-media__figure">
+                                            <span class="slds-icon_container ">
+                                                <lightning:icon iconName="standard:shift" />
+
+                                                <span class="slds-assistive-text">Select Linkedin Field Reference</span>
+                                            </span>
+
+                                        </div>
+                                        <div class="slds-media__body">
+                                            <div class="slds-page-header__name">
+                                                <div class="slds-page-header__name-title">
+                                                    <h1>
+                                                        <span class="slds-page-header__title slds-truncate">Select
+                                                            Linkedin Field
+                                                            Reference</span>
+                                                    </h1>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="textDiv">
+                        <h2><b>Select Linkedin Field</b></h2>
+
+                        <p>Modigie has provided configuration related to alternate LinkedIn in which the administrator
+                            can
+                            specify the API name of the fields (if they have) of Lead/Contact object which they use for
+                            storing LinkedIn Url. Modigie will use these values as an input and substitute if some
+                            contacts/leads didn't have other required fields (email) for enriching.
+                        </p>
+                    </div-->
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+            aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="
+                    slds-button slds-button_icon
+                    slds-modal__close
+                    slds-button_icon-inverse
+                    " title="Close">
+                        <lightning:icon iconName="utility:close" alternativeText="Connected" variant="inverse"
+                            size="small" title="Close" onclick="{!c.closeReference}" />
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">
+                        LinkedIn Field Mapping Reference
+                    </h2>
+                </header>
+                <div class="slds-modal__content slds-p-horizontal_x-large slds-p-vertical_medium textDiv"
+                    id="modal-content-id-1">
+                    <p>
+                        Modigie provides a way to map your preferred LinkedIn field to the Modigie LinkedIn field for
+                        both Leads and Contacts. If you wish to map your preferred LinkedIn field to Modigie, specify
+                        the API name of the field(s) and activate the mapping.
+                        <br />
+                        Using this feature may improve the quality of the Modigie response.
+                    </p>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+
+    </aura:if>
+
+</aura:component>
